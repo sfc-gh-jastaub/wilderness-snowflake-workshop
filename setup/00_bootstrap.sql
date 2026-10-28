@@ -23,3 +23,10 @@ CREATE OR REPLACE GIT REPOSITORY WILDERNESS_HOL.GIT.WORKSHOP_REPO
 EXECUTE IMMEDIATE FROM @WILDERNESS_HOL.GIT.WORKSHOP_REPO/branches/main/setup/10_setup_core.sql;
 
 SELECT STEP, STATUS, ROWS_AFFECTED, LOGGED_AT FROM WILDERNESS_HOL.GIT.SETUP_LOG ORDER BY LOGGED_AT;
+
+-- Your link to open the workshop repo as a workspace, with the form already filled in
+SELECT 'https://app.snowflake.com/' || LOWER(CURRENT_ORGANIZATION_NAME()) || '/' || LOWER(CURRENT_ACCOUNT_NAME())
+    || '/#/workspaces?action=create_workspace_from_git_repo'
+    || '&remoteUrl=https%3A%2F%2Fgithub.com%2Fsfc-gh-jastaub%2Fwilderness-snowflake-workshop'
+    || '&workspaceName=wilderness-snowflake-workshop&apiIntegration=WILDERNESS_GIT_API&authType=NONE'
+    AS OPEN_WORKSHOP_REPO;
