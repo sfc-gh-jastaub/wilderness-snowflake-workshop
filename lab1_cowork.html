@@ -36,7 +36,7 @@
   },
   {
    "id": "step-7",
-   "title": "Ask it three questions in CoWork"
+   "title": "Numbers, words, then both"
   },
   {
    "id": "step-8",
@@ -49,6 +49,10 @@
   {
    "id": "step-10",
    "title": "Brief Martha: a skill that emails a report"
+  },
+  {
+   "id": "step-11",
+   "title": "Continue to Lab 2"
   }
  ]
 }</script>
@@ -1036,7 +1040,7 @@ a.lab-card:hover { box-shadow: var(--shadow-md); border-color: var(--sf-blue); c
                     <li>Ask it to teach the semantic view Wilderness's words: a return rate, synonyms and two answers you have checked.</li>
                     <li>Ask it to create the Wilderness Assistant with three tools: the numbers, the customer comments and charts.</li>
                     <li>Test the assistant, then have Cortex Code put it in CoWork, where the store managers work.</li>
-                    <li>Ask it the three questions in CoWork, save a chart and schedule a question so the answer arrives by email.</li>
+                    <li>Ask it about the numbers, then the words, then both, in CoWork; save a chart and schedule a question so the sleeping-gear shortfall arrives by email.</li>
                 </ul>
             </div>
             <div class="overview-card highlight">
@@ -1053,7 +1057,7 @@ a.lab-card:hover { box-shadow: var(--shadow-md); border-color: var(--sf-blue); c
                     <span class="tech-tag">Agent skills</span>
                 </div>
                 <h3 style="margin-top:var(--space-xl);">The situation</h3>
-                <p>Christmas trading started on Sunday. Wilderness ordered tents 40% deeper than last year, but not the sleeping gear that goes with them, and the Summit 2P on the catalogue cover is coming back with broken poles. Martha Thompson, Chief Customer Officer, wants every store manager to get straight answers each morning.</p>
+                <p>Christmas trading started on Sunday. Wilderness bought 40% more tents than it sold last Christmas and sent them to every store, bought sleeping gear as usual, and some of the Summit 2P tents on the catalogue cover are coming back broken. This lab answers the store managers' first question: where do we stand?</p>
             </div>
         </div>
     </div>
@@ -1073,17 +1077,23 @@ a.lab-card:hover { box-shadow: var(--shadow-md); border-color: var(--sf-blue); c
             <a class="step-nav-item" href="#step-4" data-step="4"><span class="nav-index">4</span><span class="nav-text">Create the Wilderness Assistant</span><span class="nav-time">8 min</span></a>
             <a class="step-nav-item" href="#step-5" data-step="5"><span class="nav-index">5</span><span class="nav-text">Test it: one question for each tool</span><span class="nav-time">6 min</span></a>
             <a class="step-nav-item" href="#step-6" data-step="6"><span class="nav-index">6</span><span class="nav-text">Publish it to CoWork</span><span class="nav-time">4 min</span></a>
-            <a class="step-nav-item" href="#step-7" data-step="7"><span class="nav-index">7</span><span class="nav-text">Ask it three questions in CoWork</span><span class="nav-time">8 min</span></a>
+            <a class="step-nav-item" href="#step-7" data-step="7"><span class="nav-index">7</span><span class="nav-text">Numbers, words, then both</span><span class="nav-time">8 min</span></a>
             <a class="step-nav-item" href="#step-8" data-step="8"><span class="nav-index">8</span><span class="nav-text">Keep the answer: artifacts</span><span class="nav-time">5 min</span></a>
             <a class="step-nav-item" href="#step-9" data-step="9"><span class="nav-index">9</span><span class="nav-text">Schedule it: automations</span><span class="nav-time">6 min</span></a>
             <a class="step-nav-item optional" href="#step-10" data-step="10"><span class="nav-index">10</span><span class="nav-text">Brief Martha: a skill that emails a report</span><span class="nav-time">10 min</span></a>
+            <a class="step-nav-item optional" href="#step-11" data-step="11"><span class="nav-index">11</span><span class="nav-text">Continue to Lab 2</span><span class="nav-time">1 min</span></a>
         </div>
     </nav>
 
     <main class="steps-container" id="steps">
+<div class="info-box info">
+    <strong>This lab answers: Where do we stand?</strong>
+    <p>You build in Cortex Code; the store managers use CoWork. By the end they can ask where tents will be left over and where they will run out, what customers are saying, and which stores are short of sleeping gear, and that last answer arrives by email.</p>
+</div>
+
 <div class="info-box warning">
     <strong>Synthetic data</strong>
-    <p>Wilderness Outfitters is a fictional company. All stores, products, people, sales, feedback and documents in this workshop are synthetic and generated for training. Any resemblance to a real business is coincidental.</p>
+    <p>Wilderness Outfitters is a fictional company. All stores, products, people, sales and feedback in this workshop are synthetic and generated for training. Any resemblance to a real business is coincidental.</p>
 </div>
 
 <div class="step-card" id="step-1">
@@ -1095,15 +1105,12 @@ a.lab-card:hover { box-shadow: var(--shadow-md); border-color: var(--sf-blue); c
     <div class="step-content">
 <div class="info-box info">
     <strong>Before you start: your trial account</strong>
-    <p>Use the trial you created from the <a href="https://signup.snowflake.com/?t=5f3964a43f46b12028c5e3899fc57a980da3f3fca62294f62ef8ce5afba9b71c&amp;cloud=aws&amp;region=us-east-2" target="_blank" rel="noopener">workshop sign-up link</a> (AWS US East 2, Ohio), and stay in it all day. Click the verification link in the welcome email first: the automation in Step 9 and the briefing in Step 10 both email you, and an unverified address receives nothing.</p>
+    <p>Use the trial you created from the <a href="https://signup.snowflake.com/?t=5f3964a43f46b12028c5e3899fc57a980da3f3fca62294f62ef8ce5afba9b71c&amp;cloud=aws&amp;region=us-east-2" target="_blank" rel="noopener">workshop sign-up link</a> (AWS US West 2, Oregon), and stay in it all day. Click the verification link in the welcome email first: the automation in Step 9 and the briefing in Step 10 both email you, and an unverified address receives nothing.</p>
 </div>
 
-<blockquote class="brief">
-    "Everyone wants a tent for Christmas, and we bet on it. Three days in, the bet looks right in Sydney and Brisbane and wrong in Melbourne and Hobart. Every family that buys a tent also needs somewhere to sleep and something to cook on, and I don't think we bought enough of either. And the Summit 2P on our catalogue cover is already coming back with broken poles."
-    <cite>Martha Thompson, Chief Customer Officer, Wilderness Outfitters</cite>
-</blockquote>
+<p>The story so far: Wilderness bought 40% more tents than it sold last Christmas and sent them to every store, bought sleeping gear as usual, and some of the Summit 2P tents on the catalogue cover are coming back broken.</p>
 
-<p>It is Wednesday 4 November 2026. Christmas trading started on Sunday and runs to Christmas Eve. Your team has been asked to give Martha's 72 store managers an assistant that answers this every morning. You build it in this lab by asking Cortex Code for it, one prompt at a time.</p>
+<p>It is Wednesday 4 November 2026. Christmas trading started on Sunday and runs to Christmas Eve. Your team has been asked to give Martha's 72 store managers an assistant that tells them where they stand every morning. You build it in this lab by asking Cortex Code for it, one prompt at a time.</p>
 
 <h3>Run the setup script</h3>
 
@@ -1125,21 +1132,21 @@ CREATE WAREHOUSE IF NOT EXISTS WILDERNESS_WH WAREHOUSE_SIZE = SMALL AUTO_SUSPEND
   INITIALLY_SUSPENDED = TRUE;
 USE WAREHOUSE WILDERNESS_WH;
 CREATE DATABASE IF NOT EXISTS WILDERNESS_HOL;
-CREATE SCHEMA IF NOT EXISTS WILDERNESS_HOL.GIT;
+CREATE SCHEMA IF NOT EXISTS WILDERNESS_HOL.SETUP;
 
 CREATE OR REPLACE API INTEGRATION WILDERNESS_GIT_API
   API_PROVIDER = git_https_api
   API_ALLOWED_PREFIXES = ('https://github.com/sfc-gh-jastaub/')
   ENABLED = TRUE;
 
-CREATE OR REPLACE GIT REPOSITORY WILDERNESS_HOL.GIT.WORKSHOP_REPO
+CREATE OR REPLACE GIT REPOSITORY WILDERNESS_HOL.SETUP.WORKSHOP_REPO
   API_INTEGRATION = WILDERNESS_GIT_API
   ORIGIN = 'https://github.com/sfc-gh-jastaub/wilderness-snowflake-workshop.git';
 
 -- Core setup, about 2 minutes: infrastructure, data, feedback, semantic view, Lab 3 assets
-EXECUTE IMMEDIATE FROM @WILDERNESS_HOL.GIT.WORKSHOP_REPO/branches/main/setup/10_setup_core.sql;
+EXECUTE IMMEDIATE FROM @WILDERNESS_HOL.SETUP.WORKSHOP_REPO/branches/main/setup/10_setup_core.sql;
 
-SELECT STEP, STATUS, ROWS_AFFECTED, LOGGED_AT FROM WILDERNESS_HOL.GIT.SETUP_LOG ORDER BY LOGGED_AT;
+SELECT STEP, STATUS, ROWS_AFFECTED, LOGGED_AT FROM WILDERNESS_HOL.SETUP.SETUP_LOG ORDER BY LOGGED_AT;
 
 -- Your link to open the workshop repo as a workspace, with the form already filled in
 SELECT 'https://app.snowflake.com/' || LOWER(CURRENT_ORGANIZATION_NAME()) || '/' || LOWER(CURRENT_ACCOUNT_NAME())
@@ -1178,7 +1185,7 @@ SELECT 'https://app.snowflake.com/' || LOWER(CURRENT_ORGANIZATION_NAME()) || '/'
 
 <div class="code-block prompt">
     <div class="code-header"><span class="code-lang">cortex code</span><button class="btn-copy" type="button">Copy</button></div>
-    <pre><code>I'm working in Snowflake database WILDERNESS_HOL with warehouse WILDERNESS_WH, for Wilderness Outfitters, an Australian outdoor retailer. The data is in schema RAW. Create everything I ask for in schema LAB01_AI. For this whole session: run each statement rather than drafting it, use fully qualified names, and after you create anything, show me proof that it exists.</code></pre>
+    <pre><code>I'm working in Snowflake database WILDERNESS_HOL with warehouse WILDERNESS_WH, for Wilderness Outfitters, an Australian outdoor retailer. The data is in schema RAW. Create everything I ask for in schema LAB1_ASSISTANT. For this whole session: run each statement rather than drafting it, use fully qualified names, and after you create anything, show me proof that it exists.</code></pre>
 </div>
 
 <figure class="shot-slot"><figcaption>Screenshot to come: The Cortex Code panel in a Workspace<br><code>images/lab1_step1_cortex_code.png</code></figcaption></figure>
@@ -1216,7 +1223,7 @@ SELECT 'https://app.snowflake.com/' || LOWER(CURRENT_ORGANIZATION_NAME()) || '/'
 
 <div class="info-box tip">
     <strong>Why the attributes</strong>
-    <p>They let a search filter while it matches meaning: "pole complaints in Victoria about batch B26-07" needs both. Ask Cortex Code to explain it in its own words if you want to hear it a second way.</p>
+    <p>They let a search filter while it matches meaning: "pole complaints in Victoria about one batch of tents" needs both. Ask Cortex Code to explain it in its own words if you want to hear it a second way.</p>
 </div>
         <label class="completion-checkbox"><input type="checkbox" data-step="2"> Mark step 2 complete</label>
     </div>
@@ -1233,11 +1240,11 @@ SELECT 'https://app.snowflake.com/' || LOWER(CURRENT_ORGANIZATION_NAME()) || '/'
     <p>It describes structured data, the tables of sales, returns and stock, in Wilderness's terms: what a sale is, how a return links to a sale, what "return rate" means. An agent reads it to turn a question into the right query.</p>
 </div>
 
-<p>Setup created a starter semantic view, <code>SV_WILDERNESS_RETAIL</code>, over sales, returns, stock and the kit each store needs. It knows the tables and how they join, but not how store managers talk. Ask Cortex Code to teach it.</p>
+<p>Setup created a starter semantic view, <code>SV_WILDERNESS_RETAIL</code>, over sales, returns, stock and the sleeping gear each store needs. It knows the tables and how they join, but not how store managers talk. Ask Cortex Code to teach it.</p>
 
 <div class="code-block prompt">
     <div class="code-header"><span class="code-lang">cortex code</span><button class="btn-copy" type="button">Copy</button></div>
-    <pre><code>Improve the semantic view WILDERNESS_HOL.LAB01_AI.SV_WILDERNESS_RETAIL so store managers' words work. Add a RETURN_RATE metric: units returned divided by units sold. Add synonyms for the words they use: tent, sleeping gear, Christmas range, returns and stock cover. Add two verified queries: the return rate by category, and the sleeping-gear shortfall by state. Keep everything else as it is. Show me what you will change before you apply it, then list the view's metrics and verified queries.</code></pre>
+    <pre><code>Improve the semantic view WILDERNESS_HOL.LAB1_ASSISTANT.SV_WILDERNESS_RETAIL so store managers' words work. Add a RETURN_RATE metric: units returned divided by units sold. Add synonyms for the words they use: tent, sleeping gear, Christmas range, returns and stock cover. Add two verified queries: the return rate by category, and the sleeping-gear shortfall by state. Keep everything else as it is. Show me what you will change before you apply it, then list the view's metrics and verified queries.</code></pre>
 </div>
 
 <div class="info-box success">
@@ -1261,25 +1268,37 @@ SELECT 'https://app.snowflake.com/' || LOWER(CURRENT_ORGANIZATION_NAME()) || '/'
     <div class="step-content">
 <div class="info-box info">
     <strong>What an agent is</strong>
-    <p>It answers a question by choosing tools and putting the results together. Here it has three: Cortex Analyst for numbers, through the semantic view; Cortex Search for what customers said; and a chart tool. Its instructions tell it who it is talking to and how to answer.</p>
+    <p>It answers a question by choosing tools and putting the results together. Here it has three: Cortex Analyst for numbers, through the semantic view; Cortex Search for what customers said; and Data to Chart, which turns a result into a chart. Its instructions tell it who it is talking to and how to answer.</p>
 </div>
 
 <p>One prompt creates the agent and gives it all three tools.</p>
 
 <div class="code-block prompt">
     <div class="code-header"><span class="code-lang">cortex code</span><button class="btn-copy" type="button">Copy</button></div>
-    <pre><code>Create a Cortex Agent called WILDERNESS_ASSISTANT in WILDERNESS_HOL.LAB01_AI, with the display name Wilderness Assistant, for Wilderness's 72 store managers. Give it three tools: a Cortex Analyst tool called retail_analyst on the semantic view SV_WILDERNESS_RETAIL, a Cortex Search tool called customer_feedback on CSS_CUSTOMER_FEEDBACK, and charts. Use warehouse WILDERNESS_WH. Write its instructions: plain Australian English, short sentences, amounts in AUD, the answer first, and say plainly when the data cannot answer something. Add three sample questions: one about the numbers, one about what customers say, and one that needs both. Then show me the instructions and the tool descriptions you wrote.</code></pre>
+    <pre><code>Create a Cortex Agent called WILDERNESS_ASSISTANT in WILDERNESS_HOL.LAB1_ASSISTANT, with the display name Wilderness Assistant, for Wilderness's 72 store managers. Give it three tools: a Cortex Analyst tool called retail_analyst on the semantic view SV_WILDERNESS_RETAIL, a Cortex Search tool called customer_feedback on CSS_CUSTOMER_FEEDBACK, and the Data to Chart tool (type data_to_chart) called data_to_chart, so it can draw charts. Use warehouse WILDERNESS_WH. Write its instructions: plain Australian English, short sentences, amounts in AUD, the answer first, and say plainly when the data cannot answer something. Add three sample questions: one about the numbers, one about what customers say, and one that needs both. Then show me the instructions and the tool descriptions you wrote.</code></pre>
 </div>
 
 <div class="info-box success">
     <strong>You should see</strong>
-    <p>The agent created, then the instructions and tool descriptions Cortex Code wrote for it. It also appears in <span class="path">AI &amp; ML » Agents</span> as "Wilderness Assistant".</p>
+    <p>The agent created with three tools, <code>retail_analyst</code>, <code>customer_feedback</code> and <code>data_to_chart</code>, then the instructions and tool descriptions Cortex Code wrote for it. It also appears in <span class="path">AI &amp; ML » Agents</span> as "Wilderness Assistant".</p>
 </div>
 
 <div class="info-box tip">
     <strong>Read the tool descriptions</strong>
     <p>The agent reads each tool's description to decide which one to use. "Sales, returns and stock numbers" and "what customers said" is all it takes to route a question to the right place. When an agent picks the wrong tool, this is the first thing to fix.</p>
 </div>
+
+<details class="callout stuck">
+    <summary>Stuck? Build Steps 2 to 6 in one block</summary>
+    <div>
+        <p>If a prompt in Steps 2 to 4 did not finish, run this in your SQL file instead. It builds the feedback search, the semantic view changes and the Wilderness Assistant in <code>LAB1_ASSISTANT</code>, and adds the assistant to CoWork, so you can carry on from Step 5. It takes about a minute, and running it again replaces what it built.</p>
+        <div class="code-block">
+    <div class="code-header"><span class="code-lang">sql</span><button class="btn-copy" type="button">Copy</button></div>
+    <pre><code>ALTER GIT REPOSITORY WILDERNESS_HOL.SETUP.WORKSHOP_REPO FETCH;
+EXECUTE IMMEDIATE FROM @WILDERNESS_HOL.SETUP.WORKSHOP_REPO/branches/main/setup/90_catch_up_lab1.sql;</code></pre>
+</div>
+    </div>
+</details>
         <label class="completion-checkbox"><input type="checkbox" data-step="4"> Mark step 4 complete</label>
     </div>
 </div>
@@ -1295,7 +1314,7 @@ SELECT 'https://app.snowflake.com/' || LOWER(CURRENT_ORGANIZATION_NAME()) || '/'
 <p>A question about numbers, which should go to <code>retail_analyst</code>:</p>
 <div class="code-block prompt">
     <div class="code-header"><span class="code-lang">cortex code</span><button class="btn-copy" type="button">Copy</button></div>
-    <pre><code>Ask the agent WILDERNESS_HOL.LAB01_AI.WILDERNESS_ASSISTANT: Which stores will run out of sleeping gear before Christmas? Show me its answer and which tool it used.</code></pre>
+    <pre><code>Ask the agent WILDERNESS_HOL.LAB1_ASSISTANT.WILDERNESS_ASSISTANT: Which stores will run out of sleeping gear before Christmas? Show me its answer and which tool it used.</code></pre>
 </div>
 
 <div class="info-box success">
@@ -1341,6 +1360,11 @@ SELECT 'https://app.snowflake.com/' || LOWER(CURRENT_ORGANIZATION_NAME()) || '/'
 </div>
 
 <div class="info-box info">
+    <strong>"The store managers can't use it yet"</strong>
+    <p>Cortex Code may add that store managers need a role with access to the agent and its tools. That is right, and you do not need it today: you sign in as <code>ACCOUNTADMIN</code>, so the agent is yours to use in CoWork straight away. The technical track builds the store-manager role in Lab 3.</p>
+</div>
+
+<div class="info-box info">
     <strong>CoWork in SQL</strong>
     <p>SQL still uses CoWork's earlier name, so the statement says <code>SNOWFLAKE INTELLIGENCE</code> and the account's CoWork object is <code>SNOWFLAKE_INTELLIGENCE_OBJECT_DEFAULT</code>. You will see both in what Cortex Code ran.</p>
 </div>
@@ -1350,7 +1374,7 @@ SELECT 'https://app.snowflake.com/' || LOWER(CURRENT_ORGANIZATION_NAME()) || '/'
 <div class="step-card" id="step-7">
     <div class="step-header">
         <span class="step-number">7</span>
-        <h2 class="step-title">Ask it three questions in CoWork</h2>
+        <h2 class="step-title">Numbers, words, then both</h2>
         <span class="step-duration">~8 min</span>
     </div>
     <div class="step-content">
@@ -1358,7 +1382,7 @@ SELECT 'https://app.snowflake.com/' || LOWER(CURRENT_ORGANIZATION_NAME()) || '/'
 
 <ol class="ui-steps">
     <li>Open <a href="https://ai.snowflake.com" target="_blank" rel="noopener">ai.snowflake.com</a> in a new tab and sign in with the same account.</li>
-    <li>Choose <span class="path">Wilderness Assistant</span> and ask the three questions below, in order, in one conversation.</li>
+    <li>Choose <span class="path">Wilderness Assistant</span> and ask the questions below, in order, in one conversation: the numbers, then the words, then both.</li>
 </ol>
 
 <p>The numbers, from the semantic view:</p>
@@ -1381,7 +1405,7 @@ SELECT 'https://app.snowflake.com/' || LOWER(CURRENT_ORGANIZATION_NAME()) || '/'
 
 <div class="info-box success">
     <strong>You should see</strong>
-    <p>First, tents left over in Victoria and Tasmania and Summit 3P stockouts in New South Wales and Queensland. Second, comments quoted word for word about poles snapping at the hub and seams leaking. Third, both tools in the thinking steps, batch <code>B26-07</code> coming back at about 17% against about 4% for the other batches, and a chart.</p>
+    <p>First, tents left over in Victoria and Tasmania and tents running out in New South Wales and Queensland. Second, comments quoted word for word about poles snapping at the hub and seams leaking. Third, both tools in the thinking steps, batch <code>B26-07</code> coming back at about 17% against about 4% for the other batches, and a chart.</p>
 </div>
 
 <figure class="shot-slot"><figcaption>Screenshot to come: The combined answer in CoWork, with the chart<br><code>images/lab1_step7_cowork.png</code></figcaption></figure>
@@ -1429,7 +1453,7 @@ SELECT 'https://app.snowflake.com/' || LOWER(CURRENT_ORGANIZATION_NAME()) || '/'
         <span class="step-duration">~6 min</span>
     </div>
     <div class="step-content">
-<p>An automation asks a question again on a schedule and emails you the answer, so the store managers do not have to remember to ask.</p>
+<p>This is where the sleeping-gear problem first reaches the people who can act on it. An automation asks a question again on a schedule and emails the answer, so every morning the stores short of sleeping gear land in the store manager's inbox, in time to reorder by 13 November, without anyone remembering to ask.</p>
 
 <ol class="ui-steps">
     <li>In the same conversation, ask the question below.</li>
@@ -1475,7 +1499,7 @@ SELECT 'https://app.snowflake.com/' || LOWER(CURRENT_ORGANIZATION_NAME()) || '/'
 
 <div class="code-block prompt">
     <div class="code-header"><span class="code-lang">cortex code</span><button class="btn-copy" type="button">Copy</button></div>
-    <pre><code>Add the skill at @WILDERNESS_HOL.GIT.WORKSHOP_REPO/branches/main/skills/christmas-trading-report to the agent WILDERNESS_HOL.LAB01_AI.WILDERNESS_ASSISTANT. Also give the agent the code execution tool, and a custom tool called send_report_email for the procedure WILDERNESS_HOL.LAB01_AI.SEND_REPORT_EMAIL on warehouse WILDERNESS_WH, described as: Emails a finished HTML briefing to the person asking. Call only from the christmas-trading-report skill. Add to its orchestration instructions: use the christmas-trading-report skill only when the user asks for a briefing or report to be sent, and never call send_report_email outside that skill. Keep everything else as it is, then show me the agent's tools and skills.</code></pre>
+    <pre><code>Add the skill at @WILDERNESS_HOL.SETUP.WORKSHOP_REPO/branches/main/skills/christmas-trading-report to the agent WILDERNESS_HOL.LAB1_ASSISTANT.WILDERNESS_ASSISTANT. Also give the agent the code execution tool, and a custom tool called send_report_email for the procedure WILDERNESS_HOL.LAB1_ASSISTANT.SEND_REPORT_EMAIL on warehouse WILDERNESS_WH, described as: Emails a finished HTML briefing to the person asking. Call only from the christmas-trading-report skill. Add to its orchestration instructions: use the christmas-trading-report skill only when the user asks for a briefing or report to be sent, and never call send_report_email outside that skill. Keep everything else as it is, then show me the agent's tools and skills.</code></pre>
 </div>
 
 <div class="info-box success">
@@ -1499,10 +1523,24 @@ SELECT 'https://app.snowflake.com/' || LOWER(CURRENT_ORGANIZATION_NAME()) || '/'
 
 <div class="info-box success">
     <strong>You should see</strong>
-    <p>The thinking steps name the skill <code>christmas-trading-report</code>, then the <code>retail_analyst</code> and <code>customer_feedback</code> calls, a code step and <code>send_report_email</code>. After two to four minutes the reply ends with "Sent to" your email. The email comes from <code>no-reply@snowflake.net</code>, so check junk: three tiles (about AUD 898,000 of tents over what will sell, the 17.2% return rate on batch B26-07 and 31 stores short of sleeping gear), the tents, the kit, three customer comments and three things to do this week.</p>
+    <p>The thinking steps name the skill <code>christmas-trading-report</code>, then the <code>retail_analyst</code> and <code>customer_feedback</code> calls, a code step and <code>send_report_email</code>. After two to four minutes the reply ends with "Sent to" your email. The email comes from <code>no-reply@snowflake.net</code>, so check junk: three tiles (about AUD 898,000 of tents left over on Boxing Day, the 17.2% return rate on the faulty batch, B26-07, and 31 stores short of sleeping gear), the tents, the sleeping gear, three customer comments and three things to do this week.</p>
 </div>
 
 <figure class="shot-slot"><figcaption>Screenshot to come: The Christmas stock briefing in your inbox<br><code>images/lab1_step10_email.png</code></figcaption></figure>
+    </div>
+</div>
+<div class="step-card optional" id="step-11">
+    <div class="step-header">
+        <span class="step-number">11</span>
+        <h2 class="step-title">Continue to Lab 2 <span class="badge-optional">Next lab</span></h2>
+        <span class="step-duration">~1 min</span>
+    </div>
+    <div class="step-content">
+<p>The store managers know where they stand. Next, the merchandising team needs to know what to do about it, store by store: what to move, what to reorder and what to send back.</p>
+
+<p>Lab 2 works from the raw data the setup script loaded, so you can start it whether or not you finished every step here.</p>
+
+<p><a class="btn-primary" href="lab2_workspaces.html">Continue to Lab 2 &rarr;</a></p>
     </div>
 </div>
     </main>
@@ -1526,6 +1564,7 @@ SELECT 'https://app.snowflake.com/' || LOWER(CURRENT_ORGANIZATION_NAME()) || '/'
 <section class="completion-section" id="completionSection">
     <div class="completion-container">
 <h2>Lab 1 complete</h2>
+<p>The store managers now know where they stand: where tents will be left over and where they will run out, what customers are saying about the Summit 2P, and which stores are short of sleeping gear, every morning in their inbox.</p>
 <p>In an hour, and in plain English, you made 20,000 comments searchable, taught a semantic view Wilderness's words, built an assistant with three tools, put it in front of the store managers, kept a chart and scheduled a report. Cortex Code wrote and ran every statement; you read what it did.</p>
 <p>Next, an analyst goes past the assistant and turns the raw data into a plan for every store.</p>
         <div class="cta-row">

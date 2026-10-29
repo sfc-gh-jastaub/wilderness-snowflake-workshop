@@ -1039,11 +1039,11 @@ a.lab-card:hover { box-shadow: var(--shadow-md); border-color: var(--sf-blue); c
             <div class="overview-card">
                 <h3>What you will build</h3>
                 <ul class="learning-list">
-                    <li>Freeze this morning's assistant as a baseline version, so CoWork keeps using it while you work.</li>
+                    <li>Freeze the production copy of the assistant as a baseline version, before you change anything.</li>
                     <li>Score it on eight questions with an agent evaluation, and read why the low scores are low.</li>
                     <li>Teach the semantic view two Wilderness terms, and prove the fix with a semantic view evaluation.</li>
                     <li>Have Cortex Code rewrite the agent's instructions from the evaluation results, as a new version.</li>
-                    <li>Evaluate the new version, compare the two runs, and promote it to production.</li>
+                    <li>Evaluate the new version, compare the two runs, and promote it to production in CoWork.</li>
                     <li>Set a monthly budget for the project and a daily AI limit for store managers.</li>
                     <li>Give store managers their own role, hide member emails from them, and prove it.</li>
                 </ul>
@@ -1061,7 +1061,7 @@ a.lab-card:hover { box-shadow: var(--shadow-md); border-color: var(--sf-blue); c
                     <span class="tech-tag">Masking policies</span>
                 </div>
                 <h3 style="margin-top:var(--space-xl);">The situation</h3>
-                <p>The store managers like the assistant. Tom Walsh, Head of Data &amp; Analytics, wants proof before 72 stores lean on it every morning to Christmas Eve: is it right, what will it cost, and who can see what.</p>
+                <p>Technical track. Over lunch, Tom Walsh's team set the morning's assistant up as the production copy the stores will use. Tom, Head of Data &amp; Analytics, wants proof before 72 stores lean on it every morning to Christmas Eve: is it right, what will it cost, and who can see what.</p>
             </div>
         </div>
     </div>
@@ -1091,31 +1091,17 @@ a.lab-card:hover { box-shadow: var(--shadow-md); border-color: var(--sf-blue); c
     </nav>
 
     <main class="steps-container" id="steps">
+<div class="info-box info">
+    <strong>Technical track: can we trust it until Christmas Eve?</strong>
+    <p>Over lunch, Tom Walsh's team set the morning's assistant up as the production copy the stores will use. This afternoon you test it, fix it and harden it. The production copy is already in your account, so this lab does not depend on how far you got in Lab 1 or Lab 2.</p>
+</div>
+
 <div class="info-box warning">
     <strong>Synthetic data</strong>
-    <p>Wilderness Outfitters is a fictional company. All stores, products, people, sales, feedback and documents in this workshop are synthetic and generated for training. Any resemblance to a real business is coincidental.</p>
+    <p>Wilderness Outfitters is a fictional company. All stores, products, people, sales and feedback in this workshop are synthetic and generated for training. Any resemblance to a real business is coincidental.</p>
 </div>
 
 <p>You run this lab's SQL in one SQL file. In Snowsight, go to <span class="path">Projects » Workspaces</span>, select <span class="path">+ Add new » SQL File</span>, name it <code class="chip" title="Select to copy">lab3.sql</code>, and keep it open all afternoon. Paste each block into it and select <span class="path">Run all</span>, unless a step says otherwise. The evaluations, the semantic view and Cortex Code are in other Snowsight pages; each step says where.</p>
-
-<details class="callout">
-    <summary>Running late? Build the morning's end state first</summary>
-    <div>
-        <p>Lab 3 starts from the assistant you built in Lab 1 and the stock plan from Lab 2. If either is missing, run the block for it now, <strong>before Step 1</strong>. Do not run them after Step 1: they rebuild the assistant, which deletes its versions and its evaluation runs.</p>
-        <p>Lab 1 (the assistant, its tools, the semantic view changes and CoWork), about 30 seconds:</p>
-        <div class="code-block">
-    <div class="code-header"><span class="code-lang">sql</span><button class="btn-copy" type="button">Copy</button></div>
-    <pre><code>ALTER GIT REPOSITORY WILDERNESS_HOL.GIT.WORKSHOP_REPO FETCH;
-EXECUTE IMMEDIATE FROM @WILDERNESS_HOL.GIT.WORKSHOP_REPO/branches/main/setup/90_catch_up_lab1.sql;</code></pre>
-</div>
-        <p>Lab 2 (the stock plan view and the app), about a minute:</p>
-        <div class="code-block">
-    <div class="code-header"><span class="code-lang">sql</span><button class="btn-copy" type="button">Copy</button></div>
-    <pre><code>ALTER GIT REPOSITORY WILDERNESS_HOL.GIT.WORKSHOP_REPO FETCH;
-EXECUTE IMMEDIATE FROM @WILDERNESS_HOL.GIT.WORKSHOP_REPO/branches/main/setup/91_catch_up_lab2.sql;</code></pre>
-</div>
-    </div>
-</details>
 
 <div class="step-card" id="step-1">
     <div class="step-header">
@@ -1126,50 +1112,49 @@ EXECUTE IMMEDIATE FROM @WILDERNESS_HOL.GIT.WORKSHOP_REPO/branches/main/setup/91_
     <div class="step-content">
 <p>Tom Walsh: "The store managers like it. Before 72 stores lean on it every morning to Christmas Eve I need to know it is right, what it will cost and who can see what. And I need you to set the limits."</p>
 
-<p>This step checks that everything from the morning is in place, then freezes the assistant as it is now, so you can change it this afternoon without the store managers noticing.</p>
+<p>This step checks that the production copy is in place, then freezes it as it is now, so you can change it this afternoon and always have a known starting point to go back to.</p>
 
 <h3>Check the starting line</h3>
 
 <div class="code-block">
     <div class="code-header"><span class="code-lang">sql</span><button class="btn-copy" type="button">Copy</button></div>
-    <pre><code>-- Lab 3 Step 1, block 1: check the starting line. Every row should say OK.
+    <pre><code>-- Lab 3 Step 1, block 1: check the production copy setup built. Every row should say OK.
+-- The first three lines set this SQL file's context for the rest of the afternoon.
+USE ROLE ACCOUNTADMIN;
+USE WAREHOUSE WILDERNESS_WH;
+USE SCHEMA WILDERNESS_HOL.LAB3_PRODUCTION;
+
 EXECUTE IMMEDIATE $$
 DECLARE
   v_tools   VARCHAR DEFAULT '';
   v_metric  INT DEFAULT 0;
   v_search  INT DEFAULT 0;
   v_dataset INT DEFAULT 0;
-  v_rows    INT DEFAULT 0;
   res RESULTSET;
 BEGIN
-  CREATE OR REPLACE TEMPORARY TABLE LAB3_CHECK (CHECK_NAME VARCHAR, STATUS VARCHAR, DETAIL VARCHAR);
+  CREATE OR REPLACE TEMPORARY TABLE WILDERNESS_HOL.LAB3_PRODUCTION.LAB3_CHECK (CHECK_NAME VARCHAR, STATUS VARCHAR, DETAIL VARCHAR);
 
   BEGIN
-    DESCRIBE AGENT WILDERNESS_HOL.AGENTS.WILDERNESS_ASSISTANT;
+    DESCRIBE AGENT WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_ASSISTANT;
     SELECT ARRAY_TO_STRING(ARRAY_AGG(t.value:tool_spec:name::VARCHAR), ', ') INTO :v_tools
       FROM TABLE(RESULT_SCAN(LAST_QUERY_ID())) d, LATERAL FLATTEN(PARSE_JSON(d."agent_spec"):tools) t;
   EXCEPTION WHEN OTHER THEN v_tools := '';
   END;
-  INSERT INTO LAB3_CHECK SELECT 'Wilderness Assistant and its tools',
-    IFF(CONTAINS(:v_tools, 'retail_analyst') AND CONTAINS(:v_tools, 'customer_feedback'), 'OK', 'MISSING'), :v_tools;
+  INSERT INTO LAB3_CHECK SELECT 'Production Wilderness Assistant and its tools',
+    IFF(CONTAINS(:v_tools, 'retail_analyst') AND CONTAINS(:v_tools, 'customer_feedback')
+        AND CONTAINS(:v_tools, 'data_to_chart'), 'OK', 'MISSING'), :v_tools;
 
-  SHOW CORTEX SEARCH SERVICES LIKE 'CSS_CUSTOMER_FEEDBACK' IN SCHEMA WILDERNESS_HOL.AI;
+  SHOW CORTEX SEARCH SERVICES LIKE 'CSS_CUSTOMER_FEEDBACK' IN SCHEMA WILDERNESS_HOL.LAB3_PRODUCTION;
   SELECT COUNT(*) INTO :v_search FROM TABLE(RESULT_SCAN(LAST_QUERY_ID()));
-  INSERT INTO LAB3_CHECK SELECT 'Customer feedback search', IFF(:v_search = 1, 'OK', 'MISSING'), 'AI.CSS_CUSTOMER_FEEDBACK';
+  INSERT INTO LAB3_CHECK SELECT 'Customer feedback search', IFF(:v_search = 1, 'OK', 'MISSING'), 'LAB3_PRODUCTION.CSS_CUSTOMER_FEEDBACK';
 
-  SHOW SEMANTIC METRICS IN WILDERNESS_HOL.ANALYTICS.SV_WILDERNESS_RETAIL;
+  SHOW SEMANTIC METRICS IN WILDERNESS_HOL.LAB3_PRODUCTION.SV_WILDERNESS_RETAIL;
   SELECT COUNT(*) INTO :v_metric FROM TABLE(RESULT_SCAN(LAST_QUERY_ID())) WHERE "name" = 'RETURN_RATE';
-  INSERT INTO LAB3_CHECK SELECT 'RETURN_RATE on the semantic view', IFF(:v_metric = 1, 'OK', 'MISSING'), 'Lab 1 Step 3';
+  INSERT INTO LAB3_CHECK SELECT 'RETURN_RATE on the semantic view', IFF(:v_metric = 1, 'OK', 'MISSING'), 'LAB3_PRODUCTION.SV_WILDERNESS_RETAIL';
 
-  BEGIN
-    SELECT COUNT(*) INTO :v_rows FROM WILDERNESS_HOL.ANALYTICS.V_CHRISTMAS_STOCK_RISK;
-  EXCEPTION WHEN OTHER THEN v_rows := 0;
-  END;
-  INSERT INTO LAB3_CHECK SELECT 'Christmas stock plan (Lab 2)', IFF(:v_rows &gt; 0, 'OK', 'MISSING'), :v_rows || ' rows';
-
-  SHOW DATASETS LIKE 'CHRISTMAS_EVAL_SET' IN SCHEMA WILDERNESS_HOL.EVALS;
+  SHOW DATASETS LIKE 'CHRISTMAS_EVAL_SET' IN SCHEMA WILDERNESS_HOL.LAB3_PRODUCTION;
   SELECT COUNT(*) INTO :v_dataset FROM TABLE(RESULT_SCAN(LAST_QUERY_ID()));
-  INSERT INTO LAB3_CHECK SELECT 'Evaluation dataset', IFF(:v_dataset = 1, 'OK', 'MISSING'), 'EVALS.CHRISTMAS_EVAL_SET, 8 questions';
+  INSERT INTO LAB3_CHECK SELECT 'Evaluation dataset', IFF(:v_dataset = 1, 'OK', 'MISSING'), 'LAB3_PRODUCTION.CHRISTMAS_EVAL_SET, 8 questions';
 
   res := (SELECT * FROM LAB3_CHECK);
   RETURN TABLE(res);
@@ -1179,42 +1164,42 @@ $$;</code></pre>
 
 <div class="info-box success">
     <strong>You should see</strong>
-    <p>Five rows, all <code>OK</code>: the Wilderness Assistant with its tools (<code>retail_analyst</code>, <code>customer_feedback</code> and <code>data_to_chart</code>), the customer feedback search, <code>RETURN_RATE</code> on the semantic view, the Christmas stock plan from Lab 2 and an evaluation dataset of eight questions, which setup made for this lab. You used the assistant in CoWork this morning, so that part is in place too.</p>
+    <p>Every row <code>OK</code>: the production Wilderness Assistant with its tools (<code>retail_analyst</code>, <code>customer_feedback</code> and <code>data_to_chart</code>), its customer feedback search, <code>RETURN_RATE</code> on its semantic view, and an evaluation dataset of eight questions. Setup built all of it for this lab.</p>
 </div>
 
 <div class="info-box tip">
     <strong>A row says MISSING</strong>
-    <p>Open <strong>Running late?</strong> above this step and run the block for the lab it belongs to, then run the check again.</p>
+    <p>Run the setup script from Lab 1 Step 1 again. It rebuilds the production copy and leaves everything else as it was. Then run the check again. Do this only before you freeze the baseline: rebuilding the agent deletes its versions and its evaluation runs.</p>
 </div>
 
 <h3>Freeze the baseline</h3>
 
-<p>An agent keeps a working draft and a list of committed versions. A committed version never changes. This block commits the draft as a new version, labels it <code>baseline</code> and makes it the default, the version CoWork uses.</p>
+<p>An agent keeps a working draft and a list of committed versions. A committed version never changes. This block commits the draft as a new version, labels it <code>baseline</code> and makes it the default, the version anyone who asks the agent gets.</p>
 
 <div class="code-block">
     <div class="code-header"><span class="code-lang">sql</span><button class="btn-copy" type="button">Copy</button></div>
     <pre><code>-- Lab 3 Step 1, block 2: freeze the agent you built this morning as the baseline.
 -- Commits the draft as a new version, labels it baseline, and makes it the version CoWork uses,
 -- so nothing you change later in this lab reaches the store managers until you promote it.
-ALTER AGENT WILDERNESS_HOL.AGENTS.WILDERNESS_ASSISTANT
+ALTER AGENT WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_ASSISTANT
   COMMIT COMMENT = 'Baseline: the agent from Lab 1, before any Lab 3 change';
 
 EXECUTE IMMEDIATE $$
 DECLARE
   v_version VARCHAR;
 BEGIN
-  SHOW VERSIONS IN AGENT WILDERNESS_HOL.AGENTS.WILDERNESS_ASSISTANT;
+  SHOW VERSIONS IN AGENT WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_ASSISTANT;
   SELECT "name" INTO :v_version FROM TABLE(RESULT_SCAN(LAST_QUERY_ID()))
     WHERE "name" IS NOT NULL ORDER BY "created_on" DESC LIMIT 1;
-  EXECUTE IMMEDIATE 'ALTER AGENT WILDERNESS_HOL.AGENTS.WILDERNESS_ASSISTANT MODIFY VERSION '
+  EXECUTE IMMEDIATE 'ALTER AGENT WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_ASSISTANT MODIFY VERSION '
                  || :v_version || ' SET ALIAS = baseline';
-  EXECUTE IMMEDIATE 'ALTER AGENT WILDERNESS_HOL.AGENTS.WILDERNESS_ASSISTANT SET DEFAULT_VERSION = '''
+  EXECUTE IMMEDIATE 'ALTER AGENT WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_ASSISTANT SET DEFAULT_VERSION = '''
                  || :v_version || '''';
   RETURN 'Baseline is ' || :v_version || ', and CoWork now uses it';
 END;
 $$;
 
-SHOW VERSIONS IN AGENT WILDERNESS_HOL.AGENTS.WILDERNESS_ASSISTANT;</code></pre>
+SHOW VERSIONS IN AGENT WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_ASSISTANT;</code></pre>
 </div>
 
 <div class="info-box success">
@@ -1224,13 +1209,13 @@ SHOW VERSIONS IN AGENT WILDERNESS_HOL.AGENTS.WILDERNESS_ASSISTANT;</code></pre>
 
 <div class="info-box info">
     <strong>Why pin the default</strong>
-    <p>Until you pin it, the default is the latest commit, so committing a change this afternoon would switch every store manager to it before anyone had tested it. Pinned, CoWork stays on the baseline until Step 6 promotes a better version. You never type a version number: the blocks look it up.</p>
+    <p>Until you pin it, the default is the latest commit, so committing a change this afternoon would make it the version everyone gets before anyone had tested it. Pinned, the default stays on the baseline until Step 6 promotes a better version and puts it in CoWork. You never type a version number: the blocks look it up.</p>
 </div>
 
 <details class="callout stuck">
     <summary>Stuck? "No live version to commit"</summary>
     <div>
-        <p>You already ran the block once, so there is nothing new to commit. Run <code class="chip" title="Select to copy">SHOW VERSIONS IN AGENT WILDERNESS_HOL.AGENTS.WILDERNESS_ASSISTANT;</code> and check that one version has the alias <code>BASELINE</code> and <code>is_default</code> true. If it does, carry on.</p>
+        <p>You already ran the block once, so there is nothing new to commit. Run <code class="chip" title="Select to copy">SHOW VERSIONS IN AGENT WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_ASSISTANT;</code> and check that one version has the alias <code>BASELINE</code> and <code>is_default</code> true. If it does, carry on.</p>
     </div>
 </details>
         <label class="completion-checkbox"><input type="checkbox" data-step="1"> Mark step 1 complete</label>
@@ -1274,7 +1259,7 @@ SELECT QUESTION_ID AS "#",
        INPUT_QUERY AS QUESTION,
        GROUND_TRUTH:ground_truth_output::VARCHAR AS RIGHT_ANSWER,
        ARRAY_TO_STRING(TRANSFORM(GROUND_TRUTH:ground_truth_invocations::ARRAY, t -&gt; t:tool_name::VARCHAR), ', ') AS EXPECTED_TOOLS
-FROM WILDERNESS_HOL.EVALS.AGENT_EVAL_QUESTIONS
+FROM WILDERNESS_HOL.LAB3_PRODUCTION.AGENT_EVAL_QUESTIONS
 ORDER BY QUESTION_ID;</code></pre>
 </div>
 
@@ -1339,7 +1324,7 @@ ORDER BY QUESTION_ID;</code></pre>
 
 <div class="code-block prompt">
     <div class="code-header"><span class="code-lang">cortex code</span><button class="btn-copy" type="button">Copy</button></div>
-    <pre><code>Use the agent-studio skill. Look at the evaluation run baseline_run for the agent WILDERNESS_HOL.AGENTS.WILDERNESS_ASSISTANT. Group the low-scoring records into failure patterns. For each pattern, say whether it should be fixed in the semantic view or in the agent's instructions, and why. Do not change anything.</code></pre>
+    <pre><code>Use the agent-studio skill. Look at the evaluation run baseline_run for the agent WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_ASSISTANT. Group the low-scoring records into failure patterns. For each pattern, say whether it should be fixed in the semantic view or in the agent's instructions, and why. Do not change anything.</code></pre>
 </div>
 
 <div class="info-box success">
@@ -1371,7 +1356,7 @@ ORDER BY QUESTION_ID;</code></pre>
 <h3>1. Add two verified queries</h3>
 
 <ol class="ui-steps">
-    <li>Go to <span class="path">AI &amp; ML » Cortex Analyst</span>, open <code class="chip" title="Select to copy">SV_WILDERNESS_RETAIL</code> and select <span class="path">Edit</span>.</li>
+    <li>Go to <span class="path">AI &amp; ML » Cortex Analyst</span>, open <code class="chip" title="Select to copy">SV_WILDERNESS_RETAIL</code> in <code>LAB3_PRODUCTION</code> (not the one in <code>LAB1_ASSISTANT</code>) and select <span class="path">Edit</span>.</li>
     <li>Add each verified query below with its question and its SQL, then select <span class="path">Save</span>.</li>
 </ol>
 
@@ -1469,7 +1454,7 @@ WHERE s.order_date BETWEEN '2025-12-18' AND '2025-12-24'</code></pre>
 
 <div class="code-block prompt">
     <div class="code-header"><span class="code-lang">cortex code</span><button class="btn-copy" type="button">Copy</button></div>
-    <pre><code>Use the agent-studio skill. Based on the failures in evaluation run baseline_run for the agent WILDERNESS_HOL.AGENTS.WILDERNESS_ASSISTANT, improve only the orchestration and response instructions. The semantic view already defines Wilderness's trading terms, such as the launch weekend, so do not put dates or definitions in the instructions. Do not change the tools, the tool descriptions, the semantic view or anything else. Run SHOW VERSIONS IN AGENT before and after. Commit the change as a new version, never overwrite an existing one, and give the new version the alias candidate, without quotes. Do not change the default version. Do not start an evaluation.</code></pre>
+    <pre><code>Use the agent-studio skill. Based on the failures in evaluation run baseline_run for the agent WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_ASSISTANT, improve only the orchestration and response instructions. The semantic view already defines Wilderness's trading terms, such as the launch weekend, so do not put dates or definitions in the instructions. Do not change the tools, the tool descriptions, the semantic view or anything else. Run SHOW VERSIONS IN AGENT before and after. Commit the change as a new version, never overwrite an existing one, and give the new version the alias candidate, without quotes. Do not change the default version. Do not start an evaluation.</code></pre>
 </div>
 
 <div class="info-box success">
@@ -1485,18 +1470,18 @@ WHERE s.order_date BETWEEN '2025-12-18' AND '2025-12-24'</code></pre>
 <details class="callout stuck">
     <summary>Prefer a known-good version?</summary>
     <div>
-        <p>If Cortex Code did not finish, or changed more than the instructions, run this instead. It opens a draft from your latest version, replaces only the response and orchestration instructions with the ones the build tested, keeps everything else (your tool descriptions, and the skill if you did Lab 1 Step 9), commits, and labels the new version <code>candidate</code>. Use it only if no version is labelled <code>candidate</code> yet.</p>
+        <p>If Cortex Code did not finish, or changed more than the instructions, run this instead. It opens a draft from your latest version, replaces only the response and orchestration instructions with the ones the build tested, keeps everything else, including the tool descriptions, commits, and labels the new version <code>candidate</code>. Use it only if no version is labelled <code>candidate</code> yet.</p>
         <div class="code-block">
     <div class="code-header"><span class="code-lang">sql</span><button class="btn-copy" type="button">Copy</button></div>
     <pre><code>-- Lab 3 Step 5, known-good version: your agent as it is, with improved instructions only.
-ALTER AGENT WILDERNESS_HOL.AGENTS.WILDERNESS_ASSISTANT ADD LIVE VERSION FROM LAST;
+ALTER AGENT WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_ASSISTANT ADD LIVE VERSION FROM LAST;
 
 EXECUTE IMMEDIATE $$
 DECLARE
   v_spec VARIANT;
   v_ins VARIANT;
 BEGIN
-  SHOW VERSIONS IN AGENT WILDERNESS_HOL.AGENTS.WILDERNESS_ASSISTANT;
+  SHOW VERSIONS IN AGENT WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_ASSISTANT;
   SELECT PARSE_JSON("agent_spec") INTO :v_spec FROM TABLE(RESULT_SCAN(LAST_QUERY_ID())) WHERE "name" IS NULL;
   v_ins := COALESCE(v_spec:instructions, OBJECT_CONSTRUCT());
   v_ins := OBJECT_INSERT(v_ins, 'response',
@@ -1504,28 +1489,28 @@ BEGIN
   v_ins := OBJECT_INSERT(v_ins, 'orchestration',
     'Use retail_analyst for any number and customer_feedback for what customers said. Call each tool once per question, and call it again only if the first result was empty or failed. For ''why'' and ''what can we do'' questions use both tools, retail_analyst first. Wilderness trading terms such as the launch weekend, Peak Week and the Christmas trading period are defined in the semantic view: pass the user''s words to retail_analyst rather than guessing dates or asking the user what they mean. Chart comparisons and trends.', TRUE);
   v_spec := OBJECT_INSERT(v_spec, 'instructions', v_ins, TRUE);
-  EXECUTE IMMEDIATE 'ALTER AGENT WILDERNESS_HOL.AGENTS.WILDERNESS_ASSISTANT MODIFY LIVE VERSION SET SPECIFICATION = '''
+  EXECUTE IMMEDIATE 'ALTER AGENT WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_ASSISTANT MODIFY LIVE VERSION SET SPECIFICATION = '''
                  || REPLACE(TO_JSON(v_spec), '''', '''''') || '''';
   RETURN 'Draft updated: new response and orchestration instructions';
 END;
 $$;
 
-ALTER AGENT WILDERNESS_HOL.AGENTS.WILDERNESS_ASSISTANT COMMIT COMMENT = 'Candidate: known-good instructions (Lab 3 Step 5)';
+ALTER AGENT WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_ASSISTANT COMMIT COMMENT = 'Candidate: known-good instructions (Lab 3 Step 5)';
 
 EXECUTE IMMEDIATE $$
 DECLARE
   v_version VARCHAR;
 BEGIN
-  SHOW VERSIONS IN AGENT WILDERNESS_HOL.AGENTS.WILDERNESS_ASSISTANT;
+  SHOW VERSIONS IN AGENT WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_ASSISTANT;
   SELECT "name" INTO :v_version FROM TABLE(RESULT_SCAN(LAST_QUERY_ID()))
     WHERE "name" IS NOT NULL ORDER BY "created_on" DESC LIMIT 1;
-  EXECUTE IMMEDIATE 'ALTER AGENT WILDERNESS_HOL.AGENTS.WILDERNESS_ASSISTANT MODIFY VERSION '
+  EXECUTE IMMEDIATE 'ALTER AGENT WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_ASSISTANT MODIFY VERSION '
                  || :v_version || ' SET ALIAS = candidate';
   RETURN 'Candidate is ' || :v_version;
 END;
 $$;
 
-SHOW VERSIONS IN AGENT WILDERNESS_HOL.AGENTS.WILDERNESS_ASSISTANT;</code></pre>
+SHOW VERSIONS IN AGENT WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_ASSISTANT;</code></pre>
 </div>
     </div>
 </details>
@@ -1579,46 +1564,58 @@ SHOW VERSIONS IN AGENT WILDERNESS_HOL.AGENTS.WILDERNESS_ASSISTANT;</code></pre>
 
 <div class="info-box success">
     <strong>You should see</strong>
-    <p>Answer correctness up from about 0.6 to 0.7 to about 0.9 or higher, and tool selection up from about 0.7 to 0.8 to about 1.0. The launch-weekend questions pass, from the semantic view. The weather question improves, from the instructions. Nothing that passed before fails now. Your numbers will differ a little: at the build the baseline scored 0.58 to 0.71 and the candidate 0.92 to 1.00 across several runs.</p>
+    <p>Answer correctness up from about 0.6 to 0.7 to about 0.9 or higher, and tool selection up from about 0.7 to 0.9 to about 1.0. The launch-weekend questions pass, from the semantic view. The weather question improves, from the instructions. Nothing that passed before fails now. Your numbers will differ a little: at the build the baseline scored 0.58 to 0.71 and the candidate 0.92 to 1.00 across several runs.</p>
 </div>
 
 <h3>Promote it</h3>
 
-<p>Labelling it <code>production</code> and making it the default puts it in front of every store manager in CoWork at once.</p>
+<p>Labelling it <code>production</code>, making it the default and adding it to CoWork as <strong>Wilderness Assistant (production)</strong> puts it in front of every store manager at once.</p>
 
 <div class="code-block">
     <div class="code-header"><span class="code-lang">sql</span><button class="btn-copy" type="button">Copy</button></div>
-    <pre><code>-- Lab 3 Step 6, block 1: promote the candidate. CoWork starts using it straight away.
+    <pre><code>-- Lab 3 Step 6, block 1: promote the candidate and put the production assistant in CoWork.
 -- The candidate's label becomes production; the baseline stays as it is, so rolling back is one line.
+-- @ACCOUNT_LEVEL
 EXECUTE IMMEDIATE $$
 DECLARE
   v_version VARCHAR;
+  v_cowork  VARCHAR DEFAULT 'added to CoWork';
 BEGIN
-  SHOW VERSIONS IN AGENT WILDERNESS_HOL.AGENTS.WILDERNESS_ASSISTANT;
+  SHOW VERSIONS IN AGENT WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_ASSISTANT;
   SELECT "name" INTO :v_version FROM TABLE(RESULT_SCAN(LAST_QUERY_ID()))
     WHERE UPPER("alias") = 'CANDIDATE';
   IF (v_version IS NULL) THEN
     RETURN 'No version is labelled candidate yet. Finish Step 5 first.';
   END IF;
-  EXECUTE IMMEDIATE 'ALTER AGENT WILDERNESS_HOL.AGENTS.WILDERNESS_ASSISTANT MODIFY VERSION '
+  EXECUTE IMMEDIATE 'ALTER AGENT WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_ASSISTANT MODIFY VERSION '
                  || :v_version || ' SET ALIAS = production';
-  EXECUTE IMMEDIATE 'ALTER AGENT WILDERNESS_HOL.AGENTS.WILDERNESS_ASSISTANT SET DEFAULT_VERSION = '''
+  EXECUTE IMMEDIATE 'ALTER AGENT WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_ASSISTANT SET DEFAULT_VERSION = '''
                  || :v_version || '''';
-  RETURN 'Promoted ' || :v_version || ' to production; CoWork now uses it';
+  BEGIN
+    ALTER SNOWFLAKE INTELLIGENCE SNOWFLAKE_INTELLIGENCE_OBJECT_DEFAULT ADD AGENT WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_ASSISTANT;
+  EXCEPTION
+    WHEN OTHER THEN
+      IF (CONTAINS(LOWER(:SQLERRM), 'already')) THEN
+        v_cowork := 'already in CoWork';
+      ELSE
+        RAISE;
+      END IF;
+  END;
+  RETURN 'Promoted ' || :v_version || ' to production; Wilderness Assistant (production) ' || :v_cowork;
 END;
 $$;
 
-SHOW VERSIONS IN AGENT WILDERNESS_HOL.AGENTS.WILDERNESS_ASSISTANT;</code></pre>
+SHOW VERSIONS IN AGENT WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_ASSISTANT;</code></pre>
 </div>
 
 <div class="info-box success">
     <strong>You should see</strong>
-    <p><code>Promoted VERSION$3 to production; CoWork now uses it</code> (the number can differ), and in the versions <code>PRODUCTION</code> with <code>is_default</code> true and <code>BASELINE</code> unchanged.</p>
+    <p><code>Promoted VERSION$3 to production; Wilderness Assistant (production) added to CoWork</code> (the number can differ), and in the versions <code>PRODUCTION</code> with <code>is_default</code> true and <code>BASELINE</code> unchanged. In CoWork, <strong>Wilderness Assistant (production)</strong> is listed next to the Wilderness Assistant you built this morning.</p>
 </div>
 
 <div class="info-box tip">
     <strong>Rolling back is one line</strong>
-    <p>If production misbehaves, set the default back to the baseline's version, for example <code class="chip" title="Select to copy">ALTER AGENT WILDERNESS_HOL.AGENTS.WILDERNESS_ASSISTANT SET DEFAULT_VERSION = 'VERSION$2';</code> with the name <code>SHOW VERSIONS</code> gives for <code>BASELINE</code>. Nothing is rebuilt and the runs stay.</p>
+    <p>If production misbehaves, set the default back to the baseline's version, for example <code class="chip" title="Select to copy">ALTER AGENT WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_ASSISTANT SET DEFAULT_VERSION = 'VERSION$2';</code> with the name <code>SHOW VERSIONS</code> gives for <code>BASELINE</code>. Nothing is rebuilt and the runs stay.</p>
 </div>
         <label class="completion-checkbox"><input type="checkbox" data-step="6"> Mark step 6 complete</label>
     </div>
@@ -1664,7 +1661,7 @@ ORDER BY CREDITS DESC;</code></pre>
 
 <div class="info-box info">
     <strong>Same assistant, two lines</strong>
-    <p>The questions you asked in CoWork this morning are billed to CoWork, not to Cortex Agents, even though the same agent answered them. A limit on the agent alone would miss most of what store managers do. That is why the store-manager limit below covers both.</p>
+    <p>The questions you asked in CoWork this morning are billed to CoWork, not to Cortex Agents, even though an agent answered them. A limit on the agent alone would miss most of what store managers do. That is why the store-manager limit below covers both.</p>
 </div>
 
 <h3>2. A budget for the project</h3>
@@ -1678,12 +1675,12 @@ ORDER BY CREDITS DESC;</code></pre>
 -- search service and the tasks in it) and the warehouse. It emails you at 80% and stops the warehouse at 100%.
 USE ROLE ACCOUNTADMIN;
 
-CREATE OR REPLACE SNOWFLAKE.CORE.BUDGET WILDERNESS_HOL.GOVERNANCE.WILDERNESS_PROJECT_BUDGET();
+CREATE OR REPLACE SNOWFLAKE.CORE.BUDGET WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_PROJECT_BUDGET();
 
-CALL WILDERNESS_HOL.GOVERNANCE.WILDERNESS_PROJECT_BUDGET!SET_SPENDING_LIMIT(150);
+CALL WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_PROJECT_BUDGET!SET_SPENDING_LIMIT(150);
 
-CALL WILDERNESS_HOL.GOVERNANCE.WILDERNESS_PROJECT_BUDGET!SET_RESOURCE_TAGS(
-  [[(SELECT SYSTEM$REFERENCE('TAG', 'WILDERNESS_HOL.GOVERNANCE.PROJECT', 'SESSION', 'APPLYBUDGET')), 'wilderness_christmas']],
+CALL WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_PROJECT_BUDGET!SET_RESOURCE_TAGS(
+  [[(SELECT SYSTEM$REFERENCE('TAG', 'WILDERNESS_HOL.SETUP.PROJECT', 'SESSION', 'APPLYBUDGET')), 'wilderness_christmas']],
   'UNION');
 
 -- Email you, through the integration setup made, when spending is heading past 80%.
@@ -1692,15 +1689,15 @@ EXECUTE IMMEDIATE $$
 DECLARE
   v_email VARCHAR;
 BEGIN
-  SELECT MAX(VALUE) INTO :v_email FROM WILDERNESS_HOL.GIT.WORKSHOP_SETTINGS WHERE KEY = 'REPORT_EMAIL';
-  CALL WILDERNESS_HOL.GOVERNANCE.WILDERNESS_PROJECT_BUDGET!SET_EMAIL_NOTIFICATIONS('WILDERNESS_EMAIL', :v_email);
+  SELECT MAX(VALUE) INTO :v_email FROM WILDERNESS_HOL.SETUP.WORKSHOP_SETTINGS WHERE KEY = 'REPORT_EMAIL';
+  CALL WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_PROJECT_BUDGET!SET_EMAIL_NOTIFICATIONS('WILDERNESS_EMAIL', :v_email);
   RETURN 'Budget alerts go to ' || :v_email;
 END;
 $$;
-CALL WILDERNESS_HOL.GOVERNANCE.WILDERNESS_PROJECT_BUDGET!SET_NOTIFICATION_THRESHOLD(80);
+CALL WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_PROJECT_BUDGET!SET_NOTIFICATION_THRESHOLD(80);
 
 -- At 100%, stop the warehouse and keep it stopped until someone turns it back on.
-CREATE OR REPLACE PROCEDURE WILDERNESS_HOL.GOVERNANCE.STOP_WILDERNESS_WH()
+CREATE OR REPLACE PROCEDURE WILDERNESS_HOL.LAB3_PRODUCTION.STOP_WILDERNESS_WH()
 RETURNS VARCHAR
 LANGUAGE SQL
 EXECUTE AS OWNER
@@ -1713,17 +1710,17 @@ BEGIN
 END;
 $$;
 GRANT USAGE ON DATABASE WILDERNESS_HOL TO APPLICATION SNOWFLAKE;
-GRANT USAGE ON SCHEMA WILDERNESS_HOL.GOVERNANCE TO APPLICATION SNOWFLAKE;
-GRANT USAGE ON PROCEDURE WILDERNESS_HOL.GOVERNANCE.STOP_WILDERNESS_WH() TO APPLICATION SNOWFLAKE;
-CALL WILDERNESS_HOL.GOVERNANCE.WILDERNESS_PROJECT_BUDGET!ADD_CUSTOM_ACTION(
-  SYSTEM$REFERENCE('PROCEDURE', 'WILDERNESS_HOL.GOVERNANCE.STOP_WILDERNESS_WH()'),
+GRANT USAGE ON SCHEMA WILDERNESS_HOL.LAB3_PRODUCTION TO APPLICATION SNOWFLAKE;
+GRANT USAGE ON PROCEDURE WILDERNESS_HOL.LAB3_PRODUCTION.STOP_WILDERNESS_WH() TO APPLICATION SNOWFLAKE;
+CALL WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_PROJECT_BUDGET!ADD_CUSTOM_ACTION(
+  SYSTEM$REFERENCE('PROCEDURE', 'WILDERNESS_HOL.LAB3_PRODUCTION.STOP_WILDERNESS_WH()'),
   ARRAY_CONSTRUCT(),
   'ACTUAL',
   100);
 
 -- What the budget watches, and what it does.
-CALL WILDERNESS_HOL.GOVERNANCE.WILDERNESS_PROJECT_BUDGET!GET_RESOURCE_TAGS();
-CALL WILDERNESS_HOL.GOVERNANCE.WILDERNESS_PROJECT_BUDGET!GET_CUSTOM_ACTIONS();</code></pre>
+CALL WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_PROJECT_BUDGET!GET_RESOURCE_TAGS();
+CALL WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_PROJECT_BUDGET!GET_CUSTOM_ACTIONS();</code></pre>
 </div>
 
 <div class="info-box success">
@@ -1747,39 +1744,39 @@ CREATE USER IF NOT EXISTS STORE_MANAGER_DEMO
   COMMENT = 'Wilderness workshop: a demo store manager for the AI quota and the masking test';
 
 -- The team tag that decides who the limit applies to.
-CREATE TAG IF NOT EXISTS WILDERNESS_HOL.GOVERNANCE.TEAM ALLOWED_VALUES 'store_managers';
-ALTER USER STORE_MANAGER_DEMO SET TAG WILDERNESS_HOL.GOVERNANCE.TEAM = 'store_managers';
+CREATE TAG IF NOT EXISTS WILDERNESS_HOL.LAB3_PRODUCTION.TEAM ALLOWED_VALUES 'store_managers';
+ALTER USER STORE_MANAGER_DEMO SET TAG WILDERNESS_HOL.LAB3_PRODUCTION.TEAM = 'store_managers';
 
-CREATE OR REPLACE SNOWFLAKE.CORE.QUOTA WILDERNESS_HOL.GOVERNANCE.WILDERNESS_STORE_QUOTA();
+CREATE OR REPLACE SNOWFLAKE.CORE.QUOTA WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_STORE_QUOTA();
 
 -- What it counts: CoWork and Cortex Agents, the two ways a store manager reaches the assistant.
-CALL WILDERNESS_HOL.GOVERNANCE.WILDERNESS_STORE_QUOTA!ADD_SHARED_RESOURCE('SNOWFLAKE INTELLIGENCE');
-CALL WILDERNESS_HOL.GOVERNANCE.WILDERNESS_STORE_QUOTA!ADD_SHARED_RESOURCE('CORTEX AGENT');
+CALL WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_STORE_QUOTA!ADD_SHARED_RESOURCE('SNOWFLAKE INTELLIGENCE');
+CALL WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_STORE_QUOTA!ADD_SHARED_RESOURCE('CORTEX AGENT');
 
 -- Who it covers: users tagged store_managers, plus the demo user by name, never you.
-CALL WILDERNESS_HOL.GOVERNANCE.WILDERNESS_STORE_QUOTA!SET_USER_TAGS(
-  [[(SELECT SYSTEM$REFERENCE('TAG', 'WILDERNESS_HOL.GOVERNANCE.TEAM', 'SESSION', 'APPLYBUDGET')), 'store_managers']],
+CALL WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_STORE_QUOTA!SET_USER_TAGS(
+  [[(SELECT SYSTEM$REFERENCE('TAG', 'WILDERNESS_HOL.LAB3_PRODUCTION.TEAM', 'SESSION', 'APPLYBUDGET')), 'store_managers']],
   'UNION');
-CALL WILDERNESS_HOL.GOVERNANCE.WILDERNESS_STORE_QUOTA!INCLUDE_USERS(['STORE_MANAGER_DEMO']);
+CALL WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_STORE_QUOTA!INCLUDE_USERS(['STORE_MANAGER_DEMO']);
 EXECUTE IMMEDIATE $$
 BEGIN
-  EXECUTE IMMEDIATE 'CALL WILDERNESS_HOL.GOVERNANCE.WILDERNESS_STORE_QUOTA!EXCLUDE_USERS(''USER'', [''' ||
+  EXECUTE IMMEDIATE 'CALL WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_STORE_QUOTA!EXCLUDE_USERS(''USER'', [''' ||
                     REPLACE(CURRENT_USER(), '''', '''''') || '''])';
   RETURN 'You are excluded from the store manager quota';
 END;
 $$;
 
 -- The limit: 2 credits per store manager per day.
-CALL WILDERNESS_HOL.GOVERNANCE.WILDERNESS_STORE_QUOTA!SET_PER_USER_LIMIT(2, 'DAILY');
+CALL WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_STORE_QUOTA!SET_PER_USER_LIMIT(2, 'DAILY');
 
 -- Check before blocking: the demo user under included users, and you under excluded users.
-CALL WILDERNESS_HOL.GOVERNANCE.WILDERNESS_STORE_QUOTA!GET_QUOTA_SCOPE();
+CALL WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_STORE_QUOTA!GET_QUOTA_SCOPE();
 
 -- Block at the limit, and email the user when it happens.
-CALL WILDERNESS_HOL.GOVERNANCE.WILDERNESS_STORE_QUOTA!SET_BLOCK_ENFORCEMENT_ENABLED(TRUE, TRUE);
+CALL WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_STORE_QUOTA!SET_BLOCK_ENFORCEMENT_ENABLED(TRUE, TRUE);
 
 -- The settings in force: a daily limit of 2 credits, blocking on.
-CALL WILDERNESS_HOL.GOVERNANCE.WILDERNESS_STORE_QUOTA!GET_CONFIG();</code></pre>
+CALL WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_STORE_QUOTA!GET_CONFIG();</code></pre>
 </div>
 
 <div class="info-box success">
@@ -1839,27 +1836,29 @@ CALL WILDERNESS_HOL.GOVERNANCE.WILDERNESS_STORE_QUOTA!GET_CONFIG();</code></pre>
         <span class="step-duration">~10 min</span>
     </div>
     <div class="step-content">
-<p>Store managers should see stock and sales, not members' email addresses, and not the raw tables. One role, one masking policy, and a test that proves both.</p>
+<p>Store managers should see stock and sales, not members' email addresses, and not the raw sales lines. One role, one masking policy, and a test that proves both.</p>
 
 <div class="code-block">
     <div class="code-header"><span class="code-lang">sql</span><button class="btn-copy" type="button">Copy</button></div>
     <pre><code>-- Lab 3 Step 8: who sees what. One role for store managers, one masking policy on member emails,
 -- and a test that proves both. Run it top to bottom. It ends back in ACCOUNTADMIN.
 USE ROLE ACCOUNTADMIN;
+USE WAREHOUSE WILDERNESS_WH;
 
--- 1. The store manager role: the curated layer only, plus member names for the kit offer.
-CREATE ROLE IF NOT EXISTS WILDERNESS_STORE_MANAGER COMMENT = 'Wilderness store managers: analytics, the assistant, CoWork';
+-- 1. The store manager role: the production assistant and the curated views, plus member names
+--    for the sleeping-gear offer. Not the raw sales lines.
+CREATE ROLE IF NOT EXISTS WILDERNESS_STORE_MANAGER COMMENT = 'Wilderness store managers: curated views, the assistant, CoWork';
 GRANT USAGE ON WAREHOUSE WILDERNESS_WH TO ROLE WILDERNESS_STORE_MANAGER;
 GRANT USAGE ON DATABASE WILDERNESS_HOL TO ROLE WILDERNESS_STORE_MANAGER;
-GRANT USAGE ON SCHEMA WILDERNESS_HOL.ANALYTICS TO ROLE WILDERNESS_STORE_MANAGER;
-GRANT USAGE ON SCHEMA WILDERNESS_HOL.AI TO ROLE WILDERNESS_STORE_MANAGER;
-GRANT USAGE ON SCHEMA WILDERNESS_HOL.AGENTS TO ROLE WILDERNESS_STORE_MANAGER;
 GRANT USAGE ON SCHEMA WILDERNESS_HOL.RAW TO ROLE WILDERNESS_STORE_MANAGER;
-GRANT SELECT ON ALL VIEWS IN SCHEMA WILDERNESS_HOL.ANALYTICS TO ROLE WILDERNESS_STORE_MANAGER;
-GRANT SELECT ON SEMANTIC VIEW WILDERNESS_HOL.ANALYTICS.SV_WILDERNESS_RETAIL TO ROLE WILDERNESS_STORE_MANAGER;
-GRANT USAGE ON CORTEX SEARCH SERVICE WILDERNESS_HOL.AI.CSS_CUSTOMER_FEEDBACK TO ROLE WILDERNESS_STORE_MANAGER;
-GRANT USAGE ON AGENT WILDERNESS_HOL.AGENTS.WILDERNESS_ASSISTANT TO ROLE WILDERNESS_STORE_MANAGER;
+GRANT USAGE ON SCHEMA WILDERNESS_HOL.LAB3_PRODUCTION TO ROLE WILDERNESS_STORE_MANAGER;
+GRANT SELECT ON ALL VIEWS IN SCHEMA WILDERNESS_HOL.RAW TO ROLE WILDERNESS_STORE_MANAGER;
+GRANT SELECT ON TABLE WILDERNESS_HOL.RAW.DIM_STORE TO ROLE WILDERNESS_STORE_MANAGER;
+GRANT SELECT ON TABLE WILDERNESS_HOL.RAW.DIM_PRODUCT TO ROLE WILDERNESS_STORE_MANAGER;
 GRANT SELECT ON TABLE WILDERNESS_HOL.RAW.DIM_MEMBER TO ROLE WILDERNESS_STORE_MANAGER;
+GRANT SELECT ON SEMANTIC VIEW WILDERNESS_HOL.LAB3_PRODUCTION.SV_WILDERNESS_RETAIL TO ROLE WILDERNESS_STORE_MANAGER;
+GRANT USAGE ON CORTEX SEARCH SERVICE WILDERNESS_HOL.LAB3_PRODUCTION.CSS_CUSTOMER_FEEDBACK TO ROLE WILDERNESS_STORE_MANAGER;
+GRANT USAGE ON AGENT WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_ASSISTANT TO ROLE WILDERNESS_STORE_MANAGER;
 
 -- 2. Give the role to the demo store manager, and to you so you can test it.
 GRANT ROLE WILDERNESS_STORE_MANAGER TO USER STORE_MANAGER_DEMO;
@@ -1871,11 +1870,11 @@ END;
 $$;
 
 -- 3. Member emails: shown in full to ACCOUNTADMIN, hidden from everyone else.
-CREATE OR REPLACE MASKING POLICY WILDERNESS_HOL.GOVERNANCE.MP_MEMBER_EMAIL AS (v VARCHAR) RETURNS VARCHAR -&gt;
+CREATE MASKING POLICY IF NOT EXISTS WILDERNESS_HOL.LAB3_PRODUCTION.MP_MEMBER_EMAIL AS (v VARCHAR) RETURNS VARCHAR -&gt;
   CASE WHEN CURRENT_ROLE() = 'ACCOUNTADMIN' THEN v
        ELSE REGEXP_REPLACE(v, '^[^@]+', '*****') END;
 ALTER TABLE WILDERNESS_HOL.RAW.DIM_MEMBER MODIFY COLUMN EMAIL
-  SET MASKING POLICY WILDERNESS_HOL.GOVERNANCE.MP_MEMBER_EMAIL FORCE;
+  SET MASKING POLICY WILDERNESS_HOL.LAB3_PRODUCTION.MP_MEMBER_EMAIL FORCE;
 
 -- 4. The test. As ACCOUNTADMIN you see full emails.
 SELECT FIRST_NAME, EMAIL FROM WILDERNESS_HOL.RAW.DIM_MEMBER ORDER BY MEMBER_ID LIMIT 3;
@@ -1884,8 +1883,8 @@ SELECT FIRST_NAME, EMAIL FROM WILDERNESS_HOL.RAW.DIM_MEMBER ORDER BY MEMBER_ID L
 USE ROLE WILDERNESS_STORE_MANAGER;
 USE SECONDARY ROLES NONE;
 SELECT FIRST_NAME, EMAIL FROM WILDERNESS_HOL.RAW.DIM_MEMBER ORDER BY MEMBER_ID LIMIT 3;
-SELECT STATE, COUNT(*) AS STORE_PRODUCT_ROWS FROM WILDERNESS_HOL.ANALYTICS.V_CHRISTMAS_STOCK_RISK
-  GROUP BY STATE ORDER BY STATE;
+SELECT CHRISTMAS_STOCK_STATUS, COUNT(*) AS STORE_PRODUCT_ROWS FROM WILDERNESS_HOL.RAW.V_STOCK_COVER
+  GROUP BY CHRISTMAS_STOCK_STATUS ORDER BY CHRISTMAS_STOCK_STATUS;
 
 -- This one should fail: store managers cannot read raw sales lines.
 SELECT COUNT(*) FROM WILDERNESS_HOL.RAW.FCT_SALES_LINE;</code></pre>
@@ -1893,7 +1892,7 @@ SELECT COUNT(*) FROM WILDERNESS_HOL.RAW.FCT_SALES_LINE;</code></pre>
 
 <div class="info-box success">
     <strong>You should see</strong>
-    <p>As ACCOUNTADMIN, three members with full email addresses. As <code>WILDERNESS_STORE_MANAGER</code>, the same three with the part before the @ hidden, for example <code>*****@example.com</code>, and the stock plan by state. The last query fails with an error that the table does not exist or is not authorised. That error is the proof: the role cannot read raw sales.</p>
+    <p>As ACCOUNTADMIN, three members with full email addresses. As <code>WILDERNESS_STORE_MANAGER</code>, the same three with the part before the @ hidden, for example <code>*****@example.com</code>, and the stock cover rows by status. The last query fails with an error that the table does not exist or is not authorised. That error is the proof: the role cannot read raw sales.</p>
 </div>
 
 <p>Your session is now in the store-manager role. Run the next block to see why the <code>USE SECONDARY ROLES NONE</code> line is there, and to return to ACCOUNTADMIN.</p>
@@ -1937,7 +1936,7 @@ USE SECONDARY ROLES ALL;</code></pre>
 
 <div class="code-block prompt">
     <div class="code-header"><span class="code-lang">cortex code</span><button class="btn-copy" type="button">Copy</button></div>
-    <pre><code>Use the agent-studio skill. Look at the evaluation runs baseline_run and candidate_run for the agent WILDERNESS_HOL.AGENTS.WILDERNESS_ASSISTANT. Improve only the descriptions of the retail_analyst and customer_feedback tools, so the agent picks the right tool the first time. Do not change the instructions, the semantic view or anything else, and do not put dates or definitions in the descriptions. Run SHOW VERSIONS IN AGENT before and after. Commit the change as a new version, never overwrite an existing one, and give the new version the alias candidate_2, without quotes. Do not change the default version. Do not start an evaluation.</code></pre>
+    <pre><code>Use the agent-studio skill. Look at the evaluation runs baseline_run and candidate_run for the agent WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_ASSISTANT. Improve only the descriptions of the retail_analyst and customer_feedback tools, so the agent picks the right tool the first time. Do not change the instructions, the semantic view or anything else, and do not put dates or definitions in the descriptions. Run SHOW VERSIONS IN AGENT before and after. Commit the change as a new version, never overwrite an existing one, and give the new version the alias candidate_2, without quotes. Do not change the default version. Do not start an evaluation.</code></pre>
 </div>
 
 <ol class="ui-steps">
@@ -1969,13 +1968,13 @@ USE SECONDARY ROLES ALL;</code></pre>
     <div class="code-header"><span class="code-lang">sql</span><button class="btn-copy" type="button">Copy</button></div>
     <pre><code>-- Lab 3 optional Step 10: re-test production every night until Christmas Eve.
 -- Copy the evaluation settings from the workshop repository, then schedule a nightly run.
--- The task lives with the agent, in AGENTS: an evaluation started by SQL runs in the session's schema.
-ALTER GIT REPOSITORY WILDERNESS_HOL.GIT.WORKSHOP_REPO FETCH;
-COPY FILES INTO @WILDERNESS_HOL.EVALS.EVAL_CONFIG
-  FROM @WILDERNESS_HOL.GIT.WORKSHOP_REPO/branches/main/evals/
+-- The task lives with the agent, in LAB3_PRODUCTION: an evaluation started by SQL runs in the session's schema.
+ALTER GIT REPOSITORY WILDERNESS_HOL.SETUP.WORKSHOP_REPO FETCH;
+COPY FILES INTO @WILDERNESS_HOL.LAB3_PRODUCTION.EVAL_CONFIG
+  FROM @WILDERNESS_HOL.SETUP.WORKSHOP_REPO/branches/main/evals/
   FILES = ('nightly_eval.yaml');
 
-CREATE OR REPLACE TASK WILDERNESS_HOL.AGENTS.NIGHTLY_EVAL
+CREATE OR REPLACE TASK WILDERNESS_HOL.LAB3_PRODUCTION.NIGHTLY_EVAL
   WAREHOUSE = WILDERNESS_WH
   SCHEDULE = 'USING CRON 0 2 * * * Australia/Sydney'
   COMMENT = 'Wilderness workshop: evaluate the production agent every night at 2am'
@@ -1984,14 +1983,14 @@ EXECUTE IMMEDIATE $$
 BEGIN
   CALL EXECUTE_AI_EVALUATION('START',
     OBJECT_CONSTRUCT('run_name', 'nightly_' || TO_VARCHAR(CURRENT_TIMESTAMP(), 'YYYYMMDD_HH24MI')),
-    '@WILDERNESS_HOL.EVALS.EVAL_CONFIG/nightly_eval.yaml');
+    '@WILDERNESS_HOL.LAB3_PRODUCTION.EVAL_CONFIG/nightly_eval.yaml');
 END;
 $$;
 
-ALTER TASK WILDERNESS_HOL.AGENTS.NIGHTLY_EVAL RESUME;
+ALTER TASK WILDERNESS_HOL.LAB3_PRODUCTION.NIGHTLY_EVAL RESUME;
 
 -- Run it once now, so you can see a run appear in the Evaluations tab in a few minutes.
-EXECUTE TASK WILDERNESS_HOL.AGENTS.NIGHTLY_EVAL;</code></pre>
+EXECUTE TASK WILDERNESS_HOL.LAB3_PRODUCTION.NIGHTLY_EVAL;</code></pre>
 </div>
 
 <div class="info-box success">
@@ -2006,7 +2005,7 @@ EXECUTE TASK WILDERNESS_HOL.AGENTS.NIGHTLY_EVAL;</code></pre>
 
 <div class="info-box tip">
     <strong>It costs every night</strong>
-    <p>Each run asks the eight questions and pays the judges, about what one of your runs today cost. The task uses <code>WILDERNESS_WH</code>, so it counts toward the project budget. Stop it with <code class="chip" title="Select to copy">ALTER TASK WILDERNESS_HOL.AGENTS.NIGHTLY_EVAL SUSPEND;</code>, and cleanup removes it.</p>
+    <p>Each run asks the eight questions and pays the judges, about what one of your runs today cost. The task uses <code>WILDERNESS_WH</code>, so it counts toward the project budget. Stop it with <code class="chip" title="Select to copy">ALTER TASK WILDERNESS_HOL.LAB3_PRODUCTION.NIGHTLY_EVAL SUSPEND;</code>, and cleanup removes it.</p>
 </div>
     </div>
 </div>
@@ -2070,18 +2069,23 @@ EXECUTE TASK WILDERNESS_HOL.AGENTS.NIGHTLY_EVAL;</code></pre>
 USE ROLE ACCOUNTADMIN;
 
 -- Lab 3 cost controls and governance
-DROP SNOWFLAKE.CORE.QUOTA IF EXISTS WILDERNESS_HOL.GOVERNANCE.WILDERNESS_STORE_QUOTA;
-DROP SNOWFLAKE.CORE.BUDGET IF EXISTS WILDERNESS_HOL.GOVERNANCE.WILDERNESS_PROJECT_BUDGET;
+DROP SNOWFLAKE.CORE.QUOTA IF EXISTS WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_STORE_QUOTA;
+DROP SNOWFLAKE.CORE.BUDGET IF EXISTS WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_PROJECT_BUDGET;
 DROP USER IF EXISTS STORE_MANAGER_DEMO;
 DROP ROLE IF EXISTS WILDERNESS_STORE_MANAGER;
 
--- The agent leaves CoWork, then the database goes (agent, search, semantic view, apps, data, tags)
+-- Both assistants leave CoWork, then the database goes (agents, search, semantic views, app, data, tags)
 EXECUTE IMMEDIATE $$
 BEGIN
-  ALTER SNOWFLAKE INTELLIGENCE SNOWFLAKE_INTELLIGENCE_OBJECT_DEFAULT DROP AGENT WILDERNESS_HOL.AGENTS.WILDERNESS_ASSISTANT;
-  RETURN 'Removed the Wilderness Assistant from CoWork';
-EXCEPTION
-  WHEN OTHER THEN RETURN 'The Wilderness Assistant was not in CoWork';
+  BEGIN
+    ALTER SNOWFLAKE INTELLIGENCE SNOWFLAKE_INTELLIGENCE_OBJECT_DEFAULT DROP AGENT WILDERNESS_HOL.LAB1_ASSISTANT.WILDERNESS_ASSISTANT;
+  EXCEPTION WHEN OTHER THEN NULL;
+  END;
+  BEGIN
+    ALTER SNOWFLAKE INTELLIGENCE SNOWFLAKE_INTELLIGENCE_OBJECT_DEFAULT DROP AGENT WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_ASSISTANT;
+  EXCEPTION WHEN OTHER THEN NULL;
+  END;
+  RETURN 'Removed the Wilderness assistants from CoWork';
 END;
 $$;
 DROP DATABASE IF EXISTS WILDERNESS_HOL;
@@ -2122,7 +2126,7 @@ SELECT 'Wilderness workshop removed' AS STATUS;</code></pre>
     <div class="completion-container">
 <h2>Lab 3 complete</h2>
 <p>You measured the assistant on eight questions, found the two reasons it was wrong, fixed the definitions in the semantic view and the behaviour in a new version, proved the new version better and promoted it, with the baseline one line away. Then you set a budget for the project, a daily limit for store managers and a role that hides member emails.</p>
-<p>That is the answer to Tom's three questions: it is right, and here are the runs that show it; it will cost no more than the limits you set; and store managers see stock and sales, not customers.</p>
+<p>That is the answer to Tom's three questions: it is right, and here are the runs that show it; it will cost no more than the limits you set; and store managers see stock, sales and member names, but not members' email addresses or the raw sales lines.</p>
         <div class="cta-row">
             
             <a class="btn-secondary" href="index.html">Workshop index</a>

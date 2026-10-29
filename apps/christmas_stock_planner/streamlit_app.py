@@ -3,8 +3,8 @@ import streamlit as st
 from snowflake.snowpark.context import get_active_session
 from snowflake.snowpark.functions import call_function, lit
 
-VIEW = "WILDERNESS_HOL.ANALYTICS.V_CHRISTMAS_STOCK_RISK"
-AUDIENCE = "WILDERNESS_HOL.ANALYTICS.KIT_OFFER_AUDIENCE"
+VIEW = "WILDERNESS_HOL.LAB2_ANALYTICS.V_CHRISTMAS_STOCK_RISK"
+AUDIENCE = "WILDERNESS_HOL.LAB2_ANALYTICS.KIT_OFFER_AUDIENCE"
 MODEL = "claude-sonnet-4-6"
 NUMERIC = ["LATITUDE", "LONGITUDE", "UNIT_COST", "ON_HAND_UNITS", "ON_ORDER_UNITS", "RETURNABLE_UNITS",
            "FORECAST_UNITS_TO_XMAS", "WEEKS_OF_COVER", "EST_DEFECT_RETURN_RATE", "EXCESS_UNITS",
@@ -58,7 +58,7 @@ def write_email(member):
             .collect()[0]["EMAIL"])
 
 
-offer_tab, plan_tab = st.tabs(["Kit offer", "Stock plan"])
+offer_tab, plan_tab = st.tabs(["Sleeping-gear offer", "Stock plan"])
 
 with offer_tab:
     audience = load_audience()
@@ -70,7 +70,7 @@ with offer_tab:
     c1.metric("Tent orders", f"{int(funnel['TENT_ORDERS']):,}")
     c2.metric("Basecamp members", f"{int(funnel['TENT_MEMBERS']):,}")
     c3.metric("No sleeping gear", f"{len(audience):,}")
-    c4.metric("Store has the kit", f"{len(offers):,}")
+    c4.metric("Store has the gear", f"{len(offers):,}")
     st.caption("Members whose store is already short of sleeping gear are held back: "
                "an offer there would send customers in for stock that is not on the shelf.")
 

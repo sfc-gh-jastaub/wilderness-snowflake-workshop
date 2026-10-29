@@ -7,7 +7,7 @@
 USE ROLE ACCOUNTADMIN;
 USE WAREHOUSE WILDERNESS_WH;
 
-CREATE OR REPLACE VIEW WILDERNESS_HOL.ANALYTICS.V_SALES
+CREATE OR REPLACE VIEW WILDERNESS_HOL.RAW.V_SALES
   COMMENT = 'One row per sales line, 1 Jul 2024 to 3 Nov 2026, with product and store attributes'
 AS
 SELECT f.SALE_LINE_ID, f.ORDER_ID, f.ORDER_DATE,
@@ -18,7 +18,7 @@ FROM WILDERNESS_HOL.RAW.FCT_SALES_LINE f
 JOIN WILDERNESS_HOL.RAW.DIM_PRODUCT p ON p.PRODUCT_ID = f.PRODUCT_ID
 JOIN WILDERNESS_HOL.RAW.DIM_STORE s ON s.STORE_ID = f.STORE_ID;
 
-CREATE OR REPLACE VIEW WILDERNESS_HOL.ANALYTICS.V_RETURNS
+CREATE OR REPLACE VIEW WILDERNESS_HOL.RAW.V_RETURNS
   COMMENT = 'One row per return, each linked to its sales line, with product and store attributes'
 AS
 SELECT r.RETURN_ID, r.SALE_LINE_ID, f.ORDER_DATE, r.RETURN_DATE,
@@ -30,7 +30,7 @@ JOIN WILDERNESS_HOL.RAW.FCT_SALES_LINE f ON f.SALE_LINE_ID = r.SALE_LINE_ID
 JOIN WILDERNESS_HOL.RAW.DIM_PRODUCT p ON p.PRODUCT_ID = r.PRODUCT_ID
 JOIN WILDERNESS_HOL.RAW.DIM_STORE s ON s.STORE_ID = r.STORE_ID;
 
-CREATE OR REPLACE VIEW WILDERNESS_HOL.ANALYTICS.V_INVENTORY
+CREATE OR REPLACE VIEW WILDERNESS_HOL.RAW.V_INVENTORY
   COMMENT = 'Stock snapshot at 3 Nov 2026, one row per store, product and batch'
 AS
 SELECT i.STORE_ID || '|' || i.PRODUCT_ID || '|' || COALESCE(i.BATCH_CODE, '-') AS INVENTORY_KEY,
@@ -43,7 +43,7 @@ JOIN WILDERNESS_HOL.RAW.DIM_STORE s ON s.STORE_ID = i.STORE_ID;
 
 -- Kit cover per store and kit group (spec §4.5, S6). Tent forecast = last Christmas weekly tent
 -- units x 51/7 x the state's tent index since 1 Nov; kit needed = forecast x last Christmas attach rate.
-CREATE OR REPLACE VIEW WILDERNESS_HOL.ANALYTICS.V_KIT_COVER
+CREATE OR REPLACE VIEW WILDERNESS_HOL.RAW.V_KIT_COVER
   COMMENT = 'Sleeping, cooking and lighting kit needed for the tents still to sell before 24 Dec, per store'
 AS
 WITH tent_idx AS (
@@ -122,7 +122,7 @@ FROM k;
 -- batches, against the forecast to 24 Dec = last Christmas weekly rate x 51/7 x the trend since 1 Nov in
 -- that state and category. Same scope and S16 band as Lab 2's V_CHRISTMAS_STOCK_RISK, which adds batch
 -- faults and actions.
-CREATE OR REPLACE VIEW WILDERNESS_HOL.ANALYTICS.V_STOCK_COVER
+CREATE OR REPLACE VIEW WILDERNESS_HOL.RAW.V_STOCK_COVER
   COMMENT = 'Christmas stock cover per store and Christmas-catalogue product at 3 Nov 2026, against the forecast to 24 Dec'
 AS
 WITH idx AS (
@@ -157,17 +157,17 @@ SELECT STORE_ID || '|' || PRODUCT_ID AS STOCK_COVER_KEY, STORE_ID, PRODUCT_ID,
 FROM c;
 
 -- The base semantic view. What it lacks is the point of Lab 1 Step 3 and Lab 3 Step 4.
-CREATE OR REPLACE SEMANTIC VIEW WILDERNESS_HOL.ANALYTICS.SV_WILDERNESS_RETAIL
+CREATE OR REPLACE SEMANTIC VIEW WILDERNESS_HOL.LAB1_ASSISTANT.SV_WILDERNESS_RETAIL
   TABLES (
-    sales AS WILDERNESS_HOL.ANALYTICS.V_SALES PRIMARY KEY (SALE_LINE_ID)
+    sales AS WILDERNESS_HOL.RAW.V_SALES PRIMARY KEY (SALE_LINE_ID)
       COMMENT = 'Sales lines, 1 Jul 2024 to 3 Nov 2026',
-    returns AS WILDERNESS_HOL.ANALYTICS.V_RETURNS PRIMARY KEY (RETURN_ID)
+    returns AS WILDERNESS_HOL.RAW.V_RETURNS PRIMARY KEY (RETURN_ID)
       COMMENT = 'Customer returns, each linked to the sales line it came from',
-    inventory AS WILDERNESS_HOL.ANALYTICS.V_INVENTORY PRIMARY KEY (INVENTORY_KEY)
+    inventory AS WILDERNESS_HOL.RAW.V_INVENTORY PRIMARY KEY (INVENTORY_KEY)
       COMMENT = 'Stock on hand and on order at 3 Nov 2026, by store, product and batch',
-    kit_cover AS WILDERNESS_HOL.ANALYTICS.V_KIT_COVER PRIMARY KEY (KIT_COVER_KEY)
+    kit_cover AS WILDERNESS_HOL.RAW.V_KIT_COVER PRIMARY KEY (KIT_COVER_KEY)
       COMMENT = 'Sleeping, cooking and lighting kit needed for the tents still to sell before 24 Dec, by store',
-    stock_cover AS WILDERNESS_HOL.ANALYTICS.V_STOCK_COVER PRIMARY KEY (STOCK_COVER_KEY)
+    stock_cover AS WILDERNESS_HOL.RAW.V_STOCK_COVER PRIMARY KEY (STOCK_COVER_KEY)
       COMMENT = 'Christmas stock cover per store and product: stock plus orders at 3 Nov against the forecast to 24 Dec (last Christmas weekly rate x the trend since 1 Nov in that state and category). Use for overstock and stockout questions',
     products AS WILDERNESS_HOL.RAW.DIM_PRODUCT PRIMARY KEY (PRODUCT_ID)
       COMMENT = 'Product catalogue',
@@ -245,6 +245,6 @@ CREATE OR REPLACE SEMANTIC VIEW WILDERNESS_HOL.ANALYTICS.SV_WILDERNESS_RETAIL
       COMMENT = 'Units short of the Christmas forecast on stockout rows'
   )
   COMMENT = 'Wilderness Outfitters retail: sales, returns, stock and kit cover'
-  WITH TAG (WILDERNESS_HOL.GOVERNANCE.PROJECT = 'wilderness_christmas');
+  WITH TAG (WILDERNESS_HOL.SETUP.PROJECT = 'wilderness_christmas');
 
-CALL WILDERNESS_HOL.GIT.LOG_STEP('SEMANTIC_VIEW', 'OK', NULL);
+CALL WILDERNESS_HOL.SETUP.LOG_STEP('SEMANTIC_VIEW', 'OK', NULL);

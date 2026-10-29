@@ -1,18 +1,17 @@
 -- =====================================================================================
 -- 90_catch_up_lab1.sql  ·  Wilderness Outfitters workshop
--- The Lab 1 end state, built by SQL, for anyone whose morning did not finish:
+-- The Lab 1 assistant, built by SQL, for anyone whose prompts did not finish:
 --   Step 2  the customer feedback search service
 --   Step 3  the semantic view with RETURN_RATE, synonyms and two verified queries
---   Steps 4-5  the Wilderness Assistant and its tools
+--   Step 4  the Wilderness Assistant and its three tools
 --   Step 6  the assistant added to CoWork
--- The saved artifact and the automation (Step 7) are personal, so this file skips them.
--- While the documents are parked, the assistant has two tools (no wilderness_documents).
+-- Everything goes into WILDERNESS_HOL.LAB1_ASSISTANT. Running it again replaces what it built.
 -- =====================================================================================
 USE ROLE ACCOUNTADMIN;
 USE WAREHOUSE WILDERNESS_WH;
 
--- Step 2: make customer feedback searchable (about a minute to index 20,000 comments)
-CREATE OR REPLACE CORTEX SEARCH SERVICE WILDERNESS_HOL.AI.CSS_CUSTOMER_FEEDBACK
+-- The customer feedback search (about a minute to index 20,000 comments)
+CREATE OR REPLACE CORTEX SEARCH SERVICE WILDERNESS_HOL.LAB1_ASSISTANT.CSS_CUSTOMER_FEEDBACK
   ON FEEDBACK_TEXT
   ATTRIBUTES PRODUCT_NAME, CATEGORY, FEEDBACK_SOURCE, STATE, RATING
   WAREHOUSE = WILDERNESS_WH
@@ -23,18 +22,18 @@ SELECT FEEDBACK_ID, FEEDBACK_DATE, FEEDBACK_SOURCE, PRODUCT_ID, PRODUCT_NAME, CA
        STORE_ID, STATE, RATING, FEEDBACK_TITLE, FEEDBACK_TEXT
 FROM WILDERNESS_HOL.RAW.CUSTOMER_FEEDBACK;
 
--- Step 3: teach the semantic view Wilderness's language
-CREATE OR REPLACE SEMANTIC VIEW WILDERNESS_HOL.ANALYTICS.SV_WILDERNESS_RETAIL
+-- The semantic view with the Lab 1 Step 3 additions
+CREATE OR REPLACE SEMANTIC VIEW WILDERNESS_HOL.LAB1_ASSISTANT.SV_WILDERNESS_RETAIL
   TABLES (
-    sales AS WILDERNESS_HOL.ANALYTICS.V_SALES PRIMARY KEY (SALE_LINE_ID)
+    sales AS WILDERNESS_HOL.RAW.V_SALES PRIMARY KEY (SALE_LINE_ID)
       COMMENT = 'Sales lines, 1 Jul 2024 to 3 Nov 2026',
-    returns AS WILDERNESS_HOL.ANALYTICS.V_RETURNS PRIMARY KEY (RETURN_ID)
+    returns AS WILDERNESS_HOL.RAW.V_RETURNS PRIMARY KEY (RETURN_ID)
       COMMENT = 'Customer returns, each linked to the sales line it came from',
-    inventory AS WILDERNESS_HOL.ANALYTICS.V_INVENTORY PRIMARY KEY (INVENTORY_KEY)
+    inventory AS WILDERNESS_HOL.RAW.V_INVENTORY PRIMARY KEY (INVENTORY_KEY)
       COMMENT = 'Stock on hand and on order at 3 Nov 2026, by store, product and batch',
-    kit_cover AS WILDERNESS_HOL.ANALYTICS.V_KIT_COVER PRIMARY KEY (KIT_COVER_KEY)
+    kit_cover AS WILDERNESS_HOL.RAW.V_KIT_COVER PRIMARY KEY (KIT_COVER_KEY)
       COMMENT = 'Sleeping, cooking and lighting kit needed for the tents still to sell before 24 Dec, by store',
-    stock_cover AS WILDERNESS_HOL.ANALYTICS.V_STOCK_COVER PRIMARY KEY (STOCK_COVER_KEY)
+    stock_cover AS WILDERNESS_HOL.RAW.V_STOCK_COVER PRIMARY KEY (STOCK_COVER_KEY)
       COMMENT = 'Christmas stock cover per store and product: stock plus orders at 3 Nov against the forecast to 24 Dec (last Christmas weekly rate x the trend since 1 Nov in that state and category). Use for overstock and stockout questions',
     products AS WILDERNESS_HOL.RAW.DIM_PRODUCT PRIMARY KEY (PRODUCT_ID)
       COMMENT = 'Product catalogue',
@@ -124,10 +123,10 @@ CREATE OR REPLACE SEMANTIC VIEW WILDERNESS_HOL.ANALYTICS.SV_WILDERNESS_RETAIL
       SQL 'SELECT st.state, COUNT(DISTINCT k.kit_cover_store_id) AS stores_short, SUM(k.shortfall_units) AS shortfall_units, SUM(k.basket_at_risk) AS basket_sales_at_risk_aud, MIN(k.run_out_week) AS earliest_run_out_week FROM __kit_cover AS k JOIN __stores AS st ON k.kit_cover_store_id = st.store_id WHERE k.kit_cover_group = ''SLEEP'' AND k.shortfall_units > 0 GROUP BY st.state ORDER BY shortfall_units DESC NULLS LAST'
     )
   )
-  WITH TAG (WILDERNESS_HOL.GOVERNANCE.PROJECT = 'wilderness_christmas');
+  WITH TAG (WILDERNESS_HOL.SETUP.PROJECT = 'wilderness_christmas');
 
--- Steps 4 and 5: the Wilderness Assistant and its tools
-CREATE OR REPLACE AGENT WILDERNESS_HOL.AGENTS.WILDERNESS_ASSISTANT
+-- The Wilderness Assistant and its three tools
+CREATE OR REPLACE AGENT WILDERNESS_HOL.LAB1_ASSISTANT.WILDERNESS_ASSISTANT
   COMMENT = 'Wilderness Outfitters Christmas trading assistant for store managers and merchandisers'
   PROFILE = '{"display_name": "Wilderness Assistant"}'
   FROM SPECIFICATION
@@ -170,13 +169,13 @@ CREATE OR REPLACE AGENT WILDERNESS_HOL.AGENTS.WILDERNESS_ASSISTANT
         description: "Charts the results of retail_analyst"
   tool_resources:
     retail_analyst:
-      semantic_view: "WILDERNESS_HOL.ANALYTICS.SV_WILDERNESS_RETAIL"
+      semantic_view: "WILDERNESS_HOL.LAB1_ASSISTANT.SV_WILDERNESS_RETAIL"
       execution_environment:
         type: "warehouse"
         warehouse: "WILDERNESS_WH"
         query_timeout: 60
     customer_feedback:
-      search_service: "WILDERNESS_HOL.AI.CSS_CUSTOMER_FEEDBACK"
+      search_service: "WILDERNESS_HOL.LAB1_ASSISTANT.CSS_CUSTOMER_FEEDBACK"
       id_column: "FEEDBACK_ID"
       title_column: "FEEDBACK_TITLE"
       max_results: 10
@@ -186,7 +185,7 @@ CREATE OR REPLACE AGENT WILDERNESS_HOL.AGENTS.WILDERNESS_ASSISTANT
 -- @ACCOUNT_LEVEL
 EXECUTE IMMEDIATE $$
 BEGIN
-  ALTER SNOWFLAKE INTELLIGENCE SNOWFLAKE_INTELLIGENCE_OBJECT_DEFAULT ADD AGENT WILDERNESS_HOL.AGENTS.WILDERNESS_ASSISTANT;
+  ALTER SNOWFLAKE INTELLIGENCE SNOWFLAKE_INTELLIGENCE_OBJECT_DEFAULT ADD AGENT WILDERNESS_HOL.LAB1_ASSISTANT.WILDERNESS_ASSISTANT;
   RETURN 'Added Wilderness Assistant to CoWork';
 EXCEPTION
   WHEN OTHER THEN
@@ -197,4 +196,4 @@ EXCEPTION
 END;
 $$;
 
-CALL WILDERNESS_HOL.GIT.LOG_STEP('CATCH_UP_LAB1', 'OK', NULL);
+CALL WILDERNESS_HOL.SETUP.LOG_STEP('CATCH_UP_LAB1', 'OK', NULL);
