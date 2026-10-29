@@ -948,6 +948,8 @@ a.lab-card:hover { box-shadow: var(--shadow-md); border-color: var(--sf-blue); c
 .figure-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: var(--space-md); margin: var(--space-lg) 0; }
 .figure-row div { background: #fff; border-radius: var(--radius-md); border-top: 4px solid var(--sf-blue); padding: var(--space-md); box-shadow: var(--shadow-sm); }
 .figure-row b { display: block; font-family: var(--font-heading); font-size: 1.5rem; color: var(--sf-mid-blue); }
+/* Bold words inside a box paragraph stay inline; only the box's own first <strong> is its heading. */
+.info-box p strong, .info-box li strong { display: inline; font-family: inherit; font-size: inherit; font-weight: 700; text-transform: none; letter-spacing: normal; margin: 0; color: inherit; }
 
 </style>
 </head>

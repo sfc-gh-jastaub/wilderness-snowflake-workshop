@@ -998,6 +998,8 @@ a.lab-card:hover { box-shadow: var(--shadow-md); border-color: var(--sf-blue); c
 .figure-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: var(--space-md); margin: var(--space-lg) 0; }
 .figure-row div { background: #fff; border-radius: var(--radius-md); border-top: 4px solid var(--sf-blue); padding: var(--space-md); box-shadow: var(--shadow-sm); }
 .figure-row b { display: block; font-family: var(--font-heading); font-size: 1.5rem; color: var(--sf-mid-blue); }
+/* Bold words inside a box paragraph stay inline; only the box's own first <strong> is its heading. */
+.info-box p strong, .info-box li strong { display: inline; font-family: inherit; font-size: inherit; font-weight: 700; text-transform: none; letter-spacing: normal; margin: 0; color: inherit; }
 
 </style>
 </head>
@@ -1416,13 +1418,13 @@ WHERE s.order_date BETWEEN '2025-12-18' AND '2025-12-24'</code></pre>
 <p>Custom instructions tell Cortex Analyst things the tables cannot. In the editor, open <span class="path">Custom instructions</span>, paste the two blocks below into their fields, and select <span class="path">Save</span>.</p>
 
 <p><strong>Question categorization</strong>, so a question that uses a Wilderness term counts as clear instead of unclear:</p>
-<div class="code-block">
+<div class="code-block prompt">
     <div class="code-header"><span class="code-lang">text</span><button class="btn-copy" type="button">Copy</button></div>
     <pre><code>Wilderness uses its own trading terms, and questions that use them are clear. The launch weekend is 1 to 3 November. Peak Week is 18 to 24 December. The Christmas trading period is 1 November to 24 December. 'Last year' means 2025.</code></pre>
 </div>
 
 <p><strong>SQL generation</strong>, so the SQL uses the right dates:</p>
-<div class="code-block">
+<div class="code-block prompt">
     <div class="code-header"><span class="code-lang">text</span><button class="btn-copy" type="button">Copy</button></div>
     <pre><code>Wilderness uses these trading terms. The launch weekend is the first three days of Christmas trading, 1 to 3 November. Peak Week is the seven days to Christmas Eve, 18 to 24 December. The Christmas trading period runs from 1 November to 24 December, never calendar December. 'Last year' and 'last Christmas' mean 2025. The financial year runs from 1 July to 30 June, and 'last financial year' means FY26, 1 July 2025 to 30 June 2026. Always say which dates you used.</code></pre>
 </div>
