@@ -1,7 +1,7 @@
 -- =====================================================================================
 -- 15_lab3_assets.sql  ·  Wilderness Outfitters workshop
--- The agent evaluation questions, the email integration and the report email procedure.
--- (The compute pool and the Lab 3 notebook are added in a later build phase.)
+-- The Lab 3 evaluation questions and dataset, the email integration and the report email procedure
+-- (the procedure is used by the report skill in Lab 1 optional Step 9).
 -- =====================================================================================
 USE ROLE ACCOUNTADMIN;
 USE WAREHOUSE WILDERNESS_WH;
@@ -10,28 +10,40 @@ USE WAREHOUSE WILDERNESS_WH;
 CREATE OR REPLACE TABLE WILDERNESS_HOL.EVALS.AGENT_EVAL_QUESTIONS (
   QUESTION_ID  INT,
   INPUT_QUERY  VARCHAR,
-  GROUND_TRUTH VARIANT,
-  NEEDS_DOCS   BOOLEAN
+  GROUND_TRUTH VARIANT
 );
 
 INSERT INTO WILDERNESS_HOL.EVALS.AGENT_EVAL_QUESTIONS
-SELECT $1, $2, PARSE_JSON($3), $4 FROM VALUES
+SELECT $1, $2, PARSE_JSON($3) FROM VALUES
   (1, 'Which stores will still have too many tents on Boxing Day, and which will run out?',
-      '{"ground_truth_output": "14 stores will hold more than 7.5 weeks of Summit 2P Tent stock, 14 of them in Victoria and Tasmania: about 1,909 units (AUD 553,164 at cost) still on shelves on Boxing Day. 11 stores in NSW, QLD will run out of the Summit 3P Tent before Christmas.", "ground_truth_invocations": [{"tool_name": "retail_analyst"}]}', FALSE),
+      '{"ground_truth_output": "A correct answer covers both halves. Too many tents: the overstock is concentrated in Victoria and Tasmania, led by the Summit 2P Tent, where 14 stores hold more than 7.5 weeks of cover (about 1,909 units, AUD 553,164 at cost, left on Boxing Day). Counting other tent lines as well is acceptable if the answer still names Victoria and Tasmania. Run out: 11 stores, all in NSW, QLD, run out of the Summit 3P Tent before Christmas. An answer that misses either half, or puts the overstock outside Victoria and Tasmania, is wrong.", "ground_truth_invocations": [{"tool_name": "retail_analyst"}]}'),
   (2, 'Which stores will run out of sleeping gear before Christmas, and when?',
-      '{"ground_truth_output": "31 stores will run short of sleeping gear before 24 December, 23 of them in NSW and QLD. Most run out in the week of 7 December (27 stores); the earliest week is 2026-11-30 and the latest 2026-12-14. The shortfall is about 3,837 units, AUD 435,673 of kit sales at risk.", "ground_truth_invocations": [{"tool_name": "retail_analyst"}]}', FALSE),
-  (3, 'Customers are bringing the Summit 2P back. What are they saying, and what does the Kestrel contract let us do with the stock we can''t sell?',
-      '{"ground_truth_output": "Needs the supplier documents, which are not loaded yet.", "ground_truth_invocations": []}', TRUE),
-  (4, 'What is the last day we can order more sleeping mats for delivery before Christmas?',
-      '{"ground_truth_output": "Needs the trading playbook, which is not loaded yet.", "ground_truth_invocations": []}', TRUE),
-  (5, 'How did last Christmas trading compare to the Christmas before?',
-      '{"ground_truth_output": "Over the Christmas period (1 November to 24 December), net sales were AUD 107,941,622 in 2025 against AUD 94,942,495 in 2024, a change of +13.7%.", "ground_truth_invocations": [{"tool_name": "retail_analyst"}]}', FALSE),
+      '{"ground_truth_output": "31 stores will run short of sleeping gear before 24 December, 23 of them in NSW and QLD. Most run out in the week of 7 December (27 stores); the earliest week is 2026-11-30 and the latest 2026-12-14. The shortfall is about 3,837 units, AUD 435,673 of kit sales at risk.", "ground_truth_invocations": [{"tool_name": "retail_analyst"}]}'),
+  (3, 'Customers are bringing the Summit 2P back. What are they saying, and is it worse for some batches than others?',
+      '{"ground_truth_output": "Batch B26-07 is the problem: 17.2% of Summit 2P Tents sold from it have come back (702 of 4,087), against 3.5% to 4.0% for every other batch. Customers describe two faults: the pole snapping or cracking at the hub, and the seam tape lifting so the tent leaks in rain.", "ground_truth_invocations": [{"tool_name": "retail_analyst"}, {"tool_name": "customer_feedback"}]}'),
+  (4, 'What are customers saying about the Summit 2P tent?',
+      '{"ground_truth_output": "Most Summit 2P comments are about faults: seams leaking in rain and poles cracking or snapping at the hub. Some customers praise how quick it is to pitch and how it does in dry weather. The answer quotes customers word for word.", "ground_truth_invocations": [{"tool_name": "customer_feedback"}]}'),
+  (5, 'What were net sales over the launch weekend last year?',
+      '{"ground_truth_output": "Over the launch weekend last year, 1 to 3 November 2025, net sales were AUD 5,955,928.", "ground_truth_invocations": [{"tool_name": "retail_analyst"}]}'),
   (6, 'What were net sales last financial year?',
-      '{"ground_truth_output": "Net sales in the last financial year, FY26 (1 July 2025 to 30 June 2026), were AUD 378,017,732.", "ground_truth_invocations": [{"tool_name": "retail_analyst"}]}', FALSE),
-  (7, 'How is this Christmas tracking against last Christmas so far?',
-      '{"ground_truth_output": "Christmas trading started on 1 November. For 1 to 3 November, net sales were AUD 7,988,070 in 2026 against AUD 5,955,928 for the same days in 2025, a change of +34.1%.", "ground_truth_invocations": [{"tool_name": "retail_analyst"}]}', FALSE),
+      '{"ground_truth_output": "Net sales in the last financial year, FY26 (1 July 2025 to 30 June 2026), were AUD 378,017,732.", "ground_truth_invocations": [{"tool_name": "retail_analyst"}]}'),
+  (7, 'How many tents did we sell over the launch weekend last year?',
+      '{"ground_truth_output": "Wilderness sold 2,249 tents over the launch weekend last year, 1 to 3 November 2025.", "ground_truth_invocations": [{"tool_name": "retail_analyst"}]}'),
   (8, 'What''s the weather in Byron Bay on Christmas Day?',
-      '{"ground_truth_output": "The agent says it has no weather data and does not guess. It offers to answer questions about Wilderness sales, stock, returns or customer feedback instead.", "ground_truth_invocations": []}', FALSE);
+      '{"ground_truth_output": "The agent says it has no weather data and does not guess. It offers to answer questions about Wilderness sales, stock, returns or customer feedback instead. It does not send the user to other websites or apps.", "ground_truth_invocations": []}');
+
+-- The dataset the Evaluations tab picks in Lab 3 Step 2 (Existing dataset).
+DROP DATASET IF EXISTS WILDERNESS_HOL.EVALS.CHRISTMAS_EVAL_SET;
+CALL SYSTEM$CREATE_EVALUATION_DATASET(
+  'Cortex Agent',
+  'WILDERNESS_HOL.EVALS.AGENT_EVAL_QUESTIONS',
+  'WILDERNESS_HOL.EVALS.CHRISTMAS_EVAL_SET',
+  OBJECT_CONSTRUCT('query_text', 'INPUT_QUERY', 'expected_tools', 'GROUND_TRUTH'));
+
+-- Where evaluation configuration files live (Lab 3 optional Step 10, and the build's own checks).
+CREATE STAGE IF NOT EXISTS WILDERNESS_HOL.EVALS.EVAL_CONFIG
+  DIRECTORY = (ENABLE = TRUE)
+  COMMENT = 'Wilderness workshop: evaluation config files';
 
 -- Settings the setup writes once: the address reports go to.
 CREATE TABLE IF NOT EXISTS WILDERNESS_HOL.GIT.WORKSHOP_SETTINGS (KEY VARCHAR, VALUE VARCHAR);

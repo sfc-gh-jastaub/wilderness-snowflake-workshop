@@ -1,0 +1,1193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="snowflake-source" content="cortex-agent-authored">
+<title>Wilderness Outfitters: Christmas Trading with an AI Workforce</title>
+<script type="application/json" id="snowflake-report-metadata">{
+ "generated": "2026-10-29",
+ "intent": "Workshop landing page",
+ "producerNotes": "Built by _build/build.py from _build/src/guides/index.html."
+}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+
+/* ============================================================
+   Snowflake HOL base stylesheet (S1): extracted from fsi_generic/fsi_workshop_lab1_foundation.html
+   ============================================================ */
+
+:root {
+    /* Brand */
+    --sf-blue: #29B5E8;
+    --sf-mid-blue: #11567F;
+    --sf-deep-blue: #0a3a5c;
+    --sf-text: #5B5B5B;
+    --sf-heading: #11567F;
+    --sf-orange: #ff922b;
+    --sf-green: #37B24D;
+    --sf-red: #E03131;
+    --sf-yellow: #F59F00;
+
+    /* Neutrals */
+    --gray-50: #f8fafc;
+    --gray-100: #f1f5f9;
+    --gray-200: #e2e8f0;
+    --gray-300: #cbd5e1;
+    --gray-400: #94a3b8;
+    --gray-500: #64748b;
+    --gray-700: #334155;
+    --gray-800: #1e293b;
+    --gray-900: #0f172a;
+
+    /* Type */
+    --font-heading: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --font-body: 'Lato', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --font-mono: 'SFMono-Regular', 'JetBrains Mono', Menlo, Consolas, 'Courier New', monospace;
+
+    /* Spacing */
+    --space-xs: 0.25rem;
+    --space-sm: 0.5rem;
+    --space-md: 1rem;
+    --space-lg: 1.5rem;
+    --space-xl: 2rem;
+    --space-2xl: 3rem;
+
+    /* Radius */
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --radius-xl: 16px;
+    --radius-full: 9999px;
+
+    /* Shadows */
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+    --shadow-md: 0 4px 14px rgba(0,0,0,0.10);
+    --shadow-lg: 0 10px 30px rgba(0,0,0,0.12);
+
+    /* Layout */
+    --header-height: 72px;
+    --sidebar-width: 300px;
+    --content-max-width: 900px;
+
+    --transition-fast: 150ms ease;
+    --transition-normal: 280ms ease;
+}
+
+/* ---------- Reset ---------- */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+    scroll-behavior: smooth;
+    scroll-padding-top: calc(var(--header-height) + var(--space-lg));
+}
+
+body {
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.7;
+    color: var(--sf-text);
+    background: var(--gray-50);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+img { max-width: 100%; height: auto; display: block; }
+
+h1, h2, h3, h4, h5 {
+    font-family: var(--font-heading);
+    color: var(--sf-heading);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    line-height: 1.25;
+    font-weight: 700;
+}
+
+h4, h5 { text-transform: none; letter-spacing: 0.2px; }
+
+p { margin-bottom: var(--space-md); }
+p:last-child { margin-bottom: 0; }
+
+a { color: var(--sf-blue); text-decoration: none; transition: color var(--transition-fast); }
+a:hover { color: var(--sf-mid-blue); }
+
+ul, ol { margin: 0 0 var(--space-md) var(--space-lg); }
+li { margin-bottom: var(--space-xs); }
+
+strong { color: var(--sf-mid-blue); font-weight: 700; }
+
+code:not(pre code) {
+    font-family: var(--font-mono);
+    font-size: 0.85em;
+    background: var(--gray-100);
+    color: var(--sf-mid-blue);
+    padding: 2px 6px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--gray-200);
+}
+
+/* ---------- Header ---------- */
+.hol-header {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: var(--header-height);
+    background: #ffffff;
+    border-bottom: 1px solid var(--gray-200);
+    box-shadow: var(--shadow-sm);
+    z-index: 200;
+}
+
+.header-container {
+    max-width: 1500px;
+    margin: 0 auto;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    gap: var(--space-lg);
+    padding: 0 var(--space-xl);
+}
+
+.snowflake-logo { height: 48px; width: auto; }
+
+.logo-divider { width: 1px; height: 30px; background: var(--gray-300); flex-shrink: 0; }
+
+.header-title {
+    font-family: var(--font-heading);
+    font-size: 0.9375rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--sf-mid-blue);
+}
+
+.header-title span {
+    display: block;
+    font-family: var(--font-body);
+    font-size: 0.8125rem;
+    font-weight: 400;
+    text-transform: none;
+    letter-spacing: 0;
+    color: var(--gray-500);
+}
+
+/* ---------- Hero ---------- */
+.hero-section {
+    margin-top: var(--header-height);
+    background: linear-gradient(135deg, #11567F 0%, #0a3a5c 100%);
+    color: #ffffff;
+    padding: var(--space-2xl) var(--space-xl);
+}
+
+.hero-container { max-width: 1200px; margin: 0 auto; }
+
+.hero-badge {
+    display: inline-block;
+    background: rgba(41,181,232,0.20);
+    border: 1px solid rgba(41,181,232,0.55);
+    color: var(--sf-blue);
+    padding: var(--space-xs) var(--space-md);
+    border-radius: var(--radius-full);
+    font-family: var(--font-heading);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: var(--space-md);
+}
+
+.hero-title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: #ffffff;
+    margin-bottom: var(--space-md);
+}
+
+.hero-subtitle {
+    font-size: 1.125rem;
+    color: rgba(255,255,255,0.88);
+    max-width: 780px;
+    margin-bottom: var(--space-xl);
+}
+
+.hero-meta { display: flex; flex-wrap: wrap; gap: var(--space-md); }
+
+.meta-item {
+    background: rgba(255,255,255,0.10);
+    border: 1px solid rgba(255,255,255,0.18);
+    border-radius: var(--radius-lg);
+    padding: var(--space-sm) var(--space-lg);
+    min-width: 150px;
+}
+
+.meta-label {
+    display: block;
+    font-family: var(--font-heading);
+    font-size: 0.6875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--sf-blue);
+    margin-bottom: 2px;
+}
+
+.meta-value { font-size: 1rem; font-weight: 700; color: #ffffff; }
+
+/* ---------- Breadcrumb ---------- */
+.breadcrumb-bar {
+    background: #ffffff;
+    border-bottom: 1px solid var(--gray-200);
+    padding: var(--space-sm) var(--space-xl);
+}
+
+.breadcrumb-inner { max-width: 1500px; margin: 0 auto; font-size: 0.875rem; }
+
+.breadcrumb-inner a { font-weight: 700; }
+
+/* ---------- Content sections ---------- */
+.content-section { padding: var(--space-2xl) var(--space-xl); }
+.content-section.alt-bg { background: #ffffff; }
+
+.section-container { max-width: 1200px; margin: 0 auto; }
+
+.section-title {
+    font-size: 1.5rem;
+    font-weight: 800;
+    margin-bottom: var(--space-xl);
+    padding-bottom: var(--space-sm);
+    position: relative;
+}
+
+.section-title::after {
+    content: '';
+    position: absolute;
+    left: 0; bottom: 0;
+    width: 64px; height: 4px;
+    background: linear-gradient(90deg, var(--sf-blue), var(--sf-mid-blue));
+    border-radius: var(--radius-full);
+}
+
+.overview-grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: var(--space-xl);
+}
+
+.overview-card {
+    background: #ffffff;
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-lg);
+    padding: var(--space-xl);
+    box-shadow: var(--shadow-sm);
+}
+
+.overview-card.highlight {
+    background: linear-gradient(135deg, #eaf7fd 0%, #ffffff 100%);
+    border-color: var(--sf-blue);
+}
+
+.overview-card h3 { font-size: 1rem; margin-bottom: var(--space-md); }
+
+.learning-list { list-style: none; margin-left: 0; }
+
+.learning-list li {
+    position: relative;
+    padding-left: var(--space-lg);
+    margin-bottom: var(--space-sm);
+}
+
+.learning-list li::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 11px;
+    width: 8px; height: 8px;
+    background: var(--sf-blue);
+    border-radius: 50%;
+}
+
+.tech-tags { display: flex; flex-wrap: wrap; gap: var(--space-sm); }
+
+.tech-tag {
+    display: inline-flex;
+    align-items: center;
+    background: var(--gray-100);
+    border: 1px solid var(--gray-200);
+    color: var(--sf-mid-blue);
+    padding: 5px 12px;
+    border-radius: var(--radius-full);
+    font-size: 0.8125rem;
+    font-weight: 700;
+}
+
+/* ---------- Layout: sidebar + steps ---------- */
+.lab-layout {
+    max-width: 1500px;
+    margin: 0 auto;
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-xl);
+    padding: 0 var(--space-xl) var(--space-2xl);
+}
+
+/* ---------- Sidebar nav ---------- */
+.sidebar-nav {
+    position: sticky;
+    top: calc(var(--header-height) + var(--space-lg));
+    width: var(--sidebar-width);
+    flex-shrink: 0;
+    background: #ffffff;
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-lg);
+    padding: var(--space-lg);
+    box-shadow: var(--shadow-sm);
+    max-height: calc(100vh - var(--header-height) - var(--space-2xl));
+    overflow-y: auto;
+}
+
+.progress-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: var(--space-sm);
+}
+
+.progress-label {
+    font-family: var(--font-heading);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--sf-mid-blue);
+}
+
+.progress-percent { font-weight: 700; color: var(--sf-blue); font-size: 0.9375rem; }
+
+.progress-bar {
+    height: 8px;
+    background: var(--gray-200);
+    border-radius: var(--radius-full);
+    overflow: hidden;
+    margin-bottom: var(--space-lg);
+}
+
+.progress-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--sf-blue), var(--sf-green));
+    border-radius: var(--radius-full);
+    transition: width var(--transition-normal);
+}
+
+.steps-nav { display: flex; flex-direction: column; gap: 2px; }
+
+.step-nav-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: var(--space-sm) var(--space-sm);
+    border-radius: var(--radius-md);
+    color: var(--sf-text);
+    font-size: 0.875rem;
+    line-height: 1.4;
+    border-left: 3px solid transparent;
+    transition: all var(--transition-fast);
+}
+
+.step-nav-item:hover { background: var(--gray-100); color: var(--sf-mid-blue); }
+
+.step-nav-item.active {
+    background: #eaf7fd;
+    border-left-color: var(--sf-blue);
+    color: var(--sf-mid-blue);
+    font-weight: 700;
+}
+
+.step-nav-item.completed .nav-index {
+    background: var(--sf-green);
+    border-color: var(--sf-green);
+    color: #ffffff;
+}
+
+.nav-index {
+    flex-shrink: 0;
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    border: 2px solid var(--gray-300);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-heading);
+    font-size: 0.6875rem;
+    font-weight: 700;
+    color: var(--gray-500);
+}
+
+.nav-text { flex: 1; }
+
+.nav-time {
+    flex-shrink: 0;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--sf-blue);
+    background: var(--gray-100);
+    padding: 1px 7px;
+    border-radius: var(--radius-full);
+    white-space: nowrap;
+}
+
+/* ---------- Steps container ---------- */
+.steps-container {
+    flex: 1;
+    min-width: 0;
+    max-width: var(--content-max-width);
+}
+
+.step-card {
+    background: #ffffff;
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-lg);
+    margin-bottom: var(--space-xl);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    transition: box-shadow var(--transition-fast), border-color var(--transition-fast);
+}
+
+.step-card:hover { box-shadow: var(--shadow-md); }
+.step-card.completed { border-color: var(--sf-green); }
+.step-card.completed .step-number { background: var(--sf-green); }
+
+.step-header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    padding: var(--space-lg);
+    background: linear-gradient(135deg, #f4f9fc 0%, #ffffff 100%);
+    border-bottom: 1px solid var(--gray-200);
+    cursor: pointer;
+    user-select: none;
+}
+
+.step-number {
+    flex-shrink: 0;
+    width: 42px; height: 42px;
+    border-radius: 50%;
+    background: var(--sf-blue);
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-heading);
+    font-weight: 800;
+    font-size: 1.0625rem;
+}
+
+.step-title { flex: 1; font-size: 1.0625rem; font-weight: 700; margin: 0; }
+
+.step-duration {
+    flex-shrink: 0;
+    font-family: var(--font-heading);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--sf-mid-blue);
+    background: #eaf7fd;
+    border: 1px solid #c7e9f8;
+    padding: 4px 12px;
+    border-radius: var(--radius-full);
+    white-space: nowrap;
+}
+
+.step-content { padding: var(--space-xl); }
+.step-content.collapsed { display: none; }
+
+.step-content h3 {
+    font-size: 1rem;
+    margin: var(--space-xl) 0 var(--space-sm);
+}
+
+.step-content h3:first-child { margin-top: 0; }
+
+.step-content h4 {
+    font-size: 0.9375rem;
+    color: var(--sf-mid-blue);
+    margin: var(--space-lg) 0 var(--space-sm);
+}
+
+/* ---------- Code blocks ---------- */
+.code-block {
+    background: #0f172a;
+    border-radius: var(--radius-md);
+    margin: var(--space-lg) 0;
+    overflow: hidden;
+    border: 1px solid #1e293b;
+}
+
+.code-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-md);
+    padding: var(--space-sm) var(--space-md);
+    background: #1e293b;
+    border-bottom: 1px solid #334155;
+}
+
+.code-lang {
+    font-family: var(--font-heading);
+    font-size: 0.6875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--gray-400);
+}
+
+.btn-copy {
+    background: var(--sf-blue);
+    color: #ffffff;
+    border: none;
+    padding: 5px 16px;
+    border-radius: var(--radius-full);
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    font-weight: 700;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background var(--transition-fast), transform var(--transition-fast);
+}
+
+.btn-copy:hover { background: #1da5d8; transform: translateY(-1px); }
+.btn-copy:active { transform: translateY(0); }
+.btn-copy.copied { background: var(--sf-green); }
+
+.code-block pre {
+    margin: 0;
+    padding: var(--space-lg);
+    overflow-x: auto;
+    max-width: 100%;
+}
+
+.code-block pre code {
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    line-height: 1.65;
+    color: #e2e8f0;
+    white-space: pre;
+    display: block;
+    background: none;
+    border: none;
+    padding: 0;
+}
+
+/* ---------- Info boxes ---------- */
+.info-box {
+    display: flex;
+    gap: var(--space-md);
+    padding: var(--space-lg);
+    margin: var(--space-lg) 0;
+    border-radius: var(--radius-md);
+    border-left: 4px solid var(--sf-blue);
+    background: var(--gray-100);
+}
+
+.info-box .icon { flex-shrink: 0; font-size: 1.25rem; line-height: 1.4; }
+.info-box > div { flex: 1; min-width: 0; }
+
+.info-box strong {
+    display: block;
+    font-family: var(--font-heading);
+    font-size: 0.8125rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: var(--space-xs);
+}
+
+.info-box p { font-size: 0.9375rem; margin-bottom: var(--space-sm); }
+.info-box p:last-child { margin-bottom: 0; }
+.info-box ul, .info-box ol { font-size: 0.9375rem; margin-bottom: 0; }
+
+.info-box.info    { background: #eaf7fd; border-left-color: var(--sf-blue); }
+.info-box.tip     { background: #eef9f1; border-left-color: var(--sf-green); }
+.info-box.tip strong { color: #1f7a33; }
+.info-box.warning { background: #fff8ec; border-left-color: var(--sf-orange); }
+.info-box.warning strong { color: #b45309; }
+.info-box.success { background: #eef9f1; border-left-color: var(--sf-green); }
+.info-box.success strong { color: #1f7a33; }
+.info-box.danger  { background: #fdefef; border-left-color: var(--sf-red); }
+.info-box.danger strong { color: #b02525; }
+
+/* ---------- Tables ---------- */
+.table-wrapper {
+    overflow-x: auto;
+    margin: var(--space-lg) 0;
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-md);
+}
+
+table, .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+    background: #ffffff;
+}
+
+table th, .data-table th {
+    background: var(--sf-mid-blue);
+    color: #ffffff;
+    font-family: var(--font-heading);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    text-align: left;
+    padding: var(--space-sm) var(--space-md);
+    white-space: nowrap;
+}
+
+table td, .data-table td {
+    padding: var(--space-sm) var(--space-md);
+    border-bottom: 1px solid var(--gray-200);
+    vertical-align: top;
+}
+
+table tbody tr:last-child td { border-bottom: none; }
+table tbody tr:nth-child(even) { background: var(--gray-50); }
+
+/* ---------- Completion checkbox ---------- */
+.completion-checkbox {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    margin-top: var(--space-xl);
+    padding: var(--space-md) var(--space-lg);
+    background: var(--gray-50);
+    border: 1px dashed var(--gray-300);
+    border-radius: var(--radius-md);
+    font-family: var(--font-heading);
+    font-size: 0.8125rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--sf-mid-blue);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.completion-checkbox:hover { background: #eaf7fd; border-color: var(--sf-blue); }
+
+.completion-checkbox input[type="checkbox"] {
+    width: 18px; height: 18px;
+    accent-color: var(--sf-green);
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+/* ---------- Resources ---------- */
+.resources-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: var(--space-lg);
+}
+
+.resource-card {
+    display: block;
+    background: #ffffff;
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-lg);
+    padding: var(--space-lg);
+    box-shadow: var(--shadow-sm);
+    transition: all var(--transition-fast);
+}
+
+.resource-card:hover {
+    border-color: var(--sf-blue);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+}
+
+.resource-card h4 {
+    font-family: var(--font-heading);
+    font-size: 0.9375rem;
+    color: var(--sf-mid-blue);
+    margin-bottom: var(--space-xs);
+}
+
+.resource-card p { font-size: 0.875rem; color: var(--sf-text); margin: 0; }
+
+/* ---------- Completion / next steps ---------- */
+.completion-section {
+    background: linear-gradient(135deg, #11567F 0%, #0a3a5c 100%);
+    color: #ffffff;
+    padding: var(--space-2xl) var(--space-xl);
+    text-align: center;
+}
+
+.completion-container { max-width: 780px; margin: 0 auto; }
+
+.completion-section h2 { color: #ffffff; font-size: 1.75rem; margin-bottom: var(--space-md); }
+.completion-section p { color: rgba(255,255,255,0.88); }
+
+.completion-section .cta-row {
+    display: flex;
+    justify-content: center;
+    gap: var(--space-md);
+    flex-wrap: wrap;
+    margin-top: var(--space-xl);
+}
+
+.btn-primary {
+    display: inline-block;
+    background: var(--sf-blue);
+    color: #ffffff;
+    padding: var(--space-sm) var(--space-xl);
+    border-radius: var(--radius-full);
+    font-family: var(--font-heading);
+    font-size: 0.875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: all var(--transition-fast);
+}
+
+.btn-primary:hover { background: #1da5d8; color: #ffffff; transform: translateY(-2px); }
+
+.btn-secondary {
+    display: inline-block;
+    background: transparent;
+    border: 2px solid rgba(255,255,255,0.45);
+    color: #ffffff;
+    padding: calc(var(--space-sm) - 2px) calc(var(--space-xl) - 2px);
+    border-radius: var(--radius-full);
+    font-family: var(--font-heading);
+    font-size: 0.875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: all var(--transition-fast);
+}
+
+.btn-secondary:hover { background: rgba(255,255,255,0.12); color: #ffffff; }
+
+/* ---------- Footer ---------- */
+.hol-footer {
+    background: #0f172a;
+    color: var(--gray-400);
+    padding: var(--space-xl);
+    text-align: center;
+    font-size: 0.8125rem;
+}
+
+.hol-footer p { margin-bottom: var(--space-xs); }
+
+/* ---------- Responsive ---------- */
+@media (max-width: 1024px) {
+    .lab-layout { flex-direction: column; gap: var(--space-lg); }
+
+    .sidebar-nav {
+        position: static;
+        width: 100%;
+        max-height: none;
+        overflow: visible;
+    }
+
+    .steps-container { max-width: 100%; width: 100%; }
+
+    .overview-grid { grid-template-columns: 1fr; }
+
+    .hero-title { font-size: 1.875rem; }
+    .hero-section { padding: var(--space-xl) var(--space-lg); }
+    .content-section { padding: var(--space-xl) var(--space-lg); }
+    .lab-layout { padding: 0 var(--space-lg) var(--space-xl); }
+}
+
+@media (max-width: 640px) {
+    .header-container { padding: 0 var(--space-md); gap: var(--space-md); }
+    .header-title { font-size: 0.8125rem; }
+    .hero-title { font-size: 1.5rem; }
+    .hero-meta { flex-direction: column; }
+    .meta-item { width: 100%; }
+    .step-header { flex-wrap: wrap; }
+    .step-title { flex-basis: 100%; order: 3; }
+    .step-content { padding: var(--space-lg) var(--space-md); }
+    .code-block pre { padding: var(--space-md); }
+}
+
+/* ---------- Print ---------- */
+@media print {
+    .hol-header, .sidebar-nav, .btn-copy, .breadcrumb-bar,
+    .completion-section .cta-row { display: none !important; }
+
+    body { background: #ffffff; color: #000000; font-size: 11pt; }
+
+    .hero-section, .completion-section {
+        background: #ffffff !important;
+        color: #000000 !important;
+        border-bottom: 2px solid #11567F;
+    }
+
+    .hero-title, .hero-subtitle, .meta-value, .meta-label,
+    .completion-section h2, .completion-section p { color: #000000 !important; }
+
+    .lab-layout { display: block; padding: 0; }
+    .steps-container { max-width: 100%; }
+
+    .step-card { border: 1px solid #999; box-shadow: none; page-break-inside: avoid; }
+    .step-content, .step-content.collapsed { display: block !important; padding: 12pt 0; }
+    .step-header { background: #ffffff !important; }
+
+    .code-block { background: #f4f4f4 !important; border: 1px solid #999; page-break-inside: avoid; }
+    .code-block pre code { color: #000000 !important; font-size: 9pt; white-space: pre-wrap; }
+    .code-header { background: #e4e4e4 !important; }
+    .code-lang { color: #333 !important; }
+
+    .info-box { border: 1px solid #999; background: #f8f8f8 !important; page-break-inside: avoid; }
+    table th { background: #e4e4e4 !important; color: #000000 !important; }
+
+    a { color: #000000; text-decoration: underline; }
+    .hol-footer { background: #ffffff; color: #000000; border-top: 1px solid #999; }
+}
+
+/* Wilderness workshop additions on top of the S1 base stylesheet (_build/base.css). */
+:root { color-scheme: light; }
+
+/* Logo: inline SVG mark plus wordmark (no remote images) */
+.snowflake-logo { display: flex; align-items: center; gap: 10px; height: 48px; }
+.snowflake-logo svg { width: 34px; height: 34px; }
+.snowflake-logo .wordmark {
+    font-family: var(--font-heading); font-weight: 800; font-size: 1.35rem;
+    color: var(--sf-blue); letter-spacing: 0.5px;
+}
+
+/* Callouts without icons: the label sits in the strong line */
+.info-box { display: block; }
+.info-box > strong:first-child, .info-box > div > strong:first-child { display: block; }
+
+/* Copy chips: every value a participant types */
+code.chip {
+    cursor: pointer; white-space: nowrap;
+    background: #eaf7fd; border: 1px solid #b9e3f6; color: var(--sf-mid-blue);
+}
+code.chip:hover { background: #d6f0fb; border-color: var(--sf-blue); }
+code.chip.copied { background: #eef9f1; border-color: var(--sf-green); color: #1f7a33; }
+code.chip.copied::after { content: " copied"; font-family: var(--font-body); font-size: 0.75em; }
+
+/* Form tables in Lab 1 */
+.form-table td:first-child { font-weight: 700; color: var(--sf-mid-blue); white-space: nowrap; }
+
+/* Numbered UI steps */
+ol.ui-steps { counter-reset: ui; list-style: none; margin-left: 0; }
+ol.ui-steps > li { counter-increment: ui; position: relative; padding-left: 2.25rem; margin-bottom: var(--space-sm); }
+ol.ui-steps > li::before {
+    content: counter(ui); position: absolute; left: 0; top: 0.1rem;
+    width: 1.5rem; height: 1.5rem; border-radius: 50%;
+    background: var(--sf-blue); color: #fff; font-weight: 700; font-size: 0.8rem;
+    display: flex; align-items: center; justify-content: center;
+}
+.path { font-weight: 700; color: var(--sf-mid-blue); }
+
+/* Cortex Code prompt blocks wrap long lines */
+.code-block.prompt pre code {
+    white-space: pre-wrap; word-break: break-word;
+    font-family: var(--font-body); font-size: 0.975rem; line-height: 1.6;
+}
+.code-block.prompt .code-lang { background: var(--sf-mid-blue); color: #fff; }
+
+/* Collapsed callouts: Running late? / Stuck? / SQL fallback */
+details.callout {
+    border: 1px solid var(--gray-200); border-left: 4px solid var(--sf-yellow);
+    border-radius: var(--radius-md); background: #fffbeb; margin: var(--space-lg) 0;
+}
+details.callout.stuck { border-left-color: var(--sf-orange); background: #fff8ec; }
+details.callout.fallback { border-left-color: var(--sf-blue); background: #eaf7fd; }
+details.callout summary {
+    cursor: pointer; padding: var(--space-md) var(--space-lg);
+    font-family: var(--font-heading); font-weight: 700; color: var(--sf-mid-blue);
+}
+details.callout > div { padding: 0 var(--space-lg) var(--space-lg); }
+
+/* Screenshot slots, filled at the dry run */
+figure.shot-slot {
+    margin: var(--space-lg) 0; padding: var(--space-xl);
+    border: 2px dashed var(--gray-300); border-radius: var(--radius-md);
+    background: var(--gray-50); text-align: center; color: var(--gray-500); font-size: 0.875rem;
+}
+figure.shot-slot img { margin: 0 auto; border-radius: var(--radius-sm); }
+
+/* Quote from the brief */
+blockquote.brief {
+    margin: var(--space-lg) 0; padding: var(--space-lg) var(--space-xl);
+    border-left: 4px solid var(--sf-blue); background: #ffffff; border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm); font-style: italic;
+}
+blockquote.brief cite { display: block; margin-top: var(--space-sm); font-style: normal; font-weight: 700; color: var(--sf-mid-blue); }
+
+/* Optional steps */
+.step-card.optional .step-number { background: var(--gray-400); }
+.step-nav-item.optional .nav-index { background: var(--gray-200); color: var(--gray-500); }
+.badge-optional {
+    font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;
+    background: var(--gray-200); color: var(--gray-700); border-radius: var(--radius-full); padding: 2px 8px;
+}
+
+/* Index page: lab cards and agenda */
+.lab-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: var(--space-lg); }
+.lab-card {
+    display: flex; flex-direction: column; gap: var(--space-sm);
+    background: #fff; border: 1px solid var(--gray-200); border-radius: var(--radius-lg);
+    padding: var(--space-xl); box-shadow: var(--shadow-sm); color: var(--sf-text);
+}
+a.lab-card:hover { box-shadow: var(--shadow-md); border-color: var(--sf-blue); color: var(--sf-text); }
+.lab-card .lab-when { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; color: var(--sf-blue); letter-spacing: 0.5px; }
+.lab-card h3 { font-size: 1.05rem; margin: 0; }
+.lab-card .lab-go { margin-top: auto; font-weight: 700; color: var(--sf-blue); }
+.lab-card.pending { opacity: 0.75; }
+.cast { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: var(--space-md); }
+.cast div { background: #fff; border: 1px solid var(--gray-200); border-radius: var(--radius-md); padding: var(--space-md); }
+.figure-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: var(--space-md); margin: var(--space-lg) 0; }
+.figure-row div { background: #fff; border-radius: var(--radius-md); border-top: 4px solid var(--sf-blue); padding: var(--space-md); box-shadow: var(--shadow-sm); }
+.figure-row b { display: block; font-family: var(--font-heading); font-size: 1.5rem; color: var(--sf-mid-blue); }
+
+</style>
+</head>
+<body>
+
+<header class="hol-header">
+    <div class="header-container">
+        <span class="snowflake-logo" role="img" aria-label="Snowflake"><svg viewBox="0 0 40 40" aria-hidden="true"><g stroke="#29B5E8" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"><line x1="20.0" y1="20.0" x2="20.0" y2="3.5"/><polyline points="15.0,7.5 20.0,12.0 25.0,7.5"/><line x1="20.0" y1="20.0" x2="34.29" y2="11.75"/><polyline points="28.33,9.42 26.93,16.0 33.33,18.08"/><line x1="20.0" y1="20.0" x2="34.29" y2="28.25"/><polyline points="33.33,21.92 26.93,24.0 28.33,30.58"/><line x1="20.0" y1="20.0" x2="20.0" y2="36.5"/><polyline points="25.0,32.5 20.0,28.0 15.0,32.5"/><line x1="20.0" y1="20.0" x2="5.71" y2="28.25"/><polyline points="11.67,30.58 13.07,24.0 6.67,21.92"/><line x1="20.0" y1="20.0" x2="5.71" y2="11.75"/><polyline points="6.67,18.08 13.07,16.0 11.67,9.42"/></g></svg><span class="wordmark">snowflake</span></span>
+        <span class="logo-divider"></span>
+        <div class="header-title">
+            Wilderness Outfitters: Christmas Trading with an AI Workforce
+            <span>Workshop index</span>
+        </div>
+    </div>
+</header>
+
+<section class="hero-section">
+    <div class="hero-container">
+        <span class="hero-badge">One-day workshop · Wednesday 4 November 2026</span>
+        <h1 class="hero-title">Wilderness Outfitters: Christmas Trading with an AI Workforce</h1>
+        <p class="hero-subtitle">Seven weeks to Christmas. Build an assistant for 72 store managers, a stock plan for every store, and the controls to run them both until Christmas Eve, in one day, in your own Snowflake account.</p>
+        <div class="hero-meta">
+            <div class="meta-item"><span class="meta-label">Labs</span><span class="meta-value">3</span></div>
+            <div class="meta-item"><span class="meta-label">Time</span><span class="meta-value">4 hours</span></div>
+            <div class="meta-item"><span class="meta-label">Account</span><span class="meta-value">One trial each</span></div>
+            <div class="meta-item"><span class="meta-label">For</span><span class="meta-value">Deloitte APJ</span></div>
+        </div>
+    </div>
+</section>
+
+<div class="breadcrumb-bar"><div class="breadcrumb-inner">A Snowflake hands-on workshop for Deloitte APJ</div></div>
+
+<section class="content-section alt-bg">
+    <div class="section-container">
+        <h2 class="section-title">The brief</h2>
+        <p>Wilderness Outfitters is a big-box Australian outdoor retailer: 72 stores across every state and the ACT, plus online, selling camping, hiking, fishing, kayaking and snow gear, with about 180,000 Basecamp loyalty members. In Australia, Christmas is summer. The eight weeks from 1 November to Christmas Eve are camping season and bring in about a quarter of the year's sales.</p>
+        <p>Last Christmas Wilderness sold out of tents in the second week of December, so this year the buyers ordered tents 40% deeper. Sleeping bags, mats, stoves and lights were ordered as usual.</p>
+        <p>It is Wednesday 4 November 2026. The Christmas catalogue dropped on Sunday, and the first weekend was the biggest November weekend Wilderness has had.</p>
+        <blockquote class="brief">
+            "Everyone wants a tent for Christmas, and we bet on it. Three days in, the bet looks right in Sydney and Brisbane and wrong in Melbourne and Hobart. Every family that buys a tent also needs somewhere to sleep and something to cook on, and I don't think we bought enough of either. And the Summit 2P on our catalogue cover is already coming back with broken poles. I have seven weeks. My store managers need to know every morning what to sell, what to move and what to send back, and today the answers sit in three systems, a stack of supplier PDFs and twenty thousand reviews nobody reads."
+            <cite>Martha Thompson, Chief Customer Officer</cite>
+        </blockquote>
+
+        <div class="figure-row">
+            <div><b>72</b>stores, plus online</div>
+            <div><b>7 weeks</b>to Christmas Eve</div>
+            <div><b>+40%</b>tents ordered, kit ordered as usual</div>
+            <div><b>20,000</b>customer comments, unread</div>
+        </div>
+
+        <h3>How it works today</h3>
+        <p>Each of Martha's three questions has an answer somewhere. None of them reaches a store manager by opening time.</p>
+        <ul>
+            <li><strong>What to sell.</strong> Sales come from the tills and the website into the sales system overnight. Head office sends a weekly sales report on a Monday, which reaches stores after the weekend it describes.</li>
+            <li><strong>What to move.</strong> Stock on hand and on order sit in the merchandising system, by store and by batch. Seeing which stores will run out and which will be left holding stock means exporting both systems into a spreadsheet and matching them by hand.</li>
+            <li><strong>What to send back.</strong> The returns desk records a reason code on each return, and "faulty" covers everything from a snapped pole to a customer who could not pitch the tent. What the customer actually said is in a free-text note nobody reads.</li>
+            <li><strong>The fine print.</strong> What suppliers will take back, and by when, is in their agreements, which arrive as PDFs. The buying guides that tell staff what goes with a tent are PDFs too.</li>
+            <li><strong>The customers.</strong> Reviews, returns notes and post-purchase surveys add up to twenty thousand comments. They are where the broken Summit 2P poles showed up first.</li>
+        </ul>
+        <p>It takes a merchandising analyst most of a day to pull that together for one question in one state. Martha needs it for every store, every morning, until Christmas Eve.</p>
+        <p>Your firm has been engaged to help. You are the team that builds it, in one day, in your own Snowflake account.</p>
+        <div class="cast">
+            <div><strong>Martha Thompson</strong><br>Chief Customer Officer. Owns the Christmas brief and receives the morning briefing.</div>
+            <div><strong>Tom Walsh</strong><br>Head of Data &amp; Analytics. Wants to know it is right, what it costs and who sees what.</div>
+            <div><strong>The store managers</strong><br>72 of them. They use CoWork, not Snowsight.</div>
+        </div>
+    </div>
+</section>
+
+<section class="content-section">
+    <div class="section-container">
+        <h2 class="section-title">The labs</h2>
+        <div class="lab-grid">
+            <a class="lab-card" href="lab1_cowork.html">
+                <span class="lab-when">Morning · 60 min</span>
+                <h3>Lab 1: Your Christmas assistant in CoWork</h3>
+                <p>Store managers get an assistant that answers the tent question, and an email with the sleeping-gear shortfall on a schedule.</p>
+                <p><em>Data model, search, a semantic view, an agent, CoWork, artifacts and automations. No code.</em></p>
+                <span class="lab-go">Open Lab 1 &rarr;</span>
+            </a>
+            <a class="lab-card" href="lab2_workspaces.html">
+                <span class="lab-when">Morning · 60 min</span>
+                <h3>Lab 2: From the answer to a plan for every store</h3>
+                <p>An analyst turns the answer into a stock plan for every store, separating real faults from first-timer returns.</p>
+                <p><em>Workspaces, Cortex Code, an AI function, a notebook that publishes a view, an app on that view.</em></p>
+                <span class="lab-go">Open Lab 2 &rarr;</span>
+            </a>
+            <a class="lab-card" href="lab3_advanced.html">
+                <span class="lab-when">Afternoon · 90 min</span>
+                <h3>Lab 3: Ready for Christmas</h3>
+                <p>Tom Walsh: "Before 72 stores lean on this every morning to Christmas Eve: is it right, what will it cost us, and who sees what?"</p>
+                <p><em>Agent and semantic view evaluations, Cortex Code finding and fixing what is wrong, versions you can promote, cost controls and masking.</em></p>
+                <span class="lab-go">Open Lab 3 &rarr;</span>
+            </a>
+        </div>
+        <p style="margin-top:var(--space-lg);">Labs 1 and 2 are for everyone and need no SQL. Lab 3 is technical: you paste and read SQL. You use the same account all day, and the afternoon starts from what you built in the morning.</p>
+    </div>
+</section>
+
+<section class="content-section alt-bg">
+    <div class="section-container">
+        <h2 class="section-title">Before the workshop</h2>
+        <div class="info-box info">
+            <strong>Create your trial account</strong>
+            <ul>
+                <li>Sign up for a Snowflake trial: <strong>Enterprise</strong> edition, <strong>AWS</strong>, region <strong>US West 2 (Oregon)</strong>.</li>
+                <li>Click the verification link in the welcome email before the workshop. The Lab 1 automation and the Lab 3 report both email you, and an unverified address receives nothing.</li>
+                <li>Keep the account until the end of the day. Everything you build carries into the next lab.</li>
+            </ul>
+        </div>
+        <p>You need a laptop with a current browser. You work as <code>ACCOUNTADMIN</code> in your own account all day; nothing is shared between participants.</p>
+    </div>
+</section>
+
+<section class="content-section">
+    <div class="section-container">
+        <div class="info-box warning">
+            <strong>Synthetic data</strong>
+            <p>Wilderness Outfitters is a fictional company. All stores, products, people, sales, feedback and documents in this workshop are synthetic and generated for training. Any resemblance to a real business is coincidental.</p>
+        </div>
+    </div>
+</section>
+
+
+<footer class="hol-footer">
+    <p>Wilderness Outfitters: Christmas Trading with an AI Workforce &middot; Workshop index</p>
+    <p>&copy; 2026 Snowflake Inc. All Rights Reserved.</p>
+</footer>
+
+<script>
+/* Wilderness workshop guide: copy buttons, copy chips, step toggles, core-only progress. */
+const STORAGE_KEY = 'workshop_wilderness_index';
+const CORE_STEPS = [];
+
+function flash(el, cls, label, text, ms) {
+    el.classList.add(cls);
+    if (label !== null) { el.textContent = label; }
+    setTimeout(function () {
+        el.classList.remove(cls);
+        if (label !== null) { el.textContent = text; }
+    }, ms);
+}
+
+function copyText(text, onDone, onFail) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(onDone).catch(onFail);
+    } else {
+        onFail();
+    }
+}
+
+document.addEventListener('click', function (ev) {
+    const btn = ev.target.closest('.btn-copy');
+    if (btn) {
+        const code = btn.closest('.code-block').querySelector('code');
+        const original = btn.textContent;
+        copyText(code.textContent,
+            function () { flash(btn, 'copied', 'Copied', original, 2000); },
+            function () { flash(btn, 'copied', 'Press Ctrl+C', original, 2000); });
+        return;
+    }
+    const chip = ev.target.closest('code.chip');
+    if (chip) {
+        copyText(chip.textContent, function () { flash(chip, 'copied', null, null, 1200); }, function () {});
+        return;
+    }
+    const header = ev.target.closest('.step-header');
+    if (header) {
+        const content = header.parentElement.querySelector('.step-content');
+        if (content) { content.classList.toggle('collapsed'); }
+    }
+});
+
+function readState() {
+    try {
+        const parsed = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+        parsed.steps = parsed.steps || {};
+        return parsed;
+    } catch (e) {
+        return { steps: {} };
+    }
+}
+
+function writeState(state) {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) { /* not persisted */ }
+}
+
+function renderProgress(state) {
+    let done = 0;
+    CORE_STEPS.forEach(function (n) { if (state.steps[n] === true) { done++; } });
+    const pct = CORE_STEPS.length ? Math.round(done / CORE_STEPS.length * 100) : 0;
+    const fill = document.getElementById('progressFill');
+    const label = document.getElementById('progressPercent');
+    if (fill) { fill.style.width = pct + '%'; }
+    if (label) { label.textContent = pct + '%'; }
+    CORE_STEPS.forEach(function (n) {
+        const isDone = state.steps[n] === true;
+        const card = document.getElementById('step-' + n);
+        const nav = document.querySelector('.step-nav-item[data-step="' + n + '"]');
+        if (card) {
+            card.classList.toggle('completed', isDone);
+            const box = card.querySelector('.completion-checkbox input');
+            if (box) { box.checked = isDone; }
+        }
+        if (nav) { nav.classList.toggle('completed', isDone); }
+    });
+}
+
+document.addEventListener('change', function (ev) {
+    const box = ev.target.closest('.completion-checkbox input');
+    if (!box) { return; }
+    const state = readState();
+    state.steps[box.getAttribute('data-step')] = box.checked;
+    state.lastUpdated = new Date().toISOString();
+    writeState(state);
+    renderProgress(state);
+});
+
+function initScrollSpy() {
+    const cards = Array.prototype.slice.call(document.querySelectorAll('.step-card'));
+    if (!cards.length || !('IntersectionObserver' in window)) { return; }
+    function setActive(n) {
+        document.querySelectorAll('.step-nav-item').forEach(function (item) {
+            item.classList.toggle('active', item.getAttribute('data-step') === String(n));
+        });
+    }
+    const observer = new IntersectionObserver(function (entries) {
+        const visible = entries.filter(function (e) { return e.isIntersecting; });
+        if (!visible.length) { return; }
+        visible.sort(function (a, b) { return a.boundingClientRect.top - b.boundingClientRect.top; });
+        setActive(visible[0].target.id.replace('step-', ''));
+    }, { rootMargin: '-90px 0px -55% 0px', threshold: 0 });
+    cards.forEach(function (card) { observer.observe(card); });
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+    renderProgress(readState());
+    initScrollSpy();
+});
+</script>
+
+</body>
+</html>

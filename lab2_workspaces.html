@@ -1,0 +1,1594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="snowflake-source" content="cortex-agent-authored">
+<title>Lab 2: From the answer to a plan for every store</title>
+<script type="application/json" id="snowflake-report-metadata">{
+ "generated": "2026-10-29",
+ "intent": "Lab 2: From the answer to a plan for every store",
+ "producerNotes": "Built by _build/build.py from _build/src/guides. Figures were measured on the build account; screenshots are captured at the dry run.",
+ "sections": [
+  {
+   "id": "step-1",
+   "title": "Open a Workspace and brief Cortex Code"
+  },
+  {
+   "id": "step-2",
+   "title": "Get to know the data and find the problem"
+  },
+  {
+   "id": "step-3",
+   "title": "Build the stock plan in a notebook, with an AI function"
+  },
+  {
+   "id": "step-4",
+   "title": "Complete the kit: an offer for Basecamp members"
+  },
+  {
+   "id": "step-5",
+   "title": "Ship it as an app"
+  },
+  {
+   "id": "step-6",
+   "title": "What you just built"
+  },
+  {
+   "id": "step-7",
+   "title": "Ask Cortex Code to explain the logic"
+  },
+  {
+   "id": "step-8",
+   "title": "Add a state filter and a map"
+  },
+  {
+   "id": "step-9",
+   "title": "Document the notebook"
+  }
+ ]
+}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+
+/* ============================================================
+   Snowflake HOL base stylesheet (S1): extracted from fsi_generic/fsi_workshop_lab1_foundation.html
+   ============================================================ */
+
+:root {
+    /* Brand */
+    --sf-blue: #29B5E8;
+    --sf-mid-blue: #11567F;
+    --sf-deep-blue: #0a3a5c;
+    --sf-text: #5B5B5B;
+    --sf-heading: #11567F;
+    --sf-orange: #ff922b;
+    --sf-green: #37B24D;
+    --sf-red: #E03131;
+    --sf-yellow: #F59F00;
+
+    /* Neutrals */
+    --gray-50: #f8fafc;
+    --gray-100: #f1f5f9;
+    --gray-200: #e2e8f0;
+    --gray-300: #cbd5e1;
+    --gray-400: #94a3b8;
+    --gray-500: #64748b;
+    --gray-700: #334155;
+    --gray-800: #1e293b;
+    --gray-900: #0f172a;
+
+    /* Type */
+    --font-heading: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --font-body: 'Lato', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --font-mono: 'SFMono-Regular', 'JetBrains Mono', Menlo, Consolas, 'Courier New', monospace;
+
+    /* Spacing */
+    --space-xs: 0.25rem;
+    --space-sm: 0.5rem;
+    --space-md: 1rem;
+    --space-lg: 1.5rem;
+    --space-xl: 2rem;
+    --space-2xl: 3rem;
+
+    /* Radius */
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --radius-xl: 16px;
+    --radius-full: 9999px;
+
+    /* Shadows */
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+    --shadow-md: 0 4px 14px rgba(0,0,0,0.10);
+    --shadow-lg: 0 10px 30px rgba(0,0,0,0.12);
+
+    /* Layout */
+    --header-height: 72px;
+    --sidebar-width: 300px;
+    --content-max-width: 900px;
+
+    --transition-fast: 150ms ease;
+    --transition-normal: 280ms ease;
+}
+
+/* ---------- Reset ---------- */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+    scroll-behavior: smooth;
+    scroll-padding-top: calc(var(--header-height) + var(--space-lg));
+}
+
+body {
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.7;
+    color: var(--sf-text);
+    background: var(--gray-50);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+img { max-width: 100%; height: auto; display: block; }
+
+h1, h2, h3, h4, h5 {
+    font-family: var(--font-heading);
+    color: var(--sf-heading);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    line-height: 1.25;
+    font-weight: 700;
+}
+
+h4, h5 { text-transform: none; letter-spacing: 0.2px; }
+
+p { margin-bottom: var(--space-md); }
+p:last-child { margin-bottom: 0; }
+
+a { color: var(--sf-blue); text-decoration: none; transition: color var(--transition-fast); }
+a:hover { color: var(--sf-mid-blue); }
+
+ul, ol { margin: 0 0 var(--space-md) var(--space-lg); }
+li { margin-bottom: var(--space-xs); }
+
+strong { color: var(--sf-mid-blue); font-weight: 700; }
+
+code:not(pre code) {
+    font-family: var(--font-mono);
+    font-size: 0.85em;
+    background: var(--gray-100);
+    color: var(--sf-mid-blue);
+    padding: 2px 6px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--gray-200);
+}
+
+/* ---------- Header ---------- */
+.hol-header {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: var(--header-height);
+    background: #ffffff;
+    border-bottom: 1px solid var(--gray-200);
+    box-shadow: var(--shadow-sm);
+    z-index: 200;
+}
+
+.header-container {
+    max-width: 1500px;
+    margin: 0 auto;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    gap: var(--space-lg);
+    padding: 0 var(--space-xl);
+}
+
+.snowflake-logo { height: 48px; width: auto; }
+
+.logo-divider { width: 1px; height: 30px; background: var(--gray-300); flex-shrink: 0; }
+
+.header-title {
+    font-family: var(--font-heading);
+    font-size: 0.9375rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--sf-mid-blue);
+}
+
+.header-title span {
+    display: block;
+    font-family: var(--font-body);
+    font-size: 0.8125rem;
+    font-weight: 400;
+    text-transform: none;
+    letter-spacing: 0;
+    color: var(--gray-500);
+}
+
+/* ---------- Hero ---------- */
+.hero-section {
+    margin-top: var(--header-height);
+    background: linear-gradient(135deg, #11567F 0%, #0a3a5c 100%);
+    color: #ffffff;
+    padding: var(--space-2xl) var(--space-xl);
+}
+
+.hero-container { max-width: 1200px; margin: 0 auto; }
+
+.hero-badge {
+    display: inline-block;
+    background: rgba(41,181,232,0.20);
+    border: 1px solid rgba(41,181,232,0.55);
+    color: var(--sf-blue);
+    padding: var(--space-xs) var(--space-md);
+    border-radius: var(--radius-full);
+    font-family: var(--font-heading);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: var(--space-md);
+}
+
+.hero-title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: #ffffff;
+    margin-bottom: var(--space-md);
+}
+
+.hero-subtitle {
+    font-size: 1.125rem;
+    color: rgba(255,255,255,0.88);
+    max-width: 780px;
+    margin-bottom: var(--space-xl);
+}
+
+.hero-meta { display: flex; flex-wrap: wrap; gap: var(--space-md); }
+
+.meta-item {
+    background: rgba(255,255,255,0.10);
+    border: 1px solid rgba(255,255,255,0.18);
+    border-radius: var(--radius-lg);
+    padding: var(--space-sm) var(--space-lg);
+    min-width: 150px;
+}
+
+.meta-label {
+    display: block;
+    font-family: var(--font-heading);
+    font-size: 0.6875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--sf-blue);
+    margin-bottom: 2px;
+}
+
+.meta-value { font-size: 1rem; font-weight: 700; color: #ffffff; }
+
+/* ---------- Breadcrumb ---------- */
+.breadcrumb-bar {
+    background: #ffffff;
+    border-bottom: 1px solid var(--gray-200);
+    padding: var(--space-sm) var(--space-xl);
+}
+
+.breadcrumb-inner { max-width: 1500px; margin: 0 auto; font-size: 0.875rem; }
+
+.breadcrumb-inner a { font-weight: 700; }
+
+/* ---------- Content sections ---------- */
+.content-section { padding: var(--space-2xl) var(--space-xl); }
+.content-section.alt-bg { background: #ffffff; }
+
+.section-container { max-width: 1200px; margin: 0 auto; }
+
+.section-title {
+    font-size: 1.5rem;
+    font-weight: 800;
+    margin-bottom: var(--space-xl);
+    padding-bottom: var(--space-sm);
+    position: relative;
+}
+
+.section-title::after {
+    content: '';
+    position: absolute;
+    left: 0; bottom: 0;
+    width: 64px; height: 4px;
+    background: linear-gradient(90deg, var(--sf-blue), var(--sf-mid-blue));
+    border-radius: var(--radius-full);
+}
+
+.overview-grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: var(--space-xl);
+}
+
+.overview-card {
+    background: #ffffff;
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-lg);
+    padding: var(--space-xl);
+    box-shadow: var(--shadow-sm);
+}
+
+.overview-card.highlight {
+    background: linear-gradient(135deg, #eaf7fd 0%, #ffffff 100%);
+    border-color: var(--sf-blue);
+}
+
+.overview-card h3 { font-size: 1rem; margin-bottom: var(--space-md); }
+
+.learning-list { list-style: none; margin-left: 0; }
+
+.learning-list li {
+    position: relative;
+    padding-left: var(--space-lg);
+    margin-bottom: var(--space-sm);
+}
+
+.learning-list li::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 11px;
+    width: 8px; height: 8px;
+    background: var(--sf-blue);
+    border-radius: 50%;
+}
+
+.tech-tags { display: flex; flex-wrap: wrap; gap: var(--space-sm); }
+
+.tech-tag {
+    display: inline-flex;
+    align-items: center;
+    background: var(--gray-100);
+    border: 1px solid var(--gray-200);
+    color: var(--sf-mid-blue);
+    padding: 5px 12px;
+    border-radius: var(--radius-full);
+    font-size: 0.8125rem;
+    font-weight: 700;
+}
+
+/* ---------- Layout: sidebar + steps ---------- */
+.lab-layout {
+    max-width: 1500px;
+    margin: 0 auto;
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-xl);
+    padding: 0 var(--space-xl) var(--space-2xl);
+}
+
+/* ---------- Sidebar nav ---------- */
+.sidebar-nav {
+    position: sticky;
+    top: calc(var(--header-height) + var(--space-lg));
+    width: var(--sidebar-width);
+    flex-shrink: 0;
+    background: #ffffff;
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-lg);
+    padding: var(--space-lg);
+    box-shadow: var(--shadow-sm);
+    max-height: calc(100vh - var(--header-height) - var(--space-2xl));
+    overflow-y: auto;
+}
+
+.progress-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: var(--space-sm);
+}
+
+.progress-label {
+    font-family: var(--font-heading);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--sf-mid-blue);
+}
+
+.progress-percent { font-weight: 700; color: var(--sf-blue); font-size: 0.9375rem; }
+
+.progress-bar {
+    height: 8px;
+    background: var(--gray-200);
+    border-radius: var(--radius-full);
+    overflow: hidden;
+    margin-bottom: var(--space-lg);
+}
+
+.progress-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--sf-blue), var(--sf-green));
+    border-radius: var(--radius-full);
+    transition: width var(--transition-normal);
+}
+
+.steps-nav { display: flex; flex-direction: column; gap: 2px; }
+
+.step-nav-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: var(--space-sm) var(--space-sm);
+    border-radius: var(--radius-md);
+    color: var(--sf-text);
+    font-size: 0.875rem;
+    line-height: 1.4;
+    border-left: 3px solid transparent;
+    transition: all var(--transition-fast);
+}
+
+.step-nav-item:hover { background: var(--gray-100); color: var(--sf-mid-blue); }
+
+.step-nav-item.active {
+    background: #eaf7fd;
+    border-left-color: var(--sf-blue);
+    color: var(--sf-mid-blue);
+    font-weight: 700;
+}
+
+.step-nav-item.completed .nav-index {
+    background: var(--sf-green);
+    border-color: var(--sf-green);
+    color: #ffffff;
+}
+
+.nav-index {
+    flex-shrink: 0;
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    border: 2px solid var(--gray-300);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-heading);
+    font-size: 0.6875rem;
+    font-weight: 700;
+    color: var(--gray-500);
+}
+
+.nav-text { flex: 1; }
+
+.nav-time {
+    flex-shrink: 0;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--sf-blue);
+    background: var(--gray-100);
+    padding: 1px 7px;
+    border-radius: var(--radius-full);
+    white-space: nowrap;
+}
+
+/* ---------- Steps container ---------- */
+.steps-container {
+    flex: 1;
+    min-width: 0;
+    max-width: var(--content-max-width);
+}
+
+.step-card {
+    background: #ffffff;
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-lg);
+    margin-bottom: var(--space-xl);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    transition: box-shadow var(--transition-fast), border-color var(--transition-fast);
+}
+
+.step-card:hover { box-shadow: var(--shadow-md); }
+.step-card.completed { border-color: var(--sf-green); }
+.step-card.completed .step-number { background: var(--sf-green); }
+
+.step-header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    padding: var(--space-lg);
+    background: linear-gradient(135deg, #f4f9fc 0%, #ffffff 100%);
+    border-bottom: 1px solid var(--gray-200);
+    cursor: pointer;
+    user-select: none;
+}
+
+.step-number {
+    flex-shrink: 0;
+    width: 42px; height: 42px;
+    border-radius: 50%;
+    background: var(--sf-blue);
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-heading);
+    font-weight: 800;
+    font-size: 1.0625rem;
+}
+
+.step-title { flex: 1; font-size: 1.0625rem; font-weight: 700; margin: 0; }
+
+.step-duration {
+    flex-shrink: 0;
+    font-family: var(--font-heading);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--sf-mid-blue);
+    background: #eaf7fd;
+    border: 1px solid #c7e9f8;
+    padding: 4px 12px;
+    border-radius: var(--radius-full);
+    white-space: nowrap;
+}
+
+.step-content { padding: var(--space-xl); }
+.step-content.collapsed { display: none; }
+
+.step-content h3 {
+    font-size: 1rem;
+    margin: var(--space-xl) 0 var(--space-sm);
+}
+
+.step-content h3:first-child { margin-top: 0; }
+
+.step-content h4 {
+    font-size: 0.9375rem;
+    color: var(--sf-mid-blue);
+    margin: var(--space-lg) 0 var(--space-sm);
+}
+
+/* ---------- Code blocks ---------- */
+.code-block {
+    background: #0f172a;
+    border-radius: var(--radius-md);
+    margin: var(--space-lg) 0;
+    overflow: hidden;
+    border: 1px solid #1e293b;
+}
+
+.code-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-md);
+    padding: var(--space-sm) var(--space-md);
+    background: #1e293b;
+    border-bottom: 1px solid #334155;
+}
+
+.code-lang {
+    font-family: var(--font-heading);
+    font-size: 0.6875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--gray-400);
+}
+
+.btn-copy {
+    background: var(--sf-blue);
+    color: #ffffff;
+    border: none;
+    padding: 5px 16px;
+    border-radius: var(--radius-full);
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    font-weight: 700;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background var(--transition-fast), transform var(--transition-fast);
+}
+
+.btn-copy:hover { background: #1da5d8; transform: translateY(-1px); }
+.btn-copy:active { transform: translateY(0); }
+.btn-copy.copied { background: var(--sf-green); }
+
+.code-block pre {
+    margin: 0;
+    padding: var(--space-lg);
+    overflow-x: auto;
+    max-width: 100%;
+}
+
+.code-block pre code {
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    line-height: 1.65;
+    color: #e2e8f0;
+    white-space: pre;
+    display: block;
+    background: none;
+    border: none;
+    padding: 0;
+}
+
+/* ---------- Info boxes ---------- */
+.info-box {
+    display: flex;
+    gap: var(--space-md);
+    padding: var(--space-lg);
+    margin: var(--space-lg) 0;
+    border-radius: var(--radius-md);
+    border-left: 4px solid var(--sf-blue);
+    background: var(--gray-100);
+}
+
+.info-box .icon { flex-shrink: 0; font-size: 1.25rem; line-height: 1.4; }
+.info-box > div { flex: 1; min-width: 0; }
+
+.info-box strong {
+    display: block;
+    font-family: var(--font-heading);
+    font-size: 0.8125rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: var(--space-xs);
+}
+
+.info-box p { font-size: 0.9375rem; margin-bottom: var(--space-sm); }
+.info-box p:last-child { margin-bottom: 0; }
+.info-box ul, .info-box ol { font-size: 0.9375rem; margin-bottom: 0; }
+
+.info-box.info    { background: #eaf7fd; border-left-color: var(--sf-blue); }
+.info-box.tip     { background: #eef9f1; border-left-color: var(--sf-green); }
+.info-box.tip strong { color: #1f7a33; }
+.info-box.warning { background: #fff8ec; border-left-color: var(--sf-orange); }
+.info-box.warning strong { color: #b45309; }
+.info-box.success { background: #eef9f1; border-left-color: var(--sf-green); }
+.info-box.success strong { color: #1f7a33; }
+.info-box.danger  { background: #fdefef; border-left-color: var(--sf-red); }
+.info-box.danger strong { color: #b02525; }
+
+/* ---------- Tables ---------- */
+.table-wrapper {
+    overflow-x: auto;
+    margin: var(--space-lg) 0;
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-md);
+}
+
+table, .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+    background: #ffffff;
+}
+
+table th, .data-table th {
+    background: var(--sf-mid-blue);
+    color: #ffffff;
+    font-family: var(--font-heading);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    text-align: left;
+    padding: var(--space-sm) var(--space-md);
+    white-space: nowrap;
+}
+
+table td, .data-table td {
+    padding: var(--space-sm) var(--space-md);
+    border-bottom: 1px solid var(--gray-200);
+    vertical-align: top;
+}
+
+table tbody tr:last-child td { border-bottom: none; }
+table tbody tr:nth-child(even) { background: var(--gray-50); }
+
+/* ---------- Completion checkbox ---------- */
+.completion-checkbox {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    margin-top: var(--space-xl);
+    padding: var(--space-md) var(--space-lg);
+    background: var(--gray-50);
+    border: 1px dashed var(--gray-300);
+    border-radius: var(--radius-md);
+    font-family: var(--font-heading);
+    font-size: 0.8125rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--sf-mid-blue);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.completion-checkbox:hover { background: #eaf7fd; border-color: var(--sf-blue); }
+
+.completion-checkbox input[type="checkbox"] {
+    width: 18px; height: 18px;
+    accent-color: var(--sf-green);
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+/* ---------- Resources ---------- */
+.resources-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: var(--space-lg);
+}
+
+.resource-card {
+    display: block;
+    background: #ffffff;
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-lg);
+    padding: var(--space-lg);
+    box-shadow: var(--shadow-sm);
+    transition: all var(--transition-fast);
+}
+
+.resource-card:hover {
+    border-color: var(--sf-blue);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+}
+
+.resource-card h4 {
+    font-family: var(--font-heading);
+    font-size: 0.9375rem;
+    color: var(--sf-mid-blue);
+    margin-bottom: var(--space-xs);
+}
+
+.resource-card p { font-size: 0.875rem; color: var(--sf-text); margin: 0; }
+
+/* ---------- Completion / next steps ---------- */
+.completion-section {
+    background: linear-gradient(135deg, #11567F 0%, #0a3a5c 100%);
+    color: #ffffff;
+    padding: var(--space-2xl) var(--space-xl);
+    text-align: center;
+}
+
+.completion-container { max-width: 780px; margin: 0 auto; }
+
+.completion-section h2 { color: #ffffff; font-size: 1.75rem; margin-bottom: var(--space-md); }
+.completion-section p { color: rgba(255,255,255,0.88); }
+
+.completion-section .cta-row {
+    display: flex;
+    justify-content: center;
+    gap: var(--space-md);
+    flex-wrap: wrap;
+    margin-top: var(--space-xl);
+}
+
+.btn-primary {
+    display: inline-block;
+    background: var(--sf-blue);
+    color: #ffffff;
+    padding: var(--space-sm) var(--space-xl);
+    border-radius: var(--radius-full);
+    font-family: var(--font-heading);
+    font-size: 0.875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: all var(--transition-fast);
+}
+
+.btn-primary:hover { background: #1da5d8; color: #ffffff; transform: translateY(-2px); }
+
+.btn-secondary {
+    display: inline-block;
+    background: transparent;
+    border: 2px solid rgba(255,255,255,0.45);
+    color: #ffffff;
+    padding: calc(var(--space-sm) - 2px) calc(var(--space-xl) - 2px);
+    border-radius: var(--radius-full);
+    font-family: var(--font-heading);
+    font-size: 0.875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: all var(--transition-fast);
+}
+
+.btn-secondary:hover { background: rgba(255,255,255,0.12); color: #ffffff; }
+
+/* ---------- Footer ---------- */
+.hol-footer {
+    background: #0f172a;
+    color: var(--gray-400);
+    padding: var(--space-xl);
+    text-align: center;
+    font-size: 0.8125rem;
+}
+
+.hol-footer p { margin-bottom: var(--space-xs); }
+
+/* ---------- Responsive ---------- */
+@media (max-width: 1024px) {
+    .lab-layout { flex-direction: column; gap: var(--space-lg); }
+
+    .sidebar-nav {
+        position: static;
+        width: 100%;
+        max-height: none;
+        overflow: visible;
+    }
+
+    .steps-container { max-width: 100%; width: 100%; }
+
+    .overview-grid { grid-template-columns: 1fr; }
+
+    .hero-title { font-size: 1.875rem; }
+    .hero-section { padding: var(--space-xl) var(--space-lg); }
+    .content-section { padding: var(--space-xl) var(--space-lg); }
+    .lab-layout { padding: 0 var(--space-lg) var(--space-xl); }
+}
+
+@media (max-width: 640px) {
+    .header-container { padding: 0 var(--space-md); gap: var(--space-md); }
+    .header-title { font-size: 0.8125rem; }
+    .hero-title { font-size: 1.5rem; }
+    .hero-meta { flex-direction: column; }
+    .meta-item { width: 100%; }
+    .step-header { flex-wrap: wrap; }
+    .step-title { flex-basis: 100%; order: 3; }
+    .step-content { padding: var(--space-lg) var(--space-md); }
+    .code-block pre { padding: var(--space-md); }
+}
+
+/* ---------- Print ---------- */
+@media print {
+    .hol-header, .sidebar-nav, .btn-copy, .breadcrumb-bar,
+    .completion-section .cta-row { display: none !important; }
+
+    body { background: #ffffff; color: #000000; font-size: 11pt; }
+
+    .hero-section, .completion-section {
+        background: #ffffff !important;
+        color: #000000 !important;
+        border-bottom: 2px solid #11567F;
+    }
+
+    .hero-title, .hero-subtitle, .meta-value, .meta-label,
+    .completion-section h2, .completion-section p { color: #000000 !important; }
+
+    .lab-layout { display: block; padding: 0; }
+    .steps-container { max-width: 100%; }
+
+    .step-card { border: 1px solid #999; box-shadow: none; page-break-inside: avoid; }
+    .step-content, .step-content.collapsed { display: block !important; padding: 12pt 0; }
+    .step-header { background: #ffffff !important; }
+
+    .code-block { background: #f4f4f4 !important; border: 1px solid #999; page-break-inside: avoid; }
+    .code-block pre code { color: #000000 !important; font-size: 9pt; white-space: pre-wrap; }
+    .code-header { background: #e4e4e4 !important; }
+    .code-lang { color: #333 !important; }
+
+    .info-box { border: 1px solid #999; background: #f8f8f8 !important; page-break-inside: avoid; }
+    table th { background: #e4e4e4 !important; color: #000000 !important; }
+
+    a { color: #000000; text-decoration: underline; }
+    .hol-footer { background: #ffffff; color: #000000; border-top: 1px solid #999; }
+}
+
+/* Wilderness workshop additions on top of the S1 base stylesheet (_build/base.css). */
+:root { color-scheme: light; }
+
+/* Logo: inline SVG mark plus wordmark (no remote images) */
+.snowflake-logo { display: flex; align-items: center; gap: 10px; height: 48px; }
+.snowflake-logo svg { width: 34px; height: 34px; }
+.snowflake-logo .wordmark {
+    font-family: var(--font-heading); font-weight: 800; font-size: 1.35rem;
+    color: var(--sf-blue); letter-spacing: 0.5px;
+}
+
+/* Callouts without icons: the label sits in the strong line */
+.info-box { display: block; }
+.info-box > strong:first-child, .info-box > div > strong:first-child { display: block; }
+
+/* Copy chips: every value a participant types */
+code.chip {
+    cursor: pointer; white-space: nowrap;
+    background: #eaf7fd; border: 1px solid #b9e3f6; color: var(--sf-mid-blue);
+}
+code.chip:hover { background: #d6f0fb; border-color: var(--sf-blue); }
+code.chip.copied { background: #eef9f1; border-color: var(--sf-green); color: #1f7a33; }
+code.chip.copied::after { content: " copied"; font-family: var(--font-body); font-size: 0.75em; }
+
+/* Form tables in Lab 1 */
+.form-table td:first-child { font-weight: 700; color: var(--sf-mid-blue); white-space: nowrap; }
+
+/* Numbered UI steps */
+ol.ui-steps { counter-reset: ui; list-style: none; margin-left: 0; }
+ol.ui-steps > li { counter-increment: ui; position: relative; padding-left: 2.25rem; margin-bottom: var(--space-sm); }
+ol.ui-steps > li::before {
+    content: counter(ui); position: absolute; left: 0; top: 0.1rem;
+    width: 1.5rem; height: 1.5rem; border-radius: 50%;
+    background: var(--sf-blue); color: #fff; font-weight: 700; font-size: 0.8rem;
+    display: flex; align-items: center; justify-content: center;
+}
+.path { font-weight: 700; color: var(--sf-mid-blue); }
+
+/* Cortex Code prompt blocks wrap long lines */
+.code-block.prompt pre code {
+    white-space: pre-wrap; word-break: break-word;
+    font-family: var(--font-body); font-size: 0.975rem; line-height: 1.6;
+}
+.code-block.prompt .code-lang { background: var(--sf-mid-blue); color: #fff; }
+
+/* Collapsed callouts: Running late? / Stuck? / SQL fallback */
+details.callout {
+    border: 1px solid var(--gray-200); border-left: 4px solid var(--sf-yellow);
+    border-radius: var(--radius-md); background: #fffbeb; margin: var(--space-lg) 0;
+}
+details.callout.stuck { border-left-color: var(--sf-orange); background: #fff8ec; }
+details.callout.fallback { border-left-color: var(--sf-blue); background: #eaf7fd; }
+details.callout summary {
+    cursor: pointer; padding: var(--space-md) var(--space-lg);
+    font-family: var(--font-heading); font-weight: 700; color: var(--sf-mid-blue);
+}
+details.callout > div { padding: 0 var(--space-lg) var(--space-lg); }
+
+/* Screenshot slots, filled at the dry run */
+figure.shot-slot {
+    margin: var(--space-lg) 0; padding: var(--space-xl);
+    border: 2px dashed var(--gray-300); border-radius: var(--radius-md);
+    background: var(--gray-50); text-align: center; color: var(--gray-500); font-size: 0.875rem;
+}
+figure.shot-slot img { margin: 0 auto; border-radius: var(--radius-sm); }
+
+/* Quote from the brief */
+blockquote.brief {
+    margin: var(--space-lg) 0; padding: var(--space-lg) var(--space-xl);
+    border-left: 4px solid var(--sf-blue); background: #ffffff; border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm); font-style: italic;
+}
+blockquote.brief cite { display: block; margin-top: var(--space-sm); font-style: normal; font-weight: 700; color: var(--sf-mid-blue); }
+
+/* Optional steps */
+.step-card.optional .step-number { background: var(--gray-400); }
+.step-nav-item.optional .nav-index { background: var(--gray-200); color: var(--gray-500); }
+.badge-optional {
+    font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;
+    background: var(--gray-200); color: var(--gray-700); border-radius: var(--radius-full); padding: 2px 8px;
+}
+
+/* Index page: lab cards and agenda */
+.lab-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: var(--space-lg); }
+.lab-card {
+    display: flex; flex-direction: column; gap: var(--space-sm);
+    background: #fff; border: 1px solid var(--gray-200); border-radius: var(--radius-lg);
+    padding: var(--space-xl); box-shadow: var(--shadow-sm); color: var(--sf-text);
+}
+a.lab-card:hover { box-shadow: var(--shadow-md); border-color: var(--sf-blue); color: var(--sf-text); }
+.lab-card .lab-when { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; color: var(--sf-blue); letter-spacing: 0.5px; }
+.lab-card h3 { font-size: 1.05rem; margin: 0; }
+.lab-card .lab-go { margin-top: auto; font-weight: 700; color: var(--sf-blue); }
+.lab-card.pending { opacity: 0.75; }
+.cast { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: var(--space-md); }
+.cast div { background: #fff; border: 1px solid var(--gray-200); border-radius: var(--radius-md); padding: var(--space-md); }
+.figure-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: var(--space-md); margin: var(--space-lg) 0; }
+.figure-row div { background: #fff; border-radius: var(--radius-md); border-top: 4px solid var(--sf-blue); padding: var(--space-md); box-shadow: var(--shadow-sm); }
+.figure-row b { display: block; font-family: var(--font-heading); font-size: 1.5rem; color: var(--sf-mid-blue); }
+
+</style>
+</head>
+<body>
+
+<header class="hol-header">
+    <div class="header-container">
+        <span class="snowflake-logo" role="img" aria-label="Snowflake"><svg viewBox="0 0 40 40" aria-hidden="true"><g stroke="#29B5E8" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"><line x1="20.0" y1="20.0" x2="20.0" y2="3.5"/><polyline points="15.0,7.5 20.0,12.0 25.0,7.5"/><line x1="20.0" y1="20.0" x2="34.29" y2="11.75"/><polyline points="28.33,9.42 26.93,16.0 33.33,18.08"/><line x1="20.0" y1="20.0" x2="34.29" y2="28.25"/><polyline points="33.33,21.92 26.93,24.0 28.33,30.58"/><line x1="20.0" y1="20.0" x2="20.0" y2="36.5"/><polyline points="25.0,32.5 20.0,28.0 15.0,32.5"/><line x1="20.0" y1="20.0" x2="5.71" y2="28.25"/><polyline points="11.67,30.58 13.07,24.0 6.67,21.92"/><line x1="20.0" y1="20.0" x2="5.71" y2="11.75"/><polyline points="6.67,18.08 13.07,16.0 11.67,9.42"/></g></svg><span class="wordmark">snowflake</span></span>
+        <span class="logo-divider"></span>
+        <div class="header-title">
+            Wilderness Outfitters: Christmas Trading with an AI Workforce
+            <span>Lab 2 of 3</span>
+        </div>
+    </div>
+</header>
+
+<section class="hero-section">
+    <div class="hero-container">
+        <span class="hero-badge">Lab 2 of 3 · Morning</span>
+        <h1 class="hero-title">From the answer to a plan for every store</h1>
+        <p class="hero-subtitle">Ask Cortex Code to explore the data, sort customer comments with an AI function, build the Christmas stock plan in a notebook, find the Basecamp members to offer kit to, and ship it all as an app that writes their emails. You write prompts, not code.</p>
+        <div class="hero-meta">
+            <div class="meta-item"><span class="meta-label">Core</span><span class="meta-value">60 min, 6 steps</span></div>
+            <div class="meta-item"><span class="meta-label">Optional</span><span class="meta-value">20 min, 3 steps</span></div>
+            <div class="meta-item"><span class="meta-label">You use</span><span class="meta-value">Workspaces and Cortex Code</span></div>
+            <div class="meta-item"><span class="meta-label">Code</span><span class="meta-value">None typed. 12 prompts</span></div>
+        </div>
+    </div>
+</section>
+
+<div class="breadcrumb-bar"><div class="breadcrumb-inner"><a href="index.html">&larr; Workshop index</a></div></div>
+
+<section id="overview" class="content-section alt-bg">
+    <div class="section-container">
+        <h2 class="section-title">Overview</h2>
+        <div class="overview-grid">
+            <div class="overview-card">
+                <h3>What you will build</h3>
+                <ul class="learning-list">
+                    <li>Open a Workspace and brief Cortex Code on Wilderness, the dates and the rules for the session.</li>
+                    <li>Find the problem: where tent demand is, where the tents are, and the kit that goes with them.</li>
+                    <li>Sort every Summit 2P return comment with AI_CLASSIFY, so real faults are counted apart from first-time campers.</li>
+                    <li>Build the Christmas stock plan in a notebook and publish it as the view V_CHRISTMAS_STOCK_RISK.</li>
+                    <li>Find the Basecamp members who bought a tent without sleeping gear, and hold back the stores that are short.</li>
+                    <li>Ship it as a Streamlit app that narrows every tent sold down to those members, and writes any member's offer email with AI_COMPLETE.</li>
+                </ul>
+            </div>
+            <div class="overview-card highlight">
+                <h3>What you use</h3>
+                <div class="tech-tags">
+                    <span class="tech-tag">Workspaces</span>
+                    <span class="tech-tag">Cortex Code</span>
+                    <span class="tech-tag">AI_CLASSIFY</span>
+                    <span class="tech-tag">AI_COMPLETE</span>
+                    <span class="tech-tag">Notebooks</span>
+                    <span class="tech-tag">Views</span>
+                    <span class="tech-tag">Streamlit in Snowflake</span>
+                </div>
+                <h3 style="margin-top:var(--space-xl);">The situation</h3>
+                <p>The assistant told Martha where the problem is. Now the merchandising team needs a plan for every store and every Christmas product: what to send back to the supplier, what to move between stores and what to reorder.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="lab-layout">
+    <nav class="sidebar-nav" aria-label="Lab steps">
+        <div class="progress-header">
+            <span class="progress-label">Core steps</span>
+            <span class="progress-percent" id="progressPercent">0%</span>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+        <div class="steps-nav" id="stepsNav">
+            <a class="step-nav-item" href="#step-1" data-step="1"><span class="nav-index">1</span><span class="nav-text">Open a Workspace and brief Cortex Code</span><span class="nav-time">5 min</span></a>
+            <a class="step-nav-item" href="#step-2" data-step="2"><span class="nav-index">2</span><span class="nav-text">Get to know the data and find the problem</span><span class="nav-time">12 min</span></a>
+            <a class="step-nav-item" href="#step-3" data-step="3"><span class="nav-index">3</span><span class="nav-text">Build the stock plan in a notebook, with an AI function</span><span class="nav-time">20 min</span></a>
+            <a class="step-nav-item" href="#step-4" data-step="4"><span class="nav-index">4</span><span class="nav-text">Complete the kit: an offer for Basecamp members</span><span class="nav-time">10 min</span></a>
+            <a class="step-nav-item" href="#step-5" data-step="5"><span class="nav-index">5</span><span class="nav-text">Ship it as an app</span><span class="nav-time">10 min</span></a>
+            <a class="step-nav-item" href="#step-6" data-step="6"><span class="nav-index">6</span><span class="nav-text">What you just built</span><span class="nav-time">3 min</span></a>
+            <a class="step-nav-item optional" href="#step-7" data-step="7"><span class="nav-index">7</span><span class="nav-text">Ask Cortex Code to explain the logic</span><span class="nav-time">5 min</span></a>
+            <a class="step-nav-item optional" href="#step-8" data-step="8"><span class="nav-index">8</span><span class="nav-text">Add a state filter and a map</span><span class="nav-time">8 min</span></a>
+            <a class="step-nav-item optional" href="#step-9" data-step="9"><span class="nav-index">9</span><span class="nav-text">Document the notebook</span><span class="nav-time">7 min</span></a>
+        </div>
+    </nav>
+
+    <main class="steps-container" id="steps">
+<div class="info-box warning">
+    <strong>Synthetic data</strong>
+    <p>Wilderness Outfitters is a fictional company. All stores, products, people, sales, feedback and documents in this workshop are synthetic and generated for training. Any resemblance to a real business is coincidental.</p>
+</div>
+
+<details class="callout">
+    <summary>Running late? Build the Lab 1 end state in one block</summary>
+    <div>
+        <p>Lab 2 needs only the setup script from Lab 1 Step 1. If you did not finish Lab 1, run this in your SQL file anyway, so the assistant is ready for Lab 3. It builds the feedback search, the semantic view changes and the Wilderness Assistant, and adds it to CoWork. It takes about 30 seconds.</p>
+        <div class="code-block">
+    <div class="code-header"><span class="code-lang">sql</span><button class="btn-copy" type="button">Copy</button></div>
+    <pre><code>ALTER GIT REPOSITORY WILDERNESS_HOL.GIT.WORKSHOP_REPO FETCH;
+EXECUTE IMMEDIATE FROM @WILDERNESS_HOL.GIT.WORKSHOP_REPO/branches/main/setup/90_catch_up_lab1.sql;</code></pre>
+</div>
+    </div>
+</details>
+
+<div class="step-card" id="step-1">
+    <div class="step-header">
+        <span class="step-number">1</span>
+        <h2 class="step-title">Open a Workspace and brief Cortex Code</h2>
+        <span class="step-duration">~5 min</span>
+    </div>
+    <div class="step-content">
+<p>Cortex Code is an agent in Snowsight that writes and runs SQL and Python for you, in your account, with your rights. You tell it what you want; it does the work and shows you the result. The first prompt sets the rules for the whole session.</p>
+
+<ol class="ui-steps">
+    <li>Go to <span class="path">Projects » Workspaces</span> and open the workspace with your SQL file from Lab 1.</li>
+    <li>Open the <span class="path">Cortex Code</span> panel.</li>
+    <li>Paste prompt 0 and send it.</li>
+    <li>The first time Cortex Code asks to run a command, choose <span class="path">Always allow</span>. It then runs each statement without asking again.</li>
+</ol>
+
+<figure class="shot-slot"><figcaption>Screenshot to come: The Cortex Code panel in a Workspace<br><code>images/lab2_step1_cortex_code.png</code></figcaption></figure>
+
+<p>Prompt 0:</p>
+<div class="code-block prompt">
+    <div class="code-header"><span class="code-lang">cortex code</span><button class="btn-copy" type="button">Copy</button></div>
+    <pre><code>I'm working in Snowflake database WILDERNESS_HOL, warehouse WILDERNESS_WH, for Wilderness Outfitters, an Australian outdoor retailer. For this whole session: execute every statement rather than drafting it, use fully qualified three-part names, and after you create any object run a query that proves it exists and show me the result.</code></pre>
+</div>
+
+<div class="info-box success">
+    <strong>You should see</strong>
+    <p>Cortex Code confirms the database and warehouse, and may run a quick query to check it can see <code>WILDERNESS_HOL</code>.</p>
+</div>
+
+<div class="info-box tip">
+    <strong>Why the brief is so short</strong>
+    <p>You do not tell Cortex Code which tables exist, how they join or what dates the data covers. It reads the account and works that out. Prompt 0 only sets the rules for the session.</p>
+</div>
+        <label class="completion-checkbox"><input type="checkbox" data-step="1"> Mark step 1 complete</label>
+    </div>
+</div>
+<div class="step-card" id="step-2">
+    <div class="step-header">
+        <span class="step-number">2</span>
+        <h2 class="step-title">Get to know the data and find the problem</h2>
+        <span class="step-duration">~12 min</span>
+    </div>
+    <div class="step-content">
+<p>Start the way an analyst would on a new engagement: what does the data say about Wilderness, and does Martha's brief hold up? These three prompts give the same picture the Wilderness Assistant gave this morning, worked out from the raw tables.</p>
+
+<p>Prompt 1:</p>
+<div class="code-block prompt">
+    <div class="code-header"><span class="code-lang">cortex code</span><button class="btn-copy" type="button">Copy</button></div>
+    <pre><code>Give me a business overview of what is in WILDERNESS_HOL.RAW, written for a merchandising manager: what each table tells us about Wilderness's stores, products, customers, sales, returns, stock and customer feedback, what period the sales cover, and how it all connects. Keep it to one short table.</code></pre>
+</div>
+
+<div class="info-box success">
+    <strong>You should see</strong>
+    <p>One table in plain business terms: stores in every state plus online, products with the Christmas catalogue flagged, Basecamp loyalty members, sales from July 2024 to 3 November 2026, returns linked to the sale they came from, stock by store and batch at 3 November, and customer comments. Cortex Code found the dates and the links itself.</p>
+</div>
+
+<p>Wilderness holds about 40% more tents than it sold last Christmas, in every state. That is only a problem if customers are not buying them where they are, so the next prompt checks where tent sales are growing this year.</p>
+
+<p>Prompt 2:</p>
+<div class="code-block prompt">
+    <div class="code-header"><span class="code-lang">cortex code</span><button class="btn-copy" type="button">Copy</button></div>
+    <pre><code>Compare tent units sold from 1 to 3 November 2026 with 1 to 3 November 2025, by state. Run it and chart it.</code></pre>
+</div>
+
+<div class="info-box success">
+    <strong>You should see</strong>
+    <p>Tent sales up about 45% in New South Wales and Queensland, and only about 10% in Victoria, Tasmania and South Australia. The stock went everywhere; the extra demand did not.</p>
+</div>
+
+<p>Then the rest of the basket. A family that buys a tent also needs somewhere to sleep, something to cook on and a light, and Wilderness ordered that kit at last year's levels. Where tents sell faster, the kit runs out first.</p>
+
+<p>Prompt 3:</p>
+<div class="code-block prompt">
+    <div class="code-header"><span class="code-lang">cortex code</span><button class="btn-copy" type="button">Copy</button></div>
+    <pre><code>Last Christmas, which at Wilderness ran from 1 November to 24 December 2025, what share of orders that contained a tent also contained an item with KIT_GROUP SLEEP, COOK or LIGHT? Then find the ten stores that are shortest of sleeping gear for the tents they still have to sell before Christmas Eve. Check whether WILDERNESS_HOL.ANALYTICS already has a view for this before you build anything. Run both.</code></pre>
+</div>
+
+<div class="info-box success">
+    <strong>You should see</strong>
+    <p>About 61% of tent orders also had sleeping gear, 34% cooking gear and 28% a light. Cortex Code finds the view <code>V_KIT_COVER</code> and lists ten stores, mostly in New South Wales and Queensland, that run out of sleeping gear in early December.</p>
+</div>
+
+<div class="info-box tip">
+    <strong>What V_KIT_COVER is, and why it already exists</strong>
+    <p>For each store it works out how many sleeping bags, mats, stoves and lights the tents still to sell will need, using last Christmas's basket mix, and compares that with the stock held. Setup built it because the Wilderness Assistant answered the sleeping-gear question from it in Lab 1. Reusing it here means the plan and the assistant give the same numbers.</p>
+</div>
+        <label class="completion-checkbox"><input type="checkbox" data-step="2"> Mark step 2 complete</label>
+    </div>
+</div>
+<div class="step-card" id="step-3">
+    <div class="step-header">
+        <span class="step-number">3</span>
+        <h2 class="step-title">Build the stock plan in a notebook, with an AI function</h2>
+        <span class="step-duration">~20 min</span>
+    </div>
+    <div class="step-content">
+<p>You now know the shape of the problem: too many tents in the south, too few in the north, and not enough kit to go with them. What nobody can tell Martha yet is what to do about it in each store: which tents go back to the supplier, which move to a store that will run out, and what to reorder in time for Christmas.</p>
+
+<p>That answer needs three things the data does not hold today:</p>
+<ul>
+    <li><strong>A forecast for every store to Christmas Eve</strong>, so you can see who runs out and who is left holding stock.</li>
+    <li><strong>Which returns are real faults.</strong> The supplier takes back unsold stock only from a batch with too many faults, and the returns desk codes most of them simply as "faulty".</li>
+    <li><strong>A rule that turns each store's numbers into one action:</strong> send back, transfer out, transfer in, reorder or mark down.</li>
+</ul>
+
+<p>The four prompts build these in a notebook the team can rerun and check, then publish the result as a view.</p>
+
+<h3>Prompt 4: stock and forecast</h3>
+<div class="code-block prompt">
+    <div class="code-header"><span class="code-lang">cortex code</span><button class="btn-copy" type="button">Copy</button></div>
+    <pre><code>Create a notebook called christmas_stock_plan in this Workspace. In the first cells, load inventory at 3 November 2026 for Christmas catalogue products by store and batch, and forecast units to sell from 4 November to 24 December as last year's average weekly Christmas units times 51/7 times the state and category sales index since 1 November. Run every cell.</code></pre>
+</div>
+
+<div class="info-box success">
+    <strong>You should see</strong>
+    <p>A new notebook with its cells run. Most products have one batch; the Summit 2P has two, <code>B26-02</code> and <code>B26-07</code>.</p>
+</div>
+
+<h3>Prompt 5: sort the return comments with an AI function</h3>
+<p>Stores give every return a coarse reason code. The comment says more: a snapped pole is a fault, a customer who could not pitch the tent is not. Wilderness's supplier contract pays out only on faults.</p>
+<div class="code-block prompt">
+    <div class="code-header"><span class="code-lang">cortex code</span><button class="btn-copy" type="button">Copy</button></div>
+    <pre><code>Add a cell that uses AI_CLASSIFY to label every comment in WILDERNESS_HOL.RAW.CUSTOMER_FEEDBACK with FEEDBACK_SOURCE 'RETURN_COMMENT' for product SKU-TNT-0102 since 1 July 2026 as one of POLE_OR_FRAME_FAULT, SEAM_OR_WATERPROOFING_FAULT, COULD_NOT_PITCH, CHANGE_OF_MIND or OTHER. Save the result as WILDERNESS_HOL.ANALYTICS.TENT_RETURN_REASONS with columns FEEDBACK_ID, PRODUCT_ID, BATCH_CODE, FEEDBACK_DATE, REASON. Run it, then show the count by BATCH_CODE and REASON.</code></pre>
+</div>
+
+<div class="info-box success">
+    <strong>You should see</strong>
+    <p>About 500 comments classified in a minute or two. Most <code>B26-07</code> comments are pole or seam faults, and a block of about one in seven are <code>COULD_NOT_PITCH</code>: first-time campers, not faults.</p>
+</div>
+
+<div class="info-box tip">
+    <strong>An AI function is SQL</strong>
+    <p>The model runs where the data is, on every row, and the result is a table you can join like any other.</p>
+</div>
+
+<h3>Prompt 6: what is at risk</h3>
+<div class="code-block prompt">
+    <div class="code-header"><span class="code-lang">cortex code</span><button class="btn-copy" type="button">Copy</button></div>
+    <pre><code>Add a cell that calculates an estimated defect return rate per batch as the batch return rate times the share of its comments that are faults, then classifies each store and product as STOCKOUT (less than 6.5 weeks of forecast cover), OVERSTOCK (more than 7.5 weeks of cover) or OK, calculates stock at risk in AUD at cost, and charts it by state. Run it.</code></pre>
+</div>
+
+<div class="info-box success">
+    <strong>You should see</strong>
+    <p>An estimated defect rate of about 12% for <code>B26-07</code>, above the 8% the contract allows, and about 1% for <code>B26-02</code>. The chart puts most of the stock at risk in Victoria.</p>
+</div>
+
+<h3>Prompt 7: publish the plan as a view</h3>
+<div class="code-block prompt">
+    <div class="code-header"><span class="code-lang">cortex code</span><button class="btn-copy" type="button">Copy</button></div>
+    <pre><code>Add a final cell that creates the view WILDERNESS_HOL.ANALYTICS.V_CHRISTMAS_STOCK_RISK, one row per store and Christmas catalogue product, with columns STORE_ID, STORE_NAME, STATE, LATITUDE, LONGITUDE, PRODUCT_ID, PRODUCT_NAME, KIT_GROUP, UNIT_COST, ON_HAND_UNITS, ON_ORDER_UNITS, RETURNABLE_UNITS (on-hand units in batches whose estimated defect rate is above 8%), FORECAST_UNITS_TO_XMAS, WEEKS_OF_COVER, EST_DEFECT_RETURN_RATE, RISK, EXCESS_UNITS, SHORTFALL_UNITS, STOCK_AT_RISK_AUD (excess units times UNIT_COST) and SUGGESTED_ACTION. SUGGESTED_ACTION has one value per row: for OVERSTOCK, RETURN TO SUPPLIER if RETURNABLE_UNITS is above 0, else TRANSFER OUT if another store has a STOCKOUT row for the same product, else MARK DOWN BOXING DAY; for STOCKOUT, TRANSFER IN if any store has an OVERSTOCK row for the product, else REORDER BY 13 NOV; otherwise NONE. Run it, then SELECT the top 10 rows by STOCK_AT_RISK_AUD.</code></pre>
+</div>
+
+<div class="info-box success">
+    <strong>You should see</strong>
+    <p>Summit 2P rows in Victorian and Tasmanian stores at the top, with Ringwood first, marked <code>RETURN TO SUPPLIER</code> against the <code>B26-07</code> units.</p>
+</div>
+
+<details class="callout stuck">
+    <summary>Stuck? Use the finished notebook</summary>
+    <div>
+        <p>The workshop repository has the finished notebook, with the same objects and columns.</p>
+        <ol>
+            <li>Find the <code>OPEN_WORKSHOP_REPO</code> link in the last result of your Lab 1 Step 1 SQL file and open it. The form to create a workspace from the workshop repository opens filled in. Select <span class="path">Create</span>.</li>
+            <li>Open <code>notebooks/lab2_christmas_stock_plan.ipynb</code> and select <span class="path">Run all</span>.</li>
+        </ol>
+        <p>If the link is not to hand, select <span class="path">Projects » Workspaces » From Git repository</span> and use the repository URL <code class="chip" title="Select to copy">https://github.com/sfc-gh-jastaub/wilderness-snowflake-workshop</code>, the API integration <code class="chip" title="Select to copy">WILDERNESS_GIT_API</code> and <span class="path">Public repository</span>.</p>
+    </div>
+</details>
+        <label class="completion-checkbox"><input type="checkbox" data-step="3"> Mark step 3 complete</label>
+    </div>
+</div>
+<div class="step-card" id="step-4">
+    <div class="step-header">
+        <span class="step-number">4</span>
+        <h2 class="step-title">Complete the kit: an offer for Basecamp members</h2>
+        <span class="step-duration">~10 min</span>
+    </div>
+    <div class="step-content">
+<p>The stock plan protects margin. This step finds sales.</p>
+
+<p>Six in ten tent orders last Christmas also had sleeping gear. Some of this week's tent buyers left without it, and the ones who are Basecamp members can be sent an offer. There is a catch: an offer from a store that is already short of sleeping gear brings customers in for stock that is not there, and makes the shortage worse. So the offer goes only where the store can sell the kit.</p>
+
+<p>Prompt 8:</p>
+<div class="code-block prompt">
+    <div class="code-header"><span class="code-lang">cortex code</span><button class="btn-copy" type="button">Copy</button></div>
+    <pre><code>Find the Basecamp members who bought a tent from 1 to 3 November 2026 but no item with KIT_GROUP SLEEP in the same order. For online orders use the member's home store. Flag whether that store is short of sleeping gear in WILDERNESS_HOL.ANALYTICS.V_KIT_COVER, and send an offer only where it is not. Save one row per member as WILDERNESS_HOL.ANALYTICS.KIT_OFFER_AUDIENCE with columns MEMBER_ID, FIRST_NAME, TIER, TENT_NAME, STORE_ID, STORE_NAME, STATE, STORE_SHORT_OF_SLEEP, SEND_OFFER. Then show how many members get an offer, how many are held back, and the sales opportunity in AUD if each one spends on sleeping gear what last Christmas's tent orders with sleeping gear spent on it.</code></pre>
+</div>
+
+<div class="info-box success">
+    <strong>You should see</strong>
+    <p>About 750 members who bought a tent without sleeping gear. About 400 get an offer and about 350 are held back, most of them in New South Wales and Queensland where the kit is short. At about AUD 113 of sleeping gear per tent order, the offer is worth about AUD 46,000, from three days of sales.</p>
+</div>
+
+<p>Prompt 9:</p>
+<div class="code-block prompt">
+    <div class="code-header"><span class="code-lang">cortex code</span><button class="btn-copy" type="button">Copy</button></div>
+    <pre><code>Add a cell that uses AI_COMPLETE with the model claude-sonnet-4-6 to write the offer email for one member in KIT_OFFER_AUDIENCE who gets an offer. Thank them by name for the tent they bought at their store, and offer 15% off a sleeping bag or mat in store before 24 December. Plain Australian English, under 80 words, no exclamation marks. Run it and show me the email.</code></pre>
+</div>
+
+<div class="info-box success">
+    <strong>You should see</strong>
+    <p>One email in a few seconds, with the member's name, their tent and their store, for example "Thanks for picking up the Summit 2P Tent at Wilderness Ringwood this week". The wording changes from run to run. In Step 5 the app writes this email for any member you pick.</p>
+</div>
+
+<div class="info-box tip">
+    <strong>Why one</strong>
+    <p><code>AI_COMPLETE</code> runs once per row and is charged by the amount of text. Check the wording on one member before anyone writes four hundred.</p>
+</div>
+
+<div class="info-box info">
+    <strong>Why the assistant could not do this</strong>
+    <p>Member names are not in the semantic view, by design: store managers ask about stock and sales, not about individual customers. An analyst with the right role can work with them. In Lab 3 you control who sees what.</p>
+</div>
+
+<details class="callout stuck">
+    <summary>Stuck? Use the finished notebook</summary>
+    <div>
+        <p>Section 6 of the finished notebook, <code>notebooks/lab2_christmas_stock_plan.ipynb</code>, creates <code>KIT_OFFER_AUDIENCE</code> with the same columns and writes one email. If you opened it in Step 3, run the cells under <strong>6. Complete the kit</strong>.</p>
+    </div>
+</details>
+        <label class="completion-checkbox"><input type="checkbox" data-step="4"> Mark step 4 complete</label>
+    </div>
+</div>
+<div class="step-card" id="step-5">
+    <div class="step-header">
+        <span class="step-number">5</span>
+        <h2 class="step-title">Ship it as an app</h2>
+        <span class="step-duration">~10 min</span>
+    </div>
+    <div class="step-content">
+<p>Marketing will not open a notebook, and neither will the merchandisers. Give them one app that tells the story from the top: every tent sold this week, narrowed down to the members worth an offer, then one member's email written while they watch. The stock plan sits on a second tab.</p>
+
+<p>Prompt 10:</p>
+<div class="code-block prompt">
+    <div class="code-header"><span class="code-lang">cortex code</span><button class="btn-copy" type="button">Copy</button></div>
+    <pre><code>Create a Streamlit in Snowflake app called WILDERNESS_HOL.APPS.CHRISTMAS_STOCK_PLANNER on the warehouse runtime, with two tabs. The first tab, Kit offer, shows a funnel as four KPI tiles: tent orders from 1 to 3 November 2026 in WILDERNESS_HOL.RAW.FCT_SALES_LINE, the Basecamp members who placed them, the members in WILDERNESS_HOL.ANALYTICS.KIT_OFFER_AUDIENCE, and the members with SEND_OFFER true. Under the tiles, a bar chart of offers and held-back members by state, then the table of members who get an offer with a state filter. The second tab, Stock plan, reads WILDERNESS_HOL.ANALYTICS.V_CHRISTMAS_STOCK_RISK and shows KPI tiles for stock at risk, units returnable to suppliers and number of stockout stores, a bar chart of stock at risk by state, and a table of suggested actions. Use three-part names. Deploy it, run it and give me the link.</code></pre>
+</div>
+
+<div class="info-box success">
+    <strong>You should see</strong>
+    <p>A link to the app. The Kit offer tab narrows about 2,800 tent orders to about 2,000 Basecamp members, about 750 without sleeping gear and about 400 whose store has the kit. The chart shows New South Wales and Queensland holding back the most members. The Stock plan tab shows about AUD 900,000 of stock at risk and about 40 stores that will run out of something.</p>
+</div>
+
+<p>Prompt 11:</p>
+<div class="code-block prompt">
+    <div class="code-header"><span class="code-lang">cortex code</span><button class="btn-copy" type="button">Copy</button></div>
+    <pre><code>On the Kit offer tab, under the member table, let me pick one member and add a Write the email button. When I press it, call AI_COMPLETE with claude-sonnet-4-6 to write that member's offer email with the same prompt as the notebook, and show the email on screen. Do not send it anywhere. Redeploy the app and run it.</code></pre>
+</div>
+
+<div class="info-box success">
+    <strong>You should see</strong>
+    <p>Pick a member, press <strong>Write the email</strong>, and a few seconds later their email appears: their name, their tent, their store and the 15% offer. Pick another member and the next email is written for them.</p>
+</div>
+
+<figure class="shot-slot"><figcaption>Screenshot to come: The Kit offer tab, with one member's email written<br><code>images/lab2_step5_app.png</code></figcaption></figure>
+
+<details class="callout stuck">
+    <summary>Stuck? Deploy the finished app</summary>
+    <div>
+        <p>Run this in your SQL file. It creates <code>TENT_RETURN_REASONS</code>, <code>V_CHRISTMAS_STOCK_RISK</code> and <code>KIT_OFFER_AUDIENCE</code> with the same SQL as the finished notebook, then deploys the finished app from the workshop repository. It takes a minute or two.</p>
+        <div class="code-block">
+    <div class="code-header"><span class="code-lang">sql</span><button class="btn-copy" type="button">Copy</button></div>
+    <pre><code>ALTER GIT REPOSITORY WILDERNESS_HOL.GIT.WORKSHOP_REPO FETCH;
+EXECUTE IMMEDIATE FROM @WILDERNESS_HOL.GIT.WORKSHOP_REPO/branches/main/setup/91_catch_up_lab2.sql;</code></pre>
+</div>
+        <p>Then open <span class="path">Projects » Streamlit</span> and select <code>CHRISTMAS_STOCK_PLANNER</code>.</p>
+    </div>
+</details>
+        <label class="completion-checkbox"><input type="checkbox" data-step="5"> Mark step 5 complete</label>
+    </div>
+</div>
+<div class="step-card" id="step-6">
+    <div class="step-header">
+        <span class="step-number">6</span>
+        <h2 class="step-title">What you just built</h2>
+        <span class="step-duration">~3 min</span>
+    </div>
+    <div class="step-content">
+<p>Look at what is now in your account, and how much of it you typed.</p>
+
+<div class="table-wrapper">
+<table>
+    <thead><tr><th>Object</th><th>What it is</th></tr></thead>
+    <tbody>
+        <tr><td><code>christmas_stock_plan</code></td><td>The notebook: the steps, the numbers behind each one, and the plan, rerunnable by anyone on the team.</td></tr>
+        <tr><td><code>ANALYTICS.TENT_RETURN_REASONS</code></td><td>The output of an AI function, now an ordinary table.</td></tr>
+        <tr><td><code>ANALYTICS.V_CHRISTMAS_STOCK_RISK</code></td><td>The plan as a view: one row per store and Christmas product, with what to do.</td></tr>
+        <tr><td><code>ANALYTICS.KIT_OFFER_AUDIENCE</code></td><td>Who gets a sleeping-gear offer and who is held back, one row per Basecamp member.</td></tr>
+        <tr><td><code>APPS.CHRISTMAS_STOCK_PLANNER</code></td><td>The app: from every tent sold to one member's email on the Kit offer tab, and the stock plan on the second.</td></tr>
+    </tbody>
+</table>
+</div>
+
+<p>You typed no code. The view now outlives the notebook: the app reads it, the assistant could use it, and in Lab 3 a second app shows it next to the agent.</p>
+
+<p>The plan in one sentence: about AUD 878,000 of tent stock will still be on shelves on Boxing Day, AUD 723,000 of it in Victoria and Tasmania; AUD 221,000 of it is the faulty Summit 2P batch and can go back to the supplier, Kestrel Shelters. Meanwhile 11 New South Wales and Queensland stores run out of the Summit 3P, and 27 stores run out of sleeping gear in the week of 7 December, unless Wilderness reorders by 13 November. And about 400 Basecamp members can be offered the sleeping gear they did not buy, worth about AUD 46,000, from stores that have it.</p>
+
+<p>The Wilderness Assistant answers from the curated layer: the semantic view built for store managers. In this lab you went past it: you sorted every comment with an AI function, built new business rules, worked with customer data the assistant is not given, and published the results for others to use.</p>
+        <label class="completion-checkbox"><input type="checkbox" data-step="6"> Mark step 6 complete</label>
+    </div>
+</div>
+<div class="step-card optional" id="step-7">
+    <div class="step-header">
+        <span class="step-number">7</span>
+        <h2 class="step-title">Ask Cortex Code to explain the logic <span class="badge-optional">Optional</span></h2>
+        <span class="step-duration">~5 min</span>
+    </div>
+    <div class="step-content">
+<p>Before you hand the plan to a merchandiser, check you can explain it.</p>
+<div class="code-block prompt">
+    <div class="code-header"><span class="code-lang">cortex code</span><button class="btn-copy" type="button">Copy</button></div>
+    <pre><code>Explain, in plain English for a store manager, how V_CHRISTMAS_STOCK_RISK decides RISK and SUGGESTED_ACTION for one row. Use the Summit 2P row for Wilderness Ringwood as the example, with its real numbers.</code></pre>
+</div>
+
+<div class="info-box success">
+    <strong>You should see</strong>
+    <p>A short walk-through of Ringwood's Summit 2P row: its stock, its forecast, its weeks of cover, why it is <code>OVERSTOCK</code>, and why the action is <code>RETURN TO SUPPLIER</code>.</p>
+</div>
+    </div>
+</div>
+<div class="step-card optional" id="step-8">
+    <div class="step-header">
+        <span class="step-number">8</span>
+        <h2 class="step-title">Add a state filter and a map <span class="badge-optional">Optional</span></h2>
+        <span class="step-duration">~8 min</span>
+    </div>
+    <div class="step-content">
+<div class="code-block prompt">
+    <div class="code-header"><span class="code-lang">cortex code</span><button class="btn-copy" type="button">Copy</button></div>
+    <pre><code>On the Stock plan tab, add a state filter next to the product selector, and a map of the stores with stock at risk using LATITUDE and LONGITUDE from the view. Redeploy the app and run it.</code></pre>
+</div>
+
+<div class="info-box success">
+    <strong>You should see</strong>
+    <p>A state filter and a map of Australia with the at-risk stores marked. Choose <code>VIC</code> and the map and tiles follow.</p>
+</div>
+    </div>
+</div>
+<div class="step-card optional" id="step-9">
+    <div class="step-header">
+        <span class="step-number">9</span>
+        <h2 class="step-title">Document the notebook <span class="badge-optional">Optional</span></h2>
+        <span class="step-duration">~7 min</span>
+    </div>
+    <div class="step-content">
+<div class="code-block prompt">
+    <div class="code-header"><span class="code-lang">cortex code</span><button class="btn-copy" type="button">Copy</button></div>
+    <pre><code>Add a short markdown cell above each code cell in christmas_stock_plan that says what the cell does and why, in plain English for a merchandiser. Keep each one to two sentences.</code></pre>
+</div>
+
+<div class="info-box success">
+    <strong>You should see</strong>
+    <p>The notebook reads top to bottom as a short report: stock, forecast, comments, defect rate, plan.</p>
+</div>
+    </div>
+</div>
+    </main>
+</div>
+
+<section id="resources" class="content-section alt-bg">
+    <div class="section-container">
+        <h2 class="section-title">Further reading</h2>
+        <div class="resources-grid">
+            <a class="resource-card" href="https://docs.snowflake.com/en/user-guide/ui-snowsight/workspaces-git" target="_blank" rel="noopener"><h4>Workspaces and Git</h4><p>Create a workspace from a Git repository, including from a pre-filled link.</p></a>
+            <a class="resource-card" href="https://docs.snowflake.com/en/sql-reference/functions/ai_classify" target="_blank" rel="noopener"><h4>AI_CLASSIFY</h4><p>Classify text into the labels you give it, on every row, in SQL.</p></a>
+            <a class="resource-card" href="https://docs.snowflake.com/en/sql-reference/functions/ai_complete" target="_blank" rel="noopener"><h4>AI_COMPLETE</h4><p>Generate text with a large language model from a prompt, on every row, in SQL.</p></a>
+            <a class="resource-card" href="https://docs.snowflake.com/en/developer-guide/streamlit/about-streamlit" target="_blank" rel="noopener"><h4>Streamlit in Snowflake</h4><p>Python data apps that run next to the data and read it with your rights.</p></a>
+            <a class="resource-card" href="https://docs.snowflake.com/en/user-guide/cortex-code/cortex-code-snowsight/changelog" target="_blank" rel="noopener"><h4>Cortex Code in Snowsight</h4><p>What is new in the Cortex Code panel, including approval modes.</p></a>
+        </div>
+    </div>
+</section>
+
+<section class="completion-section" id="completionSection">
+    <div class="completion-container">
+<h2>Lab 2 complete</h2>
+<p>You took the morning's answer and went further: comments sorted by an AI function, a plan for every store and every Christmas product in a notebook the team can rerun, a view the plan lives in, a sleeping-gear offer for Basecamp members with the emails written, and an app the merchandisers open.</p>
+<p>This afternoon Tom Walsh asks the harder questions: is the assistant right, what will it cost, and who can see what.</p>
+        <div class="cta-row">
+            <a class="btn-primary" href="lab3_advanced.html">Continue to Lab 3 &rarr;</a>
+            <a class="btn-secondary" href="index.html">Workshop index</a>
+        </div>
+    </div>
+</section>
+
+<footer class="hol-footer">
+    <p>Wilderness Outfitters: Christmas Trading with an AI Workforce &middot; Lab 2 of 3</p>
+    <p>&copy; 2026 Snowflake Inc. All Rights Reserved.</p>
+</footer>
+
+<script>
+/* Wilderness workshop guide: copy buttons, copy chips, step toggles, core-only progress. */
+const STORAGE_KEY = 'workshop_wilderness_lab2_progress';
+const CORE_STEPS = [1, 2, 3, 4, 5, 6];
+
+function flash(el, cls, label, text, ms) {
+    el.classList.add(cls);
+    if (label !== null) { el.textContent = label; }
+    setTimeout(function () {
+        el.classList.remove(cls);
+        if (label !== null) { el.textContent = text; }
+    }, ms);
+}
+
+function copyText(text, onDone, onFail) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(onDone).catch(onFail);
+    } else {
+        onFail();
+    }
+}
+
+document.addEventListener('click', function (ev) {
+    const btn = ev.target.closest('.btn-copy');
+    if (btn) {
+        const code = btn.closest('.code-block').querySelector('code');
+        const original = btn.textContent;
+        copyText(code.textContent,
+            function () { flash(btn, 'copied', 'Copied', original, 2000); },
+            function () { flash(btn, 'copied', 'Press Ctrl+C', original, 2000); });
+        return;
+    }
+    const chip = ev.target.closest('code.chip');
+    if (chip) {
+        copyText(chip.textContent, function () { flash(chip, 'copied', null, null, 1200); }, function () {});
+        return;
+    }
+    const header = ev.target.closest('.step-header');
+    if (header) {
+        const content = header.parentElement.querySelector('.step-content');
+        if (content) { content.classList.toggle('collapsed'); }
+    }
+});
+
+function readState() {
+    try {
+        const parsed = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+        parsed.steps = parsed.steps || {};
+        return parsed;
+    } catch (e) {
+        return { steps: {} };
+    }
+}
+
+function writeState(state) {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) { /* not persisted */ }
+}
+
+function renderProgress(state) {
+    let done = 0;
+    CORE_STEPS.forEach(function (n) { if (state.steps[n] === true) { done++; } });
+    const pct = CORE_STEPS.length ? Math.round(done / CORE_STEPS.length * 100) : 0;
+    const fill = document.getElementById('progressFill');
+    const label = document.getElementById('progressPercent');
+    if (fill) { fill.style.width = pct + '%'; }
+    if (label) { label.textContent = pct + '%'; }
+    CORE_STEPS.forEach(function (n) {
+        const isDone = state.steps[n] === true;
+        const card = document.getElementById('step-' + n);
+        const nav = document.querySelector('.step-nav-item[data-step="' + n + '"]');
+        if (card) {
+            card.classList.toggle('completed', isDone);
+            const box = card.querySelector('.completion-checkbox input');
+            if (box) { box.checked = isDone; }
+        }
+        if (nav) { nav.classList.toggle('completed', isDone); }
+    });
+}
+
+document.addEventListener('change', function (ev) {
+    const box = ev.target.closest('.completion-checkbox input');
+    if (!box) { return; }
+    const state = readState();
+    state.steps[box.getAttribute('data-step')] = box.checked;
+    state.lastUpdated = new Date().toISOString();
+    writeState(state);
+    renderProgress(state);
+});
+
+function initScrollSpy() {
+    const cards = Array.prototype.slice.call(document.querySelectorAll('.step-card'));
+    if (!cards.length || !('IntersectionObserver' in window)) { return; }
+    function setActive(n) {
+        document.querySelectorAll('.step-nav-item').forEach(function (item) {
+            item.classList.toggle('active', item.getAttribute('data-step') === String(n));
+        });
+    }
+    const observer = new IntersectionObserver(function (entries) {
+        const visible = entries.filter(function (e) { return e.isIntersecting; });
+        if (!visible.length) { return; }
+        visible.sort(function (a, b) { return a.boundingClientRect.top - b.boundingClientRect.top; });
+        setActive(visible[0].target.id.replace('step-', ''));
+    }, { rootMargin: '-90px 0px -55% 0px', threshold: 0 });
+    cards.forEach(function (card) { observer.observe(card); });
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+    renderProgress(readState());
+    initScrollSpy();
+});
+</script>
+
+</body>
+</html>

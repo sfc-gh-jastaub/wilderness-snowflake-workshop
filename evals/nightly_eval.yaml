@@ -1,0 +1,41 @@
+# Nightly evaluation of the Wilderness Assistant's production version (Lab 3 optional Step 10).
+# The same dataset and metrics as the Lab 3 runs, plus one custom metric only the YAML route supports.
+evaluation:
+  agent_params:
+    agent_name: "WILDERNESS_HOL.AGENTS.WILDERNESS_ASSISTANT"
+    agent_type: "CORTEX AGENT"
+    agent_version: "PRODUCTION"  # unquoted SET ALIAS = production stores it in upper case
+  run_params:
+    label: "Nightly re-test of production"
+    description: "Runs at 2am Sydney time until Christmas Eve"
+  source_metadata:
+    type: "dataset"
+    dataset_name: "WILDERNESS_HOL.EVALS.CHRISTMAS_EVAL_SET"
+
+metrics:
+  - name: "answer_correctness"
+    version: "v3"
+  - name: "logical_consistency"
+    version: "v3"
+  - name: "tool_selection_accuracy"
+    version: "v3"
+  - name: "wilderness_dates"
+    model: "claude-sonnet-4-6"
+    score_ranges:
+      min_score: [0, 0.4]
+      median_score: [0.4, 0.6]
+      max_score: [0.6, 1]
+    prompt: |
+      You are checking whether a retail assistant used Wilderness Outfitters' own trading calendar.
+
+      Question: {{input}}
+      Answer: {{output}}
+      Expected answer: {{ground_truth}}
+
+      Wilderness's terms: the launch weekend is 1 to 3 November; Peak Week is 18 to 24 December; the
+      Christmas trading period is 1 November to 24 December; the financial year runs 1 July to 30 June.
+
+      Score 1 if the question uses none of these terms, or if the answer uses the right dates for every
+      term it relies on and says which dates it used. Score 0.5 if the dates are right but the answer does
+      not say which dates it used. Score 0 if it uses other dates, such as calendar December or a two-day
+      weekend, or asks the user what a term means.

@@ -145,7 +145,7 @@ CREATE OR REPLACE AGENT WILDERNESS_HOL.AGENTS.WILDERNESS_ASSISTANT
       For 'why' and 'what can we do' questions use more than one. Chart comparisons and trends.
     sample_questions:
       - question: "Tents are our big Christmas bet. Where will we still be holding tents on Boxing Day, where will we run out, and have we got the sleeping gear to go with them?"
-      - question: "Customers are bringing the Summit 2P back. What are they saying, and what does the Kestrel contract let us do with the stock we can't sell?"
+      - question: "Customers are bringing the Summit 2P back. What are they saying, and is it worse for some batches than others?"
   tools:
     - tool_spec:
         type: "cortex_analyst_text_to_sql"

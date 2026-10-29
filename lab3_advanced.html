@@ -1,0 +1,2249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="snowflake-source" content="cortex-agent-authored">
+<title>Lab 3: Ready for Christmas: evaluate, tune, govern</title>
+<script type="application/json" id="snowflake-report-metadata">{
+ "generated": "2026-10-29",
+ "intent": "Lab 3: Ready for Christmas: evaluate, tune, govern",
+ "producerNotes": "Built by _build/build.py from _build/src/guides. Figures were measured on the build account; screenshots are captured at the dry run.",
+ "sections": [
+  {
+   "id": "step-1",
+   "title": "Check the starting line and freeze the baseline"
+  },
+  {
+   "id": "step-2",
+   "title": "Run the baseline evaluation"
+  },
+  {
+   "id": "step-3",
+   "title": "Read the results and find the pattern"
+  },
+  {
+   "id": "step-4",
+   "title": "Fix Wilderness's definitions in the semantic view"
+  },
+  {
+   "id": "step-5",
+   "title": "Let Cortex Code improve the instructions, as a new version"
+  },
+  {
+   "id": "step-6",
+   "title": "Evaluate the new version, compare, promote"
+  },
+  {
+   "id": "step-7",
+   "title": "Set Wilderness's cost controls"
+  },
+  {
+   "id": "step-8",
+   "title": "Who sees what"
+  },
+  {
+   "id": "step-9",
+   "title": "Push quality further: a second change, a third run"
+  },
+  {
+   "id": "step-10",
+   "title": "Re-test production every night to Christmas"
+  },
+  {
+   "id": "step-11",
+   "title": "Add web search"
+  },
+  {
+   "id": "step-12",
+   "title": "Clean up"
+  }
+ ]
+}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+
+/* ============================================================
+   Snowflake HOL base stylesheet (S1): extracted from fsi_generic/fsi_workshop_lab1_foundation.html
+   ============================================================ */
+
+:root {
+    /* Brand */
+    --sf-blue: #29B5E8;
+    --sf-mid-blue: #11567F;
+    --sf-deep-blue: #0a3a5c;
+    --sf-text: #5B5B5B;
+    --sf-heading: #11567F;
+    --sf-orange: #ff922b;
+    --sf-green: #37B24D;
+    --sf-red: #E03131;
+    --sf-yellow: #F59F00;
+
+    /* Neutrals */
+    --gray-50: #f8fafc;
+    --gray-100: #f1f5f9;
+    --gray-200: #e2e8f0;
+    --gray-300: #cbd5e1;
+    --gray-400: #94a3b8;
+    --gray-500: #64748b;
+    --gray-700: #334155;
+    --gray-800: #1e293b;
+    --gray-900: #0f172a;
+
+    /* Type */
+    --font-heading: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --font-body: 'Lato', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --font-mono: 'SFMono-Regular', 'JetBrains Mono', Menlo, Consolas, 'Courier New', monospace;
+
+    /* Spacing */
+    --space-xs: 0.25rem;
+    --space-sm: 0.5rem;
+    --space-md: 1rem;
+    --space-lg: 1.5rem;
+    --space-xl: 2rem;
+    --space-2xl: 3rem;
+
+    /* Radius */
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --radius-xl: 16px;
+    --radius-full: 9999px;
+
+    /* Shadows */
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+    --shadow-md: 0 4px 14px rgba(0,0,0,0.10);
+    --shadow-lg: 0 10px 30px rgba(0,0,0,0.12);
+
+    /* Layout */
+    --header-height: 72px;
+    --sidebar-width: 300px;
+    --content-max-width: 900px;
+
+    --transition-fast: 150ms ease;
+    --transition-normal: 280ms ease;
+}
+
+/* ---------- Reset ---------- */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+    scroll-behavior: smooth;
+    scroll-padding-top: calc(var(--header-height) + var(--space-lg));
+}
+
+body {
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.7;
+    color: var(--sf-text);
+    background: var(--gray-50);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+img { max-width: 100%; height: auto; display: block; }
+
+h1, h2, h3, h4, h5 {
+    font-family: var(--font-heading);
+    color: var(--sf-heading);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    line-height: 1.25;
+    font-weight: 700;
+}
+
+h4, h5 { text-transform: none; letter-spacing: 0.2px; }
+
+p { margin-bottom: var(--space-md); }
+p:last-child { margin-bottom: 0; }
+
+a { color: var(--sf-blue); text-decoration: none; transition: color var(--transition-fast); }
+a:hover { color: var(--sf-mid-blue); }
+
+ul, ol { margin: 0 0 var(--space-md) var(--space-lg); }
+li { margin-bottom: var(--space-xs); }
+
+strong { color: var(--sf-mid-blue); font-weight: 700; }
+
+code:not(pre code) {
+    font-family: var(--font-mono);
+    font-size: 0.85em;
+    background: var(--gray-100);
+    color: var(--sf-mid-blue);
+    padding: 2px 6px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--gray-200);
+}
+
+/* ---------- Header ---------- */
+.hol-header {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: var(--header-height);
+    background: #ffffff;
+    border-bottom: 1px solid var(--gray-200);
+    box-shadow: var(--shadow-sm);
+    z-index: 200;
+}
+
+.header-container {
+    max-width: 1500px;
+    margin: 0 auto;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    gap: var(--space-lg);
+    padding: 0 var(--space-xl);
+}
+
+.snowflake-logo { height: 48px; width: auto; }
+
+.logo-divider { width: 1px; height: 30px; background: var(--gray-300); flex-shrink: 0; }
+
+.header-title {
+    font-family: var(--font-heading);
+    font-size: 0.9375rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--sf-mid-blue);
+}
+
+.header-title span {
+    display: block;
+    font-family: var(--font-body);
+    font-size: 0.8125rem;
+    font-weight: 400;
+    text-transform: none;
+    letter-spacing: 0;
+    color: var(--gray-500);
+}
+
+/* ---------- Hero ---------- */
+.hero-section {
+    margin-top: var(--header-height);
+    background: linear-gradient(135deg, #11567F 0%, #0a3a5c 100%);
+    color: #ffffff;
+    padding: var(--space-2xl) var(--space-xl);
+}
+
+.hero-container { max-width: 1200px; margin: 0 auto; }
+
+.hero-badge {
+    display: inline-block;
+    background: rgba(41,181,232,0.20);
+    border: 1px solid rgba(41,181,232,0.55);
+    color: var(--sf-blue);
+    padding: var(--space-xs) var(--space-md);
+    border-radius: var(--radius-full);
+    font-family: var(--font-heading);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: var(--space-md);
+}
+
+.hero-title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: #ffffff;
+    margin-bottom: var(--space-md);
+}
+
+.hero-subtitle {
+    font-size: 1.125rem;
+    color: rgba(255,255,255,0.88);
+    max-width: 780px;
+    margin-bottom: var(--space-xl);
+}
+
+.hero-meta { display: flex; flex-wrap: wrap; gap: var(--space-md); }
+
+.meta-item {
+    background: rgba(255,255,255,0.10);
+    border: 1px solid rgba(255,255,255,0.18);
+    border-radius: var(--radius-lg);
+    padding: var(--space-sm) var(--space-lg);
+    min-width: 150px;
+}
+
+.meta-label {
+    display: block;
+    font-family: var(--font-heading);
+    font-size: 0.6875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--sf-blue);
+    margin-bottom: 2px;
+}
+
+.meta-value { font-size: 1rem; font-weight: 700; color: #ffffff; }
+
+/* ---------- Breadcrumb ---------- */
+.breadcrumb-bar {
+    background: #ffffff;
+    border-bottom: 1px solid var(--gray-200);
+    padding: var(--space-sm) var(--space-xl);
+}
+
+.breadcrumb-inner { max-width: 1500px; margin: 0 auto; font-size: 0.875rem; }
+
+.breadcrumb-inner a { font-weight: 700; }
+
+/* ---------- Content sections ---------- */
+.content-section { padding: var(--space-2xl) var(--space-xl); }
+.content-section.alt-bg { background: #ffffff; }
+
+.section-container { max-width: 1200px; margin: 0 auto; }
+
+.section-title {
+    font-size: 1.5rem;
+    font-weight: 800;
+    margin-bottom: var(--space-xl);
+    padding-bottom: var(--space-sm);
+    position: relative;
+}
+
+.section-title::after {
+    content: '';
+    position: absolute;
+    left: 0; bottom: 0;
+    width: 64px; height: 4px;
+    background: linear-gradient(90deg, var(--sf-blue), var(--sf-mid-blue));
+    border-radius: var(--radius-full);
+}
+
+.overview-grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: var(--space-xl);
+}
+
+.overview-card {
+    background: #ffffff;
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-lg);
+    padding: var(--space-xl);
+    box-shadow: var(--shadow-sm);
+}
+
+.overview-card.highlight {
+    background: linear-gradient(135deg, #eaf7fd 0%, #ffffff 100%);
+    border-color: var(--sf-blue);
+}
+
+.overview-card h3 { font-size: 1rem; margin-bottom: var(--space-md); }
+
+.learning-list { list-style: none; margin-left: 0; }
+
+.learning-list li {
+    position: relative;
+    padding-left: var(--space-lg);
+    margin-bottom: var(--space-sm);
+}
+
+.learning-list li::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 11px;
+    width: 8px; height: 8px;
+    background: var(--sf-blue);
+    border-radius: 50%;
+}
+
+.tech-tags { display: flex; flex-wrap: wrap; gap: var(--space-sm); }
+
+.tech-tag {
+    display: inline-flex;
+    align-items: center;
+    background: var(--gray-100);
+    border: 1px solid var(--gray-200);
+    color: var(--sf-mid-blue);
+    padding: 5px 12px;
+    border-radius: var(--radius-full);
+    font-size: 0.8125rem;
+    font-weight: 700;
+}
+
+/* ---------- Layout: sidebar + steps ---------- */
+.lab-layout {
+    max-width: 1500px;
+    margin: 0 auto;
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-xl);
+    padding: 0 var(--space-xl) var(--space-2xl);
+}
+
+/* ---------- Sidebar nav ---------- */
+.sidebar-nav {
+    position: sticky;
+    top: calc(var(--header-height) + var(--space-lg));
+    width: var(--sidebar-width);
+    flex-shrink: 0;
+    background: #ffffff;
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-lg);
+    padding: var(--space-lg);
+    box-shadow: var(--shadow-sm);
+    max-height: calc(100vh - var(--header-height) - var(--space-2xl));
+    overflow-y: auto;
+}
+
+.progress-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: var(--space-sm);
+}
+
+.progress-label {
+    font-family: var(--font-heading);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--sf-mid-blue);
+}
+
+.progress-percent { font-weight: 700; color: var(--sf-blue); font-size: 0.9375rem; }
+
+.progress-bar {
+    height: 8px;
+    background: var(--gray-200);
+    border-radius: var(--radius-full);
+    overflow: hidden;
+    margin-bottom: var(--space-lg);
+}
+
+.progress-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--sf-blue), var(--sf-green));
+    border-radius: var(--radius-full);
+    transition: width var(--transition-normal);
+}
+
+.steps-nav { display: flex; flex-direction: column; gap: 2px; }
+
+.step-nav-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: var(--space-sm) var(--space-sm);
+    border-radius: var(--radius-md);
+    color: var(--sf-text);
+    font-size: 0.875rem;
+    line-height: 1.4;
+    border-left: 3px solid transparent;
+    transition: all var(--transition-fast);
+}
+
+.step-nav-item:hover { background: var(--gray-100); color: var(--sf-mid-blue); }
+
+.step-nav-item.active {
+    background: #eaf7fd;
+    border-left-color: var(--sf-blue);
+    color: var(--sf-mid-blue);
+    font-weight: 700;
+}
+
+.step-nav-item.completed .nav-index {
+    background: var(--sf-green);
+    border-color: var(--sf-green);
+    color: #ffffff;
+}
+
+.nav-index {
+    flex-shrink: 0;
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    border: 2px solid var(--gray-300);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-heading);
+    font-size: 0.6875rem;
+    font-weight: 700;
+    color: var(--gray-500);
+}
+
+.nav-text { flex: 1; }
+
+.nav-time {
+    flex-shrink: 0;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--sf-blue);
+    background: var(--gray-100);
+    padding: 1px 7px;
+    border-radius: var(--radius-full);
+    white-space: nowrap;
+}
+
+/* ---------- Steps container ---------- */
+.steps-container {
+    flex: 1;
+    min-width: 0;
+    max-width: var(--content-max-width);
+}
+
+.step-card {
+    background: #ffffff;
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-lg);
+    margin-bottom: var(--space-xl);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    transition: box-shadow var(--transition-fast), border-color var(--transition-fast);
+}
+
+.step-card:hover { box-shadow: var(--shadow-md); }
+.step-card.completed { border-color: var(--sf-green); }
+.step-card.completed .step-number { background: var(--sf-green); }
+
+.step-header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    padding: var(--space-lg);
+    background: linear-gradient(135deg, #f4f9fc 0%, #ffffff 100%);
+    border-bottom: 1px solid var(--gray-200);
+    cursor: pointer;
+    user-select: none;
+}
+
+.step-number {
+    flex-shrink: 0;
+    width: 42px; height: 42px;
+    border-radius: 50%;
+    background: var(--sf-blue);
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-heading);
+    font-weight: 800;
+    font-size: 1.0625rem;
+}
+
+.step-title { flex: 1; font-size: 1.0625rem; font-weight: 700; margin: 0; }
+
+.step-duration {
+    flex-shrink: 0;
+    font-family: var(--font-heading);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--sf-mid-blue);
+    background: #eaf7fd;
+    border: 1px solid #c7e9f8;
+    padding: 4px 12px;
+    border-radius: var(--radius-full);
+    white-space: nowrap;
+}
+
+.step-content { padding: var(--space-xl); }
+.step-content.collapsed { display: none; }
+
+.step-content h3 {
+    font-size: 1rem;
+    margin: var(--space-xl) 0 var(--space-sm);
+}
+
+.step-content h3:first-child { margin-top: 0; }
+
+.step-content h4 {
+    font-size: 0.9375rem;
+    color: var(--sf-mid-blue);
+    margin: var(--space-lg) 0 var(--space-sm);
+}
+
+/* ---------- Code blocks ---------- */
+.code-block {
+    background: #0f172a;
+    border-radius: var(--radius-md);
+    margin: var(--space-lg) 0;
+    overflow: hidden;
+    border: 1px solid #1e293b;
+}
+
+.code-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-md);
+    padding: var(--space-sm) var(--space-md);
+    background: #1e293b;
+    border-bottom: 1px solid #334155;
+}
+
+.code-lang {
+    font-family: var(--font-heading);
+    font-size: 0.6875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--gray-400);
+}
+
+.btn-copy {
+    background: var(--sf-blue);
+    color: #ffffff;
+    border: none;
+    padding: 5px 16px;
+    border-radius: var(--radius-full);
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    font-weight: 700;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background var(--transition-fast), transform var(--transition-fast);
+}
+
+.btn-copy:hover { background: #1da5d8; transform: translateY(-1px); }
+.btn-copy:active { transform: translateY(0); }
+.btn-copy.copied { background: var(--sf-green); }
+
+.code-block pre {
+    margin: 0;
+    padding: var(--space-lg);
+    overflow-x: auto;
+    max-width: 100%;
+}
+
+.code-block pre code {
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    line-height: 1.65;
+    color: #e2e8f0;
+    white-space: pre;
+    display: block;
+    background: none;
+    border: none;
+    padding: 0;
+}
+
+/* ---------- Info boxes ---------- */
+.info-box {
+    display: flex;
+    gap: var(--space-md);
+    padding: var(--space-lg);
+    margin: var(--space-lg) 0;
+    border-radius: var(--radius-md);
+    border-left: 4px solid var(--sf-blue);
+    background: var(--gray-100);
+}
+
+.info-box .icon { flex-shrink: 0; font-size: 1.25rem; line-height: 1.4; }
+.info-box > div { flex: 1; min-width: 0; }
+
+.info-box strong {
+    display: block;
+    font-family: var(--font-heading);
+    font-size: 0.8125rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: var(--space-xs);
+}
+
+.info-box p { font-size: 0.9375rem; margin-bottom: var(--space-sm); }
+.info-box p:last-child { margin-bottom: 0; }
+.info-box ul, .info-box ol { font-size: 0.9375rem; margin-bottom: 0; }
+
+.info-box.info    { background: #eaf7fd; border-left-color: var(--sf-blue); }
+.info-box.tip     { background: #eef9f1; border-left-color: var(--sf-green); }
+.info-box.tip strong { color: #1f7a33; }
+.info-box.warning { background: #fff8ec; border-left-color: var(--sf-orange); }
+.info-box.warning strong { color: #b45309; }
+.info-box.success { background: #eef9f1; border-left-color: var(--sf-green); }
+.info-box.success strong { color: #1f7a33; }
+.info-box.danger  { background: #fdefef; border-left-color: var(--sf-red); }
+.info-box.danger strong { color: #b02525; }
+
+/* ---------- Tables ---------- */
+.table-wrapper {
+    overflow-x: auto;
+    margin: var(--space-lg) 0;
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-md);
+}
+
+table, .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+    background: #ffffff;
+}
+
+table th, .data-table th {
+    background: var(--sf-mid-blue);
+    color: #ffffff;
+    font-family: var(--font-heading);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    text-align: left;
+    padding: var(--space-sm) var(--space-md);
+    white-space: nowrap;
+}
+
+table td, .data-table td {
+    padding: var(--space-sm) var(--space-md);
+    border-bottom: 1px solid var(--gray-200);
+    vertical-align: top;
+}
+
+table tbody tr:last-child td { border-bottom: none; }
+table tbody tr:nth-child(even) { background: var(--gray-50); }
+
+/* ---------- Completion checkbox ---------- */
+.completion-checkbox {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    margin-top: var(--space-xl);
+    padding: var(--space-md) var(--space-lg);
+    background: var(--gray-50);
+    border: 1px dashed var(--gray-300);
+    border-radius: var(--radius-md);
+    font-family: var(--font-heading);
+    font-size: 0.8125rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--sf-mid-blue);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.completion-checkbox:hover { background: #eaf7fd; border-color: var(--sf-blue); }
+
+.completion-checkbox input[type="checkbox"] {
+    width: 18px; height: 18px;
+    accent-color: var(--sf-green);
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+/* ---------- Resources ---------- */
+.resources-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: var(--space-lg);
+}
+
+.resource-card {
+    display: block;
+    background: #ffffff;
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-lg);
+    padding: var(--space-lg);
+    box-shadow: var(--shadow-sm);
+    transition: all var(--transition-fast);
+}
+
+.resource-card:hover {
+    border-color: var(--sf-blue);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+}
+
+.resource-card h4 {
+    font-family: var(--font-heading);
+    font-size: 0.9375rem;
+    color: var(--sf-mid-blue);
+    margin-bottom: var(--space-xs);
+}
+
+.resource-card p { font-size: 0.875rem; color: var(--sf-text); margin: 0; }
+
+/* ---------- Completion / next steps ---------- */
+.completion-section {
+    background: linear-gradient(135deg, #11567F 0%, #0a3a5c 100%);
+    color: #ffffff;
+    padding: var(--space-2xl) var(--space-xl);
+    text-align: center;
+}
+
+.completion-container { max-width: 780px; margin: 0 auto; }
+
+.completion-section h2 { color: #ffffff; font-size: 1.75rem; margin-bottom: var(--space-md); }
+.completion-section p { color: rgba(255,255,255,0.88); }
+
+.completion-section .cta-row {
+    display: flex;
+    justify-content: center;
+    gap: var(--space-md);
+    flex-wrap: wrap;
+    margin-top: var(--space-xl);
+}
+
+.btn-primary {
+    display: inline-block;
+    background: var(--sf-blue);
+    color: #ffffff;
+    padding: var(--space-sm) var(--space-xl);
+    border-radius: var(--radius-full);
+    font-family: var(--font-heading);
+    font-size: 0.875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: all var(--transition-fast);
+}
+
+.btn-primary:hover { background: #1da5d8; color: #ffffff; transform: translateY(-2px); }
+
+.btn-secondary {
+    display: inline-block;
+    background: transparent;
+    border: 2px solid rgba(255,255,255,0.45);
+    color: #ffffff;
+    padding: calc(var(--space-sm) - 2px) calc(var(--space-xl) - 2px);
+    border-radius: var(--radius-full);
+    font-family: var(--font-heading);
+    font-size: 0.875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: all var(--transition-fast);
+}
+
+.btn-secondary:hover { background: rgba(255,255,255,0.12); color: #ffffff; }
+
+/* ---------- Footer ---------- */
+.hol-footer {
+    background: #0f172a;
+    color: var(--gray-400);
+    padding: var(--space-xl);
+    text-align: center;
+    font-size: 0.8125rem;
+}
+
+.hol-footer p { margin-bottom: var(--space-xs); }
+
+/* ---------- Responsive ---------- */
+@media (max-width: 1024px) {
+    .lab-layout { flex-direction: column; gap: var(--space-lg); }
+
+    .sidebar-nav {
+        position: static;
+        width: 100%;
+        max-height: none;
+        overflow: visible;
+    }
+
+    .steps-container { max-width: 100%; width: 100%; }
+
+    .overview-grid { grid-template-columns: 1fr; }
+
+    .hero-title { font-size: 1.875rem; }
+    .hero-section { padding: var(--space-xl) var(--space-lg); }
+    .content-section { padding: var(--space-xl) var(--space-lg); }
+    .lab-layout { padding: 0 var(--space-lg) var(--space-xl); }
+}
+
+@media (max-width: 640px) {
+    .header-container { padding: 0 var(--space-md); gap: var(--space-md); }
+    .header-title { font-size: 0.8125rem; }
+    .hero-title { font-size: 1.5rem; }
+    .hero-meta { flex-direction: column; }
+    .meta-item { width: 100%; }
+    .step-header { flex-wrap: wrap; }
+    .step-title { flex-basis: 100%; order: 3; }
+    .step-content { padding: var(--space-lg) var(--space-md); }
+    .code-block pre { padding: var(--space-md); }
+}
+
+/* ---------- Print ---------- */
+@media print {
+    .hol-header, .sidebar-nav, .btn-copy, .breadcrumb-bar,
+    .completion-section .cta-row { display: none !important; }
+
+    body { background: #ffffff; color: #000000; font-size: 11pt; }
+
+    .hero-section, .completion-section {
+        background: #ffffff !important;
+        color: #000000 !important;
+        border-bottom: 2px solid #11567F;
+    }
+
+    .hero-title, .hero-subtitle, .meta-value, .meta-label,
+    .completion-section h2, .completion-section p { color: #000000 !important; }
+
+    .lab-layout { display: block; padding: 0; }
+    .steps-container { max-width: 100%; }
+
+    .step-card { border: 1px solid #999; box-shadow: none; page-break-inside: avoid; }
+    .step-content, .step-content.collapsed { display: block !important; padding: 12pt 0; }
+    .step-header { background: #ffffff !important; }
+
+    .code-block { background: #f4f4f4 !important; border: 1px solid #999; page-break-inside: avoid; }
+    .code-block pre code { color: #000000 !important; font-size: 9pt; white-space: pre-wrap; }
+    .code-header { background: #e4e4e4 !important; }
+    .code-lang { color: #333 !important; }
+
+    .info-box { border: 1px solid #999; background: #f8f8f8 !important; page-break-inside: avoid; }
+    table th { background: #e4e4e4 !important; color: #000000 !important; }
+
+    a { color: #000000; text-decoration: underline; }
+    .hol-footer { background: #ffffff; color: #000000; border-top: 1px solid #999; }
+}
+
+/* Wilderness workshop additions on top of the S1 base stylesheet (_build/base.css). */
+:root { color-scheme: light; }
+
+/* Logo: inline SVG mark plus wordmark (no remote images) */
+.snowflake-logo { display: flex; align-items: center; gap: 10px; height: 48px; }
+.snowflake-logo svg { width: 34px; height: 34px; }
+.snowflake-logo .wordmark {
+    font-family: var(--font-heading); font-weight: 800; font-size: 1.35rem;
+    color: var(--sf-blue); letter-spacing: 0.5px;
+}
+
+/* Callouts without icons: the label sits in the strong line */
+.info-box { display: block; }
+.info-box > strong:first-child, .info-box > div > strong:first-child { display: block; }
+
+/* Copy chips: every value a participant types */
+code.chip {
+    cursor: pointer; white-space: nowrap;
+    background: #eaf7fd; border: 1px solid #b9e3f6; color: var(--sf-mid-blue);
+}
+code.chip:hover { background: #d6f0fb; border-color: var(--sf-blue); }
+code.chip.copied { background: #eef9f1; border-color: var(--sf-green); color: #1f7a33; }
+code.chip.copied::after { content: " copied"; font-family: var(--font-body); font-size: 0.75em; }
+
+/* Form tables in Lab 1 */
+.form-table td:first-child { font-weight: 700; color: var(--sf-mid-blue); white-space: nowrap; }
+
+/* Numbered UI steps */
+ol.ui-steps { counter-reset: ui; list-style: none; margin-left: 0; }
+ol.ui-steps > li { counter-increment: ui; position: relative; padding-left: 2.25rem; margin-bottom: var(--space-sm); }
+ol.ui-steps > li::before {
+    content: counter(ui); position: absolute; left: 0; top: 0.1rem;
+    width: 1.5rem; height: 1.5rem; border-radius: 50%;
+    background: var(--sf-blue); color: #fff; font-weight: 700; font-size: 0.8rem;
+    display: flex; align-items: center; justify-content: center;
+}
+.path { font-weight: 700; color: var(--sf-mid-blue); }
+
+/* Cortex Code prompt blocks wrap long lines */
+.code-block.prompt pre code {
+    white-space: pre-wrap; word-break: break-word;
+    font-family: var(--font-body); font-size: 0.975rem; line-height: 1.6;
+}
+.code-block.prompt .code-lang { background: var(--sf-mid-blue); color: #fff; }
+
+/* Collapsed callouts: Running late? / Stuck? / SQL fallback */
+details.callout {
+    border: 1px solid var(--gray-200); border-left: 4px solid var(--sf-yellow);
+    border-radius: var(--radius-md); background: #fffbeb; margin: var(--space-lg) 0;
+}
+details.callout.stuck { border-left-color: var(--sf-orange); background: #fff8ec; }
+details.callout.fallback { border-left-color: var(--sf-blue); background: #eaf7fd; }
+details.callout summary {
+    cursor: pointer; padding: var(--space-md) var(--space-lg);
+    font-family: var(--font-heading); font-weight: 700; color: var(--sf-mid-blue);
+}
+details.callout > div { padding: 0 var(--space-lg) var(--space-lg); }
+
+/* Screenshot slots, filled at the dry run */
+figure.shot-slot {
+    margin: var(--space-lg) 0; padding: var(--space-xl);
+    border: 2px dashed var(--gray-300); border-radius: var(--radius-md);
+    background: var(--gray-50); text-align: center; color: var(--gray-500); font-size: 0.875rem;
+}
+figure.shot-slot img { margin: 0 auto; border-radius: var(--radius-sm); }
+
+/* Quote from the brief */
+blockquote.brief {
+    margin: var(--space-lg) 0; padding: var(--space-lg) var(--space-xl);
+    border-left: 4px solid var(--sf-blue); background: #ffffff; border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm); font-style: italic;
+}
+blockquote.brief cite { display: block; margin-top: var(--space-sm); font-style: normal; font-weight: 700; color: var(--sf-mid-blue); }
+
+/* Optional steps */
+.step-card.optional .step-number { background: var(--gray-400); }
+.step-nav-item.optional .nav-index { background: var(--gray-200); color: var(--gray-500); }
+.badge-optional {
+    font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;
+    background: var(--gray-200); color: var(--gray-700); border-radius: var(--radius-full); padding: 2px 8px;
+}
+
+/* Index page: lab cards and agenda */
+.lab-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: var(--space-lg); }
+.lab-card {
+    display: flex; flex-direction: column; gap: var(--space-sm);
+    background: #fff; border: 1px solid var(--gray-200); border-radius: var(--radius-lg);
+    padding: var(--space-xl); box-shadow: var(--shadow-sm); color: var(--sf-text);
+}
+a.lab-card:hover { box-shadow: var(--shadow-md); border-color: var(--sf-blue); color: var(--sf-text); }
+.lab-card .lab-when { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; color: var(--sf-blue); letter-spacing: 0.5px; }
+.lab-card h3 { font-size: 1.05rem; margin: 0; }
+.lab-card .lab-go { margin-top: auto; font-weight: 700; color: var(--sf-blue); }
+.lab-card.pending { opacity: 0.75; }
+.cast { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: var(--space-md); }
+.cast div { background: #fff; border: 1px solid var(--gray-200); border-radius: var(--radius-md); padding: var(--space-md); }
+.figure-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: var(--space-md); margin: var(--space-lg) 0; }
+.figure-row div { background: #fff; border-radius: var(--radius-md); border-top: 4px solid var(--sf-blue); padding: var(--space-md); box-shadow: var(--shadow-sm); }
+.figure-row b { display: block; font-family: var(--font-heading); font-size: 1.5rem; color: var(--sf-mid-blue); }
+
+</style>
+</head>
+<body>
+
+<header class="hol-header">
+    <div class="header-container">
+        <span class="snowflake-logo" role="img" aria-label="Snowflake"><svg viewBox="0 0 40 40" aria-hidden="true"><g stroke="#29B5E8" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"><line x1="20.0" y1="20.0" x2="20.0" y2="3.5"/><polyline points="15.0,7.5 20.0,12.0 25.0,7.5"/><line x1="20.0" y1="20.0" x2="34.29" y2="11.75"/><polyline points="28.33,9.42 26.93,16.0 33.33,18.08"/><line x1="20.0" y1="20.0" x2="34.29" y2="28.25"/><polyline points="33.33,21.92 26.93,24.0 28.33,30.58"/><line x1="20.0" y1="20.0" x2="20.0" y2="36.5"/><polyline points="25.0,32.5 20.0,28.0 15.0,32.5"/><line x1="20.0" y1="20.0" x2="5.71" y2="28.25"/><polyline points="11.67,30.58 13.07,24.0 6.67,21.92"/><line x1="20.0" y1="20.0" x2="5.71" y2="11.75"/><polyline points="6.67,18.08 13.07,16.0 11.67,9.42"/></g></svg><span class="wordmark">snowflake</span></span>
+        <span class="logo-divider"></span>
+        <div class="header-title">
+            Wilderness Outfitters: Christmas Trading with an AI Workforce
+            <span>Lab 3 of 3</span>
+        </div>
+    </div>
+</header>
+
+<section class="hero-section">
+    <div class="hero-container">
+        <span class="hero-badge">Lab 3 of 3 · Afternoon</span>
+        <h1 class="hero-title">Ready for Christmas: evaluate, tune, govern</h1>
+        <p class="hero-subtitle">Measure how often the assistant is right, find out why it is wrong, fix the definitions in the semantic view and the behaviour in the agent, prove the new version is better and promote it. Then set the cost limits and decide who sees what.</p>
+        <div class="hero-meta">
+            <div class="meta-item"><span class="meta-label">Core</span><span class="meta-value">89 min, 8 steps</span></div>
+            <div class="meta-item"><span class="meta-label">Optional</span><span class="meta-value">30 min, 3 steps</span></div>
+            <div class="meta-item"><span class="meta-label">You use</span><span class="meta-value">Snowsight, Cortex Code and CoWork</span></div>
+            <div class="meta-item"><span class="meta-label">Code</span><span class="meta-value">SQL blocks to paste, 2 prompts</span></div>
+        </div>
+    </div>
+</section>
+
+<div class="breadcrumb-bar"><div class="breadcrumb-inner"><a href="index.html">&larr; Workshop index</a></div></div>
+
+<section id="overview" class="content-section alt-bg">
+    <div class="section-container">
+        <h2 class="section-title">Overview</h2>
+        <div class="overview-grid">
+            <div class="overview-card">
+                <h3>What you will build</h3>
+                <ul class="learning-list">
+                    <li>Freeze this morning's assistant as a baseline version, so CoWork keeps using it while you work.</li>
+                    <li>Score it on eight questions with an agent evaluation, and read why the low scores are low.</li>
+                    <li>Teach the semantic view two Wilderness terms, and prove the fix with a semantic view evaluation.</li>
+                    <li>Have Cortex Code rewrite the agent's instructions from the evaluation results, as a new version.</li>
+                    <li>Evaluate the new version, compare the two runs, and promote it to production.</li>
+                    <li>Set a monthly budget for the project and a daily AI limit for store managers.</li>
+                    <li>Give store managers their own role, hide member emails from them, and prove it.</li>
+                </ul>
+            </div>
+            <div class="overview-card highlight">
+                <h3>What you use</h3>
+                <div class="tech-tags">
+                    <span class="tech-tag">Agent evaluations</span>
+                    <span class="tech-tag">Semantic view evaluations</span>
+                    <span class="tech-tag">Custom instructions</span>
+                    <span class="tech-tag">Agent versions</span>
+                    <span class="tech-tag">Cortex Code agent-studio</span>
+                    <span class="tech-tag">Budgets</span>
+                    <span class="tech-tag">Per-user quotas</span>
+                    <span class="tech-tag">Masking policies</span>
+                </div>
+                <h3 style="margin-top:var(--space-xl);">The situation</h3>
+                <p>The store managers like the assistant. Tom Walsh, Head of Data &amp; Analytics, wants proof before 72 stores lean on it every morning to Christmas Eve: is it right, what will it cost, and who can see what.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="lab-layout">
+    <nav class="sidebar-nav" aria-label="Lab steps">
+        <div class="progress-header">
+            <span class="progress-label">Core steps</span>
+            <span class="progress-percent" id="progressPercent">0%</span>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+        <div class="steps-nav" id="stepsNav">
+            <a class="step-nav-item" href="#step-1" data-step="1"><span class="nav-index">1</span><span class="nav-text">Check the starting line and freeze the baseline</span><span class="nav-time">5 min</span></a>
+            <a class="step-nav-item" href="#step-2" data-step="2"><span class="nav-index">2</span><span class="nav-text">Run the baseline evaluation</span><span class="nav-time">15 min</span></a>
+            <a class="step-nav-item" href="#step-3" data-step="3"><span class="nav-index">3</span><span class="nav-text">Read the results and find the pattern</span><span class="nav-time">10 min</span></a>
+            <a class="step-nav-item" href="#step-4" data-step="4"><span class="nav-index">4</span><span class="nav-text">Fix Wilderness's definitions in the semantic view</span><span class="nav-time">14 min</span></a>
+            <a class="step-nav-item" href="#step-5" data-step="5"><span class="nav-index">5</span><span class="nav-text">Let Cortex Code improve the instructions, as a new version</span><span class="nav-time">8 min</span></a>
+            <a class="step-nav-item" href="#step-6" data-step="6"><span class="nav-index">6</span><span class="nav-text">Evaluate the new version, compare, promote</span><span class="nav-time">12 min</span></a>
+            <a class="step-nav-item" href="#step-7" data-step="7"><span class="nav-index">7</span><span class="nav-text">Set Wilderness's cost controls</span><span class="nav-time">15 min</span></a>
+            <a class="step-nav-item" href="#step-8" data-step="8"><span class="nav-index">8</span><span class="nav-text">Who sees what</span><span class="nav-time">10 min</span></a>
+            <a class="step-nav-item optional" href="#step-9" data-step="9"><span class="nav-index">9</span><span class="nav-text">Push quality further: a second change, a third run</span><span class="nav-time">10 min</span></a>
+            <a class="step-nav-item optional" href="#step-10" data-step="10"><span class="nav-index">10</span><span class="nav-text">Re-test production every night to Christmas</span><span class="nav-time">10 min</span></a>
+            <a class="step-nav-item optional" href="#step-11" data-step="11"><span class="nav-index">11</span><span class="nav-text">Add web search</span><span class="nav-time">10 min</span></a>
+            <a class="step-nav-item optional" href="#step-12" data-step="12"><span class="nav-index">12</span><span class="nav-text">Clean up</span><span class="nav-time">5 min</span></a>
+        </div>
+    </nav>
+
+    <main class="steps-container" id="steps">
+<div class="info-box warning">
+    <strong>Synthetic data</strong>
+    <p>Wilderness Outfitters is a fictional company. All stores, products, people, sales, feedback and documents in this workshop are synthetic and generated for training. Any resemblance to a real business is coincidental.</p>
+</div>
+
+<p>You run this lab's SQL in one SQL file. In Snowsight, go to <span class="path">Projects » Workspaces</span>, select <span class="path">+ Add new » SQL File</span>, name it <code class="chip" title="Select to copy">lab3.sql</code>, and keep it open all afternoon. Paste each block into it and select <span class="path">Run all</span>, unless a step says otherwise. The evaluations, the semantic view and Cortex Code are in other Snowsight pages; each step says where.</p>
+
+<details class="callout">
+    <summary>Running late? Build the morning's end state first</summary>
+    <div>
+        <p>Lab 3 starts from the assistant you built in Lab 1 and the stock plan from Lab 2. If either is missing, run the block for it now, <strong>before Step 1</strong>. Do not run them after Step 1: they rebuild the assistant, which deletes its versions and its evaluation runs.</p>
+        <p>Lab 1 (the assistant, its tools, the semantic view changes and CoWork), about 30 seconds:</p>
+        <div class="code-block">
+    <div class="code-header"><span class="code-lang">sql</span><button class="btn-copy" type="button">Copy</button></div>
+    <pre><code>ALTER GIT REPOSITORY WILDERNESS_HOL.GIT.WORKSHOP_REPO FETCH;
+EXECUTE IMMEDIATE FROM @WILDERNESS_HOL.GIT.WORKSHOP_REPO/branches/main/setup/90_catch_up_lab1.sql;</code></pre>
+</div>
+        <p>Lab 2 (the stock plan view and the app), about a minute:</p>
+        <div class="code-block">
+    <div class="code-header"><span class="code-lang">sql</span><button class="btn-copy" type="button">Copy</button></div>
+    <pre><code>ALTER GIT REPOSITORY WILDERNESS_HOL.GIT.WORKSHOP_REPO FETCH;
+EXECUTE IMMEDIATE FROM @WILDERNESS_HOL.GIT.WORKSHOP_REPO/branches/main/setup/91_catch_up_lab2.sql;</code></pre>
+</div>
+    </div>
+</details>
+
+<div class="step-card" id="step-1">
+    <div class="step-header">
+        <span class="step-number">1</span>
+        <h2 class="step-title">Check the starting line and freeze the baseline</h2>
+        <span class="step-duration">~5 min</span>
+    </div>
+    <div class="step-content">
+<p>Tom Walsh: "The store managers like it. Before 72 stores lean on it every morning to Christmas Eve I need to know it is right, what it will cost and who can see what. And I need you to set the limits."</p>
+
+<p>This step checks that everything from the morning is in place, then freezes the assistant as it is now, so you can change it this afternoon without the store managers noticing.</p>
+
+<h3>Check the starting line</h3>
+
+<div class="code-block">
+    <div class="code-header"><span class="code-lang">sql</span><button class="btn-copy" type="button">Copy</button></div>
+    <pre><code>-- Lab 3 Step 1, block 1: check the starting line. Every row should say OK.
+EXECUTE IMMEDIATE $$
+DECLARE
+  v_tools   VARCHAR DEFAULT '';
+  v_metric  INT DEFAULT 0;
+  v_search  INT DEFAULT 0;
+  v_dataset INT DEFAULT 0;
+  v_rows    INT DEFAULT 0;
+  res RESULTSET;
+BEGIN
+  CREATE OR REPLACE TEMPORARY TABLE LAB3_CHECK (CHECK_NAME VARCHAR, STATUS VARCHAR, DETAIL VARCHAR);
+
+  BEGIN
+    DESCRIBE AGENT WILDERNESS_HOL.AGENTS.WILDERNESS_ASSISTANT;
+    SELECT ARRAY_TO_STRING(ARRAY_AGG(t.value:tool_spec:name::VARCHAR), ', ') INTO :v_tools
+      FROM TABLE(RESULT_SCAN(LAST_QUERY_ID())) d, LATERAL FLATTEN(PARSE_JSON(d."agent_spec"):tools) t;
+  EXCEPTION WHEN OTHER THEN v_tools := '';
+  END;
+  INSERT INTO LAB3_CHECK SELECT 'Wilderness Assistant and its tools',
+    IFF(CONTAINS(:v_tools, 'retail_analyst') AND CONTAINS(:v_tools, 'customer_feedback'), 'OK', 'MISSING'), :v_tools;
+
+  SHOW CORTEX SEARCH SERVICES LIKE 'CSS_CUSTOMER_FEEDBACK' IN SCHEMA WILDERNESS_HOL.AI;
+  SELECT COUNT(*) INTO :v_search FROM TABLE(RESULT_SCAN(LAST_QUERY_ID()));
+  INSERT INTO LAB3_CHECK SELECT 'Customer feedback search', IFF(:v_search = 1, 'OK', 'MISSING'), 'AI.CSS_CUSTOMER_FEEDBACK';
+
+  SHOW SEMANTIC METRICS IN WILDERNESS_HOL.ANALYTICS.SV_WILDERNESS_RETAIL;
+  SELECT COUNT(*) INTO :v_metric FROM TABLE(RESULT_SCAN(LAST_QUERY_ID())) WHERE "name" = 'RETURN_RATE';
+  INSERT INTO LAB3_CHECK SELECT 'RETURN_RATE on the semantic view', IFF(:v_metric = 1, 'OK', 'MISSING'), 'Lab 1 Step 3';
+
+  BEGIN
+    SELECT COUNT(*) INTO :v_rows FROM WILDERNESS_HOL.ANALYTICS.V_CHRISTMAS_STOCK_RISK;
+  EXCEPTION WHEN OTHER THEN v_rows := 0;
+  END;
+  INSERT INTO LAB3_CHECK SELECT 'Christmas stock plan (Lab 2)', IFF(:v_rows &gt; 0, 'OK', 'MISSING'), :v_rows || ' rows';
+
+  SHOW DATASETS LIKE 'CHRISTMAS_EVAL_SET' IN SCHEMA WILDERNESS_HOL.EVALS;
+  SELECT COUNT(*) INTO :v_dataset FROM TABLE(RESULT_SCAN(LAST_QUERY_ID()));
+  INSERT INTO LAB3_CHECK SELECT 'Evaluation dataset', IFF(:v_dataset = 1, 'OK', 'MISSING'), 'EVALS.CHRISTMAS_EVAL_SET, 8 questions';
+
+  res := (SELECT * FROM LAB3_CHECK);
+  RETURN TABLE(res);
+END;
+$$;</code></pre>
+</div>
+
+<div class="info-box success">
+    <strong>You should see</strong>
+    <p>Five rows, all <code>OK</code>: the Wilderness Assistant with its tools (<code>retail_analyst</code>, <code>customer_feedback</code> and <code>data_to_chart</code>), the customer feedback search, <code>RETURN_RATE</code> on the semantic view, the Christmas stock plan from Lab 2 and an evaluation dataset of eight questions, which setup made for this lab. You used the assistant in CoWork this morning, so that part is in place too.</p>
+</div>
+
+<div class="info-box tip">
+    <strong>A row says MISSING</strong>
+    <p>Open <strong>Running late?</strong> above this step and run the block for the lab it belongs to, then run the check again.</p>
+</div>
+
+<h3>Freeze the baseline</h3>
+
+<p>An agent keeps a working draft and a list of committed versions. A committed version never changes. This block commits the draft as a new version, labels it <code>baseline</code> and makes it the default, the version CoWork uses.</p>
+
+<div class="code-block">
+    <div class="code-header"><span class="code-lang">sql</span><button class="btn-copy" type="button">Copy</button></div>
+    <pre><code>-- Lab 3 Step 1, block 2: freeze the agent you built this morning as the baseline.
+-- Commits the draft as a new version, labels it baseline, and makes it the version CoWork uses,
+-- so nothing you change later in this lab reaches the store managers until you promote it.
+ALTER AGENT WILDERNESS_HOL.AGENTS.WILDERNESS_ASSISTANT
+  COMMIT COMMENT = 'Baseline: the agent from Lab 1, before any Lab 3 change';
+
+EXECUTE IMMEDIATE $$
+DECLARE
+  v_version VARCHAR;
+BEGIN
+  SHOW VERSIONS IN AGENT WILDERNESS_HOL.AGENTS.WILDERNESS_ASSISTANT;
+  SELECT "name" INTO :v_version FROM TABLE(RESULT_SCAN(LAST_QUERY_ID()))
+    WHERE "name" IS NOT NULL ORDER BY "created_on" DESC LIMIT 1;
+  EXECUTE IMMEDIATE 'ALTER AGENT WILDERNESS_HOL.AGENTS.WILDERNESS_ASSISTANT MODIFY VERSION '
+                 || :v_version || ' SET ALIAS = baseline';
+  EXECUTE IMMEDIATE 'ALTER AGENT WILDERNESS_HOL.AGENTS.WILDERNESS_ASSISTANT SET DEFAULT_VERSION = '''
+                 || :v_version || '''';
+  RETURN 'Baseline is ' || :v_version || ', and CoWork now uses it';
+END;
+$$;
+
+SHOW VERSIONS IN AGENT WILDERNESS_HOL.AGENTS.WILDERNESS_ASSISTANT;</code></pre>
+</div>
+
+<div class="info-box success">
+    <strong>You should see</strong>
+    <p><code>Baseline is VERSION$2</code> (the number can differ), then the versions. The new one has the alias <code>BASELINE</code> and <code>is_default</code> true.</p>
+</div>
+
+<div class="info-box info">
+    <strong>Why pin the default</strong>
+    <p>Until you pin it, the default is the latest commit, so committing a change this afternoon would switch every store manager to it before anyone had tested it. Pinned, CoWork stays on the baseline until Step 6 promotes a better version. You never type a version number: the blocks look it up.</p>
+</div>
+
+<details class="callout stuck">
+    <summary>Stuck? "No live version to commit"</summary>
+    <div>
+        <p>You already ran the block once, so there is nothing new to commit. Run <code class="chip" title="Select to copy">SHOW VERSIONS IN AGENT WILDERNESS_HOL.AGENTS.WILDERNESS_ASSISTANT;</code> and check that one version has the alias <code>BASELINE</code> and <code>is_default</code> true. If it does, carry on.</p>
+    </div>
+</details>
+        <label class="completion-checkbox"><input type="checkbox" data-step="1"> Mark step 1 complete</label>
+    </div>
+</div>
+<div class="step-card" id="step-2">
+    <div class="step-header">
+        <span class="step-number">2</span>
+        <h2 class="step-title">Run the baseline evaluation</h2>
+        <span class="step-duration">~15 min</span>
+    </div>
+    <div class="step-content">
+<p>An agent evaluation asks the assistant a set of questions and scores every answer. You give each question the answer a right reply contains, and the tools it should use. Setup made the set: eight questions a store manager would ask.</p>
+
+<h3>Start the run</h3>
+
+<ol class="ui-steps">
+    <li>Go to <span class="path">AI &amp; ML » Agents</span> and open <code class="chip" title="Select to copy">WILDERNESS_ASSISTANT</code>.</li>
+    <li>Open the <span class="path">Evaluations</span> tab and select <span class="path">Create evaluation run » Run an evaluation manually</span>.</li>
+    <li>Run name <code class="chip" title="Select to copy">baseline_run</code>. Agent version <code class="chip" title="Select to copy">baseline</code>.</li>
+    <li>Dataset: select the existing dataset <code class="chip" title="Select to copy">CHRISTMAS_EVAL_SET</code>.</li>
+    <li>Metrics: <strong>Answer correctness</strong>, <strong>Logical consistency</strong> and <strong>Tool selection accuracy</strong>, each on version <strong>v3</strong>.</li>
+    <li>Select <span class="path">Create</span>.</li>
+</ol>
+
+<figure class="shot-slot"><figcaption>Screenshot to come: Creating baseline_run on the baseline version<br><code>images/lab3_step2_create_run.png</code></figcaption></figure>
+
+<div class="info-box success">
+    <strong>You should see</strong>
+    <p><code>baseline_run</code> in the list with a status that moves on as it works. It takes about 4 to 5 minutes. Stay on this page and read the rest of the step while it runs.</p>
+</div>
+
+<h3>The eight questions</h3>
+
+<p>Run this in <code>lab3.sql</code> to see each question, what a right answer contains, and the tools it should use.</p>
+
+<div class="code-block">
+    <div class="code-header"><span class="code-lang">sql</span><button class="btn-copy" type="button">Copy</button></div>
+    <pre><code>-- Lab 3 Step 2, block 1: the eight questions and what a right answer contains.
+SELECT QUESTION_ID AS "#",
+       INPUT_QUERY AS QUESTION,
+       GROUND_TRUTH:ground_truth_output::VARCHAR AS RIGHT_ANSWER,
+       ARRAY_TO_STRING(TRANSFORM(GROUND_TRUTH:ground_truth_invocations::ARRAY, t -&gt; t:tool_name::VARCHAR), ', ') AS EXPECTED_TOOLS
+FROM WILDERNESS_HOL.EVALS.AGENT_EVAL_QUESTIONS
+ORDER BY QUESTION_ID;</code></pre>
+</div>
+
+<div class="table-wrapper">
+<table class="form-table">
+    <thead><tr><th>#</th><th>What it tests</th></tr></thead>
+    <tbody>
+        <tr><td>1 to 3</td><td>The morning's questions: tents, sleeping gear, and why the Summit 2P comes back. Question 3 needs both tools.</td></tr>
+        <tr><td>4</td><td>Customer comments only, so the assistant should use the search and nothing else.</td></tr>
+        <tr><td>5 and 7</td><td>Wilderness's <em>launch weekend</em>, a trading term with its own dates: 1 to 3 November.</td></tr>
+        <tr><td>6</td><td>The financial year. A control: it should pass today.</td></tr>
+        <tr><td>8</td><td>The weather. The assistant has no weather data, so the right answer says so and stops there.</td></tr>
+    </tbody>
+</table>
+</div>
+
+<div class="info-box info">
+    <strong>What each metric scores</strong>
+    <p><strong>Answer correctness</strong>: a judge model compares the answer with the expected answer. <strong>Logical consistency</strong>: a judge reads the agent's own steps and checks that they hang together, with no expected answer needed. <strong>Tool selection accuracy</strong> compares the tools it called with the tools you listed, and is worked out without a judge. Each is scored 0 to 1 per question.</p>
+</div>
+
+<div class="info-box tip">
+    <strong>Why a version, and why scores move</strong>
+    <p>The run asks <code>baseline</code>, a version that cannot change, so whatever you edit while it runs does not change what is scored. Each run asks the questions again, and models do not answer the same way twice, so a score can move by a few points between two runs of the same version. Read the pattern, not the second decimal place.</p>
+</div>
+
+<p>Wait until <code>baseline_run</code> shows <strong>Completed</strong> before Step 3.</p>
+        <label class="completion-checkbox"><input type="checkbox" data-step="2"> Mark step 2 complete</label>
+    </div>
+</div>
+<div class="step-card" id="step-3">
+    <div class="step-header">
+        <span class="step-number">3</span>
+        <h2 class="step-title">Read the results and find the pattern</h2>
+        <span class="step-duration">~10 min</span>
+    </div>
+    <div class="step-content">
+<p>The scores say what is wrong. The records say why.</p>
+
+<ol class="ui-steps">
+    <li>Open <code>baseline_run</code>. Sort the records by <strong>Answer correctness</strong>, lowest first.</li>
+    <li>Open the lowest record. The scores are on the left, the agent's steps in the middle and the detail of the selected step on the right.</li>
+    <li>Expand the judge's explanation of the answer correctness score.</li>
+    <li>Select the <code>retail_analyst</code> step and read the SQL it ran.</li>
+</ol>
+
+<figure class="shot-slot"><figcaption>Screenshot to come: A low-scoring record: scores, the agent's steps and the SQL<br><code>images/lab3_step3_record.png</code></figcaption></figure>
+
+<div class="info-box success">
+    <strong>You should see</strong>
+    <p>Answer correctness about 0.6 to 0.7 across the eight. The lowest records are the launch-weekend questions, 5 and 7. The SQL counts the wrong days, often a two-day weekend of 1 and 2 November, or the answer asks you which weekend you mean. Question 8 points you to a weather website, and some answers called the same tool twice, which costs tool selection points.</p>
+</div>
+
+<div class="info-box warning">
+    <strong>This is expected</strong>
+    <p>The answer is well formatted, confident and wrong. A store manager would not catch it. The evaluation did.</p>
+</div>
+
+<h3>Ask Cortex Code for the pattern</h3>
+
+<p>Open the Cortex Code panel in Snowsight, the same one you used in Lab 2, and paste this. It only reads.</p>
+
+<div class="code-block prompt">
+    <div class="code-header"><span class="code-lang">cortex code</span><button class="btn-copy" type="button">Copy</button></div>
+    <pre><code>Use the agent-studio skill. Look at the evaluation run baseline_run for the agent WILDERNESS_HOL.AGENTS.WILDERNESS_ASSISTANT. Group the low-scoring records into failure patterns. For each pattern, say whether it should be fixed in the semantic view or in the agent's instructions, and why. Do not change anything.</code></pre>
+</div>
+
+<div class="info-box success">
+    <strong>You should see</strong>
+    <p>Two kinds of failure. The dates: the assistant does not know Wilderness's trading terms, and that belongs in the semantic view. The behaviour: tools called twice and a refusal that sends people elsewhere, and that belongs in the agent's instructions. Its wording will differ from your neighbour's.</p>
+</div>
+
+<div class="info-box info">
+    <strong>Why the split matters</strong>
+    <p>The semantic view is shared. Every agent and every tool that reads it gets a definition you put there, at once. The instructions belong to this agent, and a committed version keeps them. Step 4 fixes the definitions, Step 5 the behaviour.</p>
+</div>
+        <label class="completion-checkbox"><input type="checkbox" data-step="3"> Mark step 3 complete</label>
+    </div>
+</div>
+<div class="step-card" id="step-4">
+    <div class="step-header">
+        <span class="step-number">4</span>
+        <h2 class="step-title">Fix Wilderness's definitions in the semantic view</h2>
+        <span class="step-duration">~14 min</span>
+    </div>
+    <div class="step-content">
+<p>Wilderness says <em>launch weekend</em> and <em>Peak Week</em>, and each means fixed dates. Nothing in the data says so, so the assistant guesses or asks. The fix goes in the semantic view, where every agent and tool that reads it will get it. You prove it with a semantic view evaluation, before and after.</p>
+
+<div class="info-box info">
+    <strong>What a semantic view evaluation is</strong>
+    <p>It tests one layer: the SQL Cortex Analyst writes. The right answers are your own verified queries. During the run they are removed from a temporary copy of the view, so Cortex Analyst has to write the SQL itself, and its result is compared with yours.</p>
+</div>
+
+<h3>1. Add two verified queries</h3>
+
+<ol class="ui-steps">
+    <li>Go to <span class="path">AI &amp; ML » Cortex Analyst</span>, open <code class="chip" title="Select to copy">SV_WILDERNESS_RETAIL</code> and select <span class="path">Edit</span>.</li>
+    <li>Add each verified query below with its question and its SQL, then select <span class="path">Save</span>.</li>
+</ol>
+
+<p>Question: <code class="chip" title="Select to copy">What were net sales over the launch weekend last year?</code></p>
+<div class="code-block">
+    <div class="code-header"><span class="code-lang">sql</span><button class="btn-copy" type="button">Copy</button></div>
+    <pre><code>SELECT MIN(s.order_date) AS first_day, MAX(s.order_date) AS last_day, SUM(s.net_sales) AS net_sales_aud
+FROM __sales AS s
+WHERE s.order_date BETWEEN '2025-11-01' AND '2025-11-03'</code></pre>
+</div>
+
+<p>Question: <code class="chip" title="Select to copy">What were net sales in Peak Week last year?</code></p>
+<div class="code-block">
+    <div class="code-header"><span class="code-lang">sql</span><button class="btn-copy" type="button">Copy</button></div>
+    <pre><code>SELECT MIN(s.order_date) AS first_day, MAX(s.order_date) AS last_day, SUM(s.net_sales) AS net_sales_aud
+FROM __sales AS s
+WHERE s.order_date BETWEEN '2025-12-18' AND '2025-12-24'</code></pre>
+</div>
+
+<p>Each returns one total for a fixed range of days, so a wrong range gives a plainly wrong number.</p>
+
+<h3>2. Evaluate before the fix</h3>
+
+<ol class="ui-steps">
+    <li>Open the semantic view's <span class="path">Evaluations</span> tab and select <span class="path">Create evaluation run</span>.</li>
+    <li>Run name <code class="chip" title="Select to copy">before_fix</code>, metric <strong>SQL correctness</strong> on <strong>v3</strong>.</li>
+    <li>Select only the two queries you just added, then <span class="path">Run evaluation</span>.</li>
+</ol>
+
+<div class="info-box success">
+    <strong>You should see</strong>
+    <p>After 2 to 3 minutes, <strong>0 of 2</strong> correct. Open a result: Cortex Analyst did not answer, and asked what "Peak Week" or "launch weekend" means.</p>
+</div>
+
+<figure class="shot-slot"><figcaption>Screenshot to come: before_fix: 0 of 2<br><code>images/lab3_step4_before.png</code></figcaption></figure>
+
+<div class="info-box tip">
+    <strong>Why only these two</strong>
+    <p>A question with a fixed total gives the same result every run. Lab 1's sleeping-gear query returns a list, and how the list is shaped can change its score from run to run, which would blur the before and after.</p>
+</div>
+
+<h3>3. Add the definitions</h3>
+
+<p>Custom instructions tell Cortex Analyst things the tables cannot. In the editor, open <span class="path">Custom instructions</span>, paste the two blocks below into their fields, and select <span class="path">Save</span>.</p>
+
+<p><strong>Question categorization</strong>, so a question that uses a Wilderness term counts as clear instead of unclear:</p>
+<div class="code-block">
+    <div class="code-header"><span class="code-lang">text</span><button class="btn-copy" type="button">Copy</button></div>
+    <pre><code>Wilderness uses its own trading terms, and questions that use them are clear. The launch weekend is 1 to 3 November. Peak Week is 18 to 24 December. The Christmas trading period is 1 November to 24 December. 'Last year' means 2025.</code></pre>
+</div>
+
+<p><strong>SQL generation</strong>, so the SQL uses the right dates:</p>
+<div class="code-block">
+    <div class="code-header"><span class="code-lang">text</span><button class="btn-copy" type="button">Copy</button></div>
+    <pre><code>Wilderness uses these trading terms. The launch weekend is the first three days of Christmas trading, 1 to 3 November. Peak Week is the seven days to Christmas Eve, 18 to 24 December. The Christmas trading period runs from 1 November to 24 December, never calendar December. 'Last year' and 'last Christmas' mean 2025. The financial year runs from 1 July to 30 June, and 'last financial year' means FY26, 1 July 2025 to 30 June 2026. Always say which dates you used.</code></pre>
+</div>
+
+<figure class="shot-slot"><figcaption>Screenshot to come: The two custom instructions on the semantic view<br><code>images/lab3_step4_instructions.png</code></figcaption></figure>
+
+<div class="info-box info">
+    <strong>Both are needed</strong>
+    <p>At the build, SQL generation on its own still scored 0 of 2: Cortex Analyst kept asking what the terms meant before it reached the SQL. Question categorization lets the question through; SQL generation gets the dates right.</p>
+</div>
+
+<h3>4. Evaluate after the fix</h3>
+
+<p>Create a second run, <code class="chip" title="Select to copy">after_fix</code>, the same way, on the same two queries.</p>
+
+<div class="info-box success">
+    <strong>You should see</strong>
+    <p><strong>2 of 2</strong> correct, with SQL that uses 1 to 3 November 2025 and 18 to 24 December 2025.</p>
+</div>
+
+<h3>5. Look at Improve</h3>
+
+<p>Open <code>after_fix</code> and select <span class="path">Improve</span> in the accuracy panel. It suggests changes to the semantic view from the results. Read one; you do not need to accept it.</p>
+
+<div class="info-box tip">
+    <strong>Run it whenever the view changes</strong>
+    <p>A semantic view evaluation takes minutes and tests only the view. Run it every time someone changes the view, so a broken definition is caught before any agent uses it.</p>
+</div>
+        <label class="completion-checkbox"><input type="checkbox" data-step="4"> Mark step 4 complete</label>
+    </div>
+</div>
+<div class="step-card" id="step-5">
+    <div class="step-header">
+        <span class="step-number">5</span>
+        <h2 class="step-title">Let Cortex Code improve the instructions, as a new version</h2>
+        <span class="step-duration">~8 min</span>
+    </div>
+    <div class="step-content">
+<p>The definitions are fixed in the semantic view. The behaviour is the agent's: calling the same tool twice, and sending people to a weather website. You ask Cortex Code to fix only that, as a new version, and to leave the store managers on the baseline.</p>
+
+<p>In the Cortex Code panel, paste this prompt. Read what it found and the instructions it proposes before you approve each change.</p>
+
+<div class="code-block prompt">
+    <div class="code-header"><span class="code-lang">cortex code</span><button class="btn-copy" type="button">Copy</button></div>
+    <pre><code>Use the agent-studio skill. Based on the failures in evaluation run baseline_run for the agent WILDERNESS_HOL.AGENTS.WILDERNESS_ASSISTANT, improve only the orchestration and response instructions. The semantic view already defines Wilderness's trading terms, such as the launch weekend, so do not put dates or definitions in the instructions. Do not change the tools, the tool descriptions, the semantic view or anything else. Run SHOW VERSIONS IN AGENT before and after. Commit the change as a new version, never overwrite an existing one, and give the new version the alias candidate, without quotes. Do not change the default version. Do not start an evaluation.</code></pre>
+</div>
+
+<div class="info-box success">
+    <strong>You should see</strong>
+    <p>A summary of the failures, new response and orchestration instructions, and a new version in <code>SHOW VERSIONS</code> with the alias <code>CANDIDATE</code>. <code>BASELINE</code> is still the default. At the build, four tries each committed exactly one new version, changed only the two instruction fields and left the baseline as the default. It takes about 5 to 10 minutes.</p>
+</div>
+
+<div class="info-box info">
+    <strong>Why the prompt says no dates</strong>
+    <p>In an early try, Cortex Code copied "launch weekend = 1 to 3 November" into the agent's instructions, and warned itself that this was fitting the test. It would pass the eight questions, but only this agent would know the term, and the definition would live in two places. Definitions go in the semantic view; instructions say how this agent behaves.</p>
+</div>
+
+<details class="callout stuck">
+    <summary>Prefer a known-good version?</summary>
+    <div>
+        <p>If Cortex Code did not finish, or changed more than the instructions, run this instead. It opens a draft from your latest version, replaces only the response and orchestration instructions with the ones the build tested, keeps everything else (your tool descriptions, and the skill if you did Lab 1 Step 9), commits, and labels the new version <code>candidate</code>. Use it only if no version is labelled <code>candidate</code> yet.</p>
+        <div class="code-block">
+    <div class="code-header"><span class="code-lang">sql</span><button class="btn-copy" type="button">Copy</button></div>
+    <pre><code>-- Lab 3 Step 5, known-good version: your agent as it is, with improved instructions only.
+ALTER AGENT WILDERNESS_HOL.AGENTS.WILDERNESS_ASSISTANT ADD LIVE VERSION FROM LAST;
+
+EXECUTE IMMEDIATE $$
+DECLARE
+  v_spec VARIANT;
+  v_ins VARIANT;
+BEGIN
+  SHOW VERSIONS IN AGENT WILDERNESS_HOL.AGENTS.WILDERNESS_ASSISTANT;
+  SELECT PARSE_JSON("agent_spec") INTO :v_spec FROM TABLE(RESULT_SCAN(LAST_QUERY_ID())) WHERE "name" IS NULL;
+  v_ins := COALESCE(v_spec:instructions, OBJECT_CONSTRUCT());
+  v_ins := OBJECT_INSERT(v_ins, 'response',
+    'You help Wilderness Outfitters store managers and merchandisers through Christmas trading. Use plain Australian English and short sentences. Give the answer first, then the numbers behind it, and say which dates you used. Show money as AUD, for example AUD 1,234, never a bare $ sign. Quote customers word for word and name the source. Do not use emoji or marketing language. If a question is outside Wilderness sales, stock, returns and customer feedback, say so in one sentence and offer what you can answer instead. Do not send people to other websites or apps.', TRUE);
+  v_ins := OBJECT_INSERT(v_ins, 'orchestration',
+    'Use retail_analyst for any number and customer_feedback for what customers said. Call each tool once per question, and call it again only if the first result was empty or failed. For ''why'' and ''what can we do'' questions use both tools, retail_analyst first. Wilderness trading terms such as the launch weekend, Peak Week and the Christmas trading period are defined in the semantic view: pass the user''s words to retail_analyst rather than guessing dates or asking the user what they mean. Chart comparisons and trends.', TRUE);
+  v_spec := OBJECT_INSERT(v_spec, 'instructions', v_ins, TRUE);
+  EXECUTE IMMEDIATE 'ALTER AGENT WILDERNESS_HOL.AGENTS.WILDERNESS_ASSISTANT MODIFY LIVE VERSION SET SPECIFICATION = '''
+                 || REPLACE(TO_JSON(v_spec), '''', '''''') || '''';
+  RETURN 'Draft updated: new response and orchestration instructions';
+END;
+$$;
+
+ALTER AGENT WILDERNESS_HOL.AGENTS.WILDERNESS_ASSISTANT COMMIT COMMENT = 'Candidate: known-good instructions (Lab 3 Step 5)';
+
+EXECUTE IMMEDIATE $$
+DECLARE
+  v_version VARCHAR;
+BEGIN
+  SHOW VERSIONS IN AGENT WILDERNESS_HOL.AGENTS.WILDERNESS_ASSISTANT;
+  SELECT "name" INTO :v_version FROM TABLE(RESULT_SCAN(LAST_QUERY_ID()))
+    WHERE "name" IS NOT NULL ORDER BY "created_on" DESC LIMIT 1;
+  EXECUTE IMMEDIATE 'ALTER AGENT WILDERNESS_HOL.AGENTS.WILDERNESS_ASSISTANT MODIFY VERSION '
+                 || :v_version || ' SET ALIAS = candidate';
+  RETURN 'Candidate is ' || :v_version;
+END;
+$$;
+
+SHOW VERSIONS IN AGENT WILDERNESS_HOL.AGENTS.WILDERNESS_ASSISTANT;</code></pre>
+</div>
+    </div>
+</details>
+        <label class="completion-checkbox"><input type="checkbox" data-step="5"> Mark step 5 complete</label>
+    </div>
+</div>
+<div class="step-card" id="step-6">
+    <div class="step-header">
+        <span class="step-number">6</span>
+        <h2 class="step-title">Evaluate the new version, compare, promote</h2>
+        <span class="step-duration">~12 min</span>
+    </div>
+    <div class="step-content">
+<p>The same questions and the same metrics, on the new version. Only the version changes, so any difference comes from the changes.</p>
+
+<h3>Run it</h3>
+
+<ol class="ui-steps">
+    <li>Back on the agent's <span class="path">Evaluations</span> tab, select <span class="path">Create evaluation run » Run an evaluation manually</span>.</li>
+    <li>Run name <code class="chip" title="Select to copy">candidate_run</code>. Agent version <code class="chip" title="Select to copy">candidate</code>.</li>
+    <li>The same dataset, <code class="chip" title="Select to copy">CHRISTMAS_EVAL_SET</code>, and the same three metrics on <strong>v3</strong>. Select <span class="path">Create</span>.</li>
+</ol>
+
+<p>It takes about 4 to 5 minutes. Read this while it runs.</p>
+
+<div class="table-wrapper">
+<table class="form-table">
+    <thead><tr><th></th><th>Agent evaluation</th><th>Semantic view evaluation</th></tr></thead>
+    <tbody>
+        <tr><td>Tests</td><td>The whole assistant: tool choice, reasoning, the final answer</td><td>One layer: the SQL Cortex Analyst writes</td></tr>
+        <tr><td>Right answers</td><td>An expected answer and expected tools, scored by judge models</td><td>Your verified queries, removed during the run, results compared</td></tr>
+        <tr><td>Catches</td><td>Wrong tool, refusals, wrong numbers, rambling</td><td>Wrong definitions, joins and filters</td></tr>
+        <tr><td>Run it</td><td>Before you promote an agent version</td><td>Every time the semantic view changes</td></tr>
+    </tbody>
+</table>
+</div>
+
+<div class="info-box warning">
+    <strong>The baseline would pass the date questions now too</strong>
+    <p>A version freezes the agent's instructions and tools, not the semantic view it reads. The view fix in Step 4 reached every version at once, the baseline included. If you ran <code>baseline</code> again now, it would also get the launch weekend right. So this comparison shows the two fixes together. To see the instructions alone, you would compare two runs made after Step 4.</p>
+</div>
+
+<h3>Compare the two runs</h3>
+
+<ol class="ui-steps">
+    <li>When <code>candidate_run</code> shows <strong>Completed</strong>, select <code>baseline_run</code> and <code>candidate_run</code> in the list.</li>
+    <li>Select <span class="path">Compare</span>, then <span class="path">Hide unchanged metrics</span>.</li>
+</ol>
+
+<figure class="shot-slot"><figcaption>Screenshot to come: baseline_run and candidate_run compared<br><code>images/lab3_step6_compare.png</code></figcaption></figure>
+
+<div class="info-box success">
+    <strong>You should see</strong>
+    <p>Answer correctness up from about 0.6 to 0.7 to about 0.9 or higher, and tool selection up from about 0.7 to 0.8 to about 1.0. The launch-weekend questions pass, from the semantic view. The weather question improves, from the instructions. Nothing that passed before fails now. Your numbers will differ a little: at the build the baseline scored 0.58 to 0.71 and the candidate 0.92 to 1.00 across several runs.</p>
+</div>
+
+<h3>Promote it</h3>
+
+<p>Labelling it <code>production</code> and making it the default puts it in front of every store manager in CoWork at once.</p>
+
+<div class="code-block">
+    <div class="code-header"><span class="code-lang">sql</span><button class="btn-copy" type="button">Copy</button></div>
+    <pre><code>-- Lab 3 Step 6, block 1: promote the candidate. CoWork starts using it straight away.
+-- The candidate's label becomes production; the baseline stays as it is, so rolling back is one line.
+EXECUTE IMMEDIATE $$
+DECLARE
+  v_version VARCHAR;
+BEGIN
+  SHOW VERSIONS IN AGENT WILDERNESS_HOL.AGENTS.WILDERNESS_ASSISTANT;
+  SELECT "name" INTO :v_version FROM TABLE(RESULT_SCAN(LAST_QUERY_ID()))
+    WHERE UPPER("alias") = 'CANDIDATE';
+  IF (v_version IS NULL) THEN
+    RETURN 'No version is labelled candidate yet. Finish Step 5 first.';
+  END IF;
+  EXECUTE IMMEDIATE 'ALTER AGENT WILDERNESS_HOL.AGENTS.WILDERNESS_ASSISTANT MODIFY VERSION '
+                 || :v_version || ' SET ALIAS = production';
+  EXECUTE IMMEDIATE 'ALTER AGENT WILDERNESS_HOL.AGENTS.WILDERNESS_ASSISTANT SET DEFAULT_VERSION = '''
+                 || :v_version || '''';
+  RETURN 'Promoted ' || :v_version || ' to production; CoWork now uses it';
+END;
+$$;
+
+SHOW VERSIONS IN AGENT WILDERNESS_HOL.AGENTS.WILDERNESS_ASSISTANT;</code></pre>
+</div>
+
+<div class="info-box success">
+    <strong>You should see</strong>
+    <p><code>Promoted VERSION$3 to production; CoWork now uses it</code> (the number can differ), and in the versions <code>PRODUCTION</code> with <code>is_default</code> true and <code>BASELINE</code> unchanged.</p>
+</div>
+
+<div class="info-box tip">
+    <strong>Rolling back is one line</strong>
+    <p>If production misbehaves, set the default back to the baseline's version, for example <code class="chip" title="Select to copy">ALTER AGENT WILDERNESS_HOL.AGENTS.WILDERNESS_ASSISTANT SET DEFAULT_VERSION = 'VERSION$2';</code> with the name <code>SHOW VERSIONS</code> gives for <code>BASELINE</code>. Nothing is rebuilt and the runs stay.</p>
+</div>
+        <label class="completion-checkbox"><input type="checkbox" data-step="6"> Mark step 6 complete</label>
+    </div>
+</div>
+<div class="step-card" id="step-7">
+    <div class="step-header">
+        <span class="step-number">7</span>
+        <h2 class="step-title">Set Wilderness's cost controls</h2>
+        <span class="step-duration">~15 min</span>
+    </div>
+    <div class="step-content">
+<p>Tom wants a set of limits he can sign off before 72 stores go live. Start with what today has cost, then set two controls: one for the project, one for each store manager.</p>
+
+<h3>1. What today has cost</h3>
+
+<div class="code-block">
+    <div class="code-header"><span class="code-lang">sql</span><button class="btn-copy" type="button">Copy</button></div>
+    <pre><code>-- Lab 3 Step 7, block 1: what this account has spent in the last 24 hours, by service.
+-- Usage reaches this view an hour or two after it happens, so the last hour may be missing.
+SELECT CASE SERVICE_TYPE
+         WHEN 'CORTEX_AGENTS'            THEN 'Cortex Agents (the assistant outside CoWork, and evaluations)'
+         WHEN 'SNOWFLAKE_COWORK'         THEN 'CoWork (the store managers'' questions)'
+         WHEN 'SNOWFLAKE_INTELLIGENCE'   THEN 'CoWork (the store managers'' questions)'
+         WHEN 'AI_FUNCTIONS'             THEN 'AI functions (Lab 2 AI_CLASSIFY and AI_COMPLETE)'
+         WHEN 'AI_INFERENCE'             THEN 'AI inference (evaluation judges and other model calls)'
+         WHEN 'CORTEX_SEARCH'            THEN 'Cortex Search (customer feedback)'
+         WHEN 'SNOWFLAKE_COCO_SNOWSIGHT' THEN 'Cortex Code in Snowsight (Lab 2 and Lab 3)'
+         WHEN 'WAREHOUSE_METERING'       THEN 'Warehouse (queries, the app, the automation)'
+         ELSE SERVICE_TYPE
+       END AS WHAT,
+       ROUND(SUM(CREDITS_USED), 2) AS CREDITS
+FROM SNOWFLAKE.ACCOUNT_USAGE.METERING_HISTORY
+WHERE START_TIME &gt;= DATEADD('hour', -24, CURRENT_TIMESTAMP())
+GROUP BY WHAT
+HAVING CREDITS &gt; 0
+ORDER BY CREDITS DESC;</code></pre>
+</div>
+
+<div class="info-box success">
+    <strong>You should see</strong>
+    <p>One row per service you used today, for example Cortex Agents, CoWork, AI functions, Cortex Search, Cortex Code and the warehouse. The two evaluation runs show up under Cortex Agents and AI inference. Usage reaches this view an hour or two after it happens, so this afternoon's runs may not be there yet.</p>
+</div>
+
+<div class="info-box info">
+    <strong>Same assistant, two lines</strong>
+    <p>The questions you asked in CoWork this morning are billed to CoWork, not to Cortex Agents, even though the same agent answered them. A limit on the agent alone would miss most of what store managers do. That is why the store-manager limit below covers both.</p>
+</div>
+
+<h3>2. A budget for the project</h3>
+
+<p>Setup tagged the database and the warehouse <code>PROJECT = 'wilderness_christmas'</code>. A budget on that tag counts everything inside them, the agent, the search service and the tasks included, against one monthly limit.</p>
+
+<div class="code-block">
+    <div class="code-header"><span class="code-lang">sql</span><button class="btn-copy" type="button">Copy</button></div>
+    <pre><code>-- Lab 3 Step 7, block 2: a monthly budget for the whole Wilderness project.
+-- It counts every object tagged PROJECT = 'wilderness_christmas': the database (and so the agent, the
+-- search service and the tasks in it) and the warehouse. It emails you at 80% and stops the warehouse at 100%.
+USE ROLE ACCOUNTADMIN;
+
+CREATE OR REPLACE SNOWFLAKE.CORE.BUDGET WILDERNESS_HOL.GOVERNANCE.WILDERNESS_PROJECT_BUDGET();
+
+CALL WILDERNESS_HOL.GOVERNANCE.WILDERNESS_PROJECT_BUDGET!SET_SPENDING_LIMIT(150);
+
+CALL WILDERNESS_HOL.GOVERNANCE.WILDERNESS_PROJECT_BUDGET!SET_RESOURCE_TAGS(
+  [[(SELECT SYSTEM$REFERENCE('TAG', 'WILDERNESS_HOL.GOVERNANCE.PROJECT', 'SESSION', 'APPLYBUDGET')), 'wilderness_christmas']],
+  'UNION');
+
+-- Email you, through the integration setup made, when spending is heading past 80%.
+GRANT USAGE ON INTEGRATION WILDERNESS_EMAIL TO APPLICATION SNOWFLAKE;
+EXECUTE IMMEDIATE $$
+DECLARE
+  v_email VARCHAR;
+BEGIN
+  SELECT MAX(VALUE) INTO :v_email FROM WILDERNESS_HOL.GIT.WORKSHOP_SETTINGS WHERE KEY = 'REPORT_EMAIL';
+  CALL WILDERNESS_HOL.GOVERNANCE.WILDERNESS_PROJECT_BUDGET!SET_EMAIL_NOTIFICATIONS('WILDERNESS_EMAIL', :v_email);
+  RETURN 'Budget alerts go to ' || :v_email;
+END;
+$$;
+CALL WILDERNESS_HOL.GOVERNANCE.WILDERNESS_PROJECT_BUDGET!SET_NOTIFICATION_THRESHOLD(80);
+
+-- At 100%, stop the warehouse and keep it stopped until someone turns it back on.
+CREATE OR REPLACE PROCEDURE WILDERNESS_HOL.GOVERNANCE.STOP_WILDERNESS_WH()
+RETURNS VARCHAR
+LANGUAGE SQL
+EXECUTE AS OWNER
+AS
+$$
+BEGIN
+  ALTER WAREHOUSE WILDERNESS_WH SET AUTO_RESUME = FALSE;
+  ALTER WAREHOUSE WILDERNESS_WH SUSPEND;
+  RETURN 'WILDERNESS_WH stopped by the project budget';
+END;
+$$;
+GRANT USAGE ON DATABASE WILDERNESS_HOL TO APPLICATION SNOWFLAKE;
+GRANT USAGE ON SCHEMA WILDERNESS_HOL.GOVERNANCE TO APPLICATION SNOWFLAKE;
+GRANT USAGE ON PROCEDURE WILDERNESS_HOL.GOVERNANCE.STOP_WILDERNESS_WH() TO APPLICATION SNOWFLAKE;
+CALL WILDERNESS_HOL.GOVERNANCE.WILDERNESS_PROJECT_BUDGET!ADD_CUSTOM_ACTION(
+  SYSTEM$REFERENCE('PROCEDURE', 'WILDERNESS_HOL.GOVERNANCE.STOP_WILDERNESS_WH()'),
+  ARRAY_CONSTRUCT(),
+  'ACTUAL',
+  100);
+
+-- What the budget watches, and what it does.
+CALL WILDERNESS_HOL.GOVERNANCE.WILDERNESS_PROJECT_BUDGET!GET_RESOURCE_TAGS();
+CALL WILDERNESS_HOL.GOVERNANCE.WILDERNESS_PROJECT_BUDGET!GET_CUSTOM_ACTIONS();</code></pre>
+</div>
+
+<div class="info-box success">
+    <strong>You should see</strong>
+    <p><code>Budget alerts go to</code> your email, then the tag the budget watches (<code>PROJECT</code> = <code>wilderness_christmas</code>) and one custom action, <code>STOP_WILDERNESS_WH</code> at 100% of actual spend.</p>
+</div>
+
+<h3>3. A daily limit for each store manager</h3>
+
+<p>A per-user quota gives every user in scope the same AI limit, and blocks a user who reaches it within minutes, until the next day. You try it on a demo store manager, never on yourself.</p>
+
+<div class="code-block">
+    <div class="code-header"><span class="code-lang">sql</span><button class="btn-copy" type="button">Copy</button></div>
+    <pre><code>-- Lab 3 Step 7, block 3: a daily AI limit for store managers, tried on a demo user.
+-- A new quota covers every user in the account. This block narrows it to users tagged as store managers,
+-- and leaves you out by name, so it can never block you during the workshop.
+USE ROLE ACCOUNTADMIN;
+
+-- A store manager to apply the limit to. No password: nobody signs in as this user today.
+CREATE USER IF NOT EXISTS STORE_MANAGER_DEMO
+  COMMENT = 'Wilderness workshop: a demo store manager for the AI quota and the masking test';
+
+-- The team tag that decides who the limit applies to.
+CREATE TAG IF NOT EXISTS WILDERNESS_HOL.GOVERNANCE.TEAM ALLOWED_VALUES 'store_managers';
+ALTER USER STORE_MANAGER_DEMO SET TAG WILDERNESS_HOL.GOVERNANCE.TEAM = 'store_managers';
+
+CREATE OR REPLACE SNOWFLAKE.CORE.QUOTA WILDERNESS_HOL.GOVERNANCE.WILDERNESS_STORE_QUOTA();
+
+-- What it counts: CoWork and Cortex Agents, the two ways a store manager reaches the assistant.
+CALL WILDERNESS_HOL.GOVERNANCE.WILDERNESS_STORE_QUOTA!ADD_SHARED_RESOURCE('SNOWFLAKE INTELLIGENCE');
+CALL WILDERNESS_HOL.GOVERNANCE.WILDERNESS_STORE_QUOTA!ADD_SHARED_RESOURCE('CORTEX AGENT');
+
+-- Who it covers: users tagged store_managers, plus the demo user by name, never you.
+CALL WILDERNESS_HOL.GOVERNANCE.WILDERNESS_STORE_QUOTA!SET_USER_TAGS(
+  [[(SELECT SYSTEM$REFERENCE('TAG', 'WILDERNESS_HOL.GOVERNANCE.TEAM', 'SESSION', 'APPLYBUDGET')), 'store_managers']],
+  'UNION');
+CALL WILDERNESS_HOL.GOVERNANCE.WILDERNESS_STORE_QUOTA!INCLUDE_USERS(['STORE_MANAGER_DEMO']);
+EXECUTE IMMEDIATE $$
+BEGIN
+  EXECUTE IMMEDIATE 'CALL WILDERNESS_HOL.GOVERNANCE.WILDERNESS_STORE_QUOTA!EXCLUDE_USERS(''USER'', [''' ||
+                    REPLACE(CURRENT_USER(), '''', '''''') || '''])';
+  RETURN 'You are excluded from the store manager quota';
+END;
+$$;
+
+-- The limit: 2 credits per store manager per day.
+CALL WILDERNESS_HOL.GOVERNANCE.WILDERNESS_STORE_QUOTA!SET_PER_USER_LIMIT(2, 'DAILY');
+
+-- Check before blocking: the demo user under included users, and you under excluded users.
+CALL WILDERNESS_HOL.GOVERNANCE.WILDERNESS_STORE_QUOTA!GET_QUOTA_SCOPE();
+
+-- Block at the limit, and email the user when it happens.
+CALL WILDERNESS_HOL.GOVERNANCE.WILDERNESS_STORE_QUOTA!SET_BLOCK_ENFORCEMENT_ENABLED(TRUE, TRUE);
+
+-- The settings in force: a daily limit of 2 credits, blocking on.
+CALL WILDERNESS_HOL.GOVERNANCE.WILDERNESS_STORE_QUOTA!GET_CONFIG();</code></pre>
+</div>
+
+<div class="info-box success">
+    <strong>You should see</strong>
+    <p>The scope check lists <code>STORE_MANAGER_DEMO</code> under included users, you under excluded users, and the two domains it counts, <code>CORTEX_AGENT</code> and <code>SNOWFLAKE_INTELLIGENCE</code>, which is CoWork. The last result shows <code>PER_USER_LIMIT_DAILY</code> 2 and <code>BLOCK_ENFORCEMENT_ENABLED</code> true. The Budgets page can take up to two hours to list the demo user under the quota's users.</p>
+</div>
+
+<div class="info-box warning">
+    <strong>Why the block leaves you out by name</strong>
+    <p>A new quota covers every user in the account. You have used far more than 2 credits today, so a quota that included you would block your CoWork and agent requests for the rest of the day. The block narrows the quota to a store-manager tag, excludes you by name, and turns blocking on only after the scope check has shown who is in it.</p>
+</div>
+
+<h3>4. See them as a reviewer would</h3>
+
+<ol class="ui-steps">
+    <li>Go to <span class="path">Admin » Cost management</span> and open the <span class="path">Budgets</span> tab.</li>
+    <li>Open <code>WILDERNESS_PROJECT_BUDGET</code>, then go back and open <code>WILDERNESS_STORE_QUOTA</code>.</li>
+</ol>
+
+<figure class="shot-slot"><figcaption>Screenshot to come: The project budget and the store-manager quota in Budgets<br><code>images/lab3_step7_budgets.png</code></figcaption></figure>
+
+<h3>5. Make the morning email cost less</h3>
+
+<p>The Lab 1 automation runs every hour, which was for proving it works. A store manager needs one email before the shop opens. In CoWork, ask:</p>
+
+<div class="code-block prompt">
+    <div class="code-header"><span class="code-lang">cortex code</span><button class="btn-copy" type="button">Copy</button></div>
+    <pre><code>Change my sleeping-gear report to weekdays at 7am.</code></pre>
+</div>
+
+<div class="info-box success">
+    <strong>You should see</strong>
+    <p>CoWork proposes the new schedule. After you confirm, the automation shows weekdays at 7:00 in the <span class="path">Automations</span> tab.</p>
+</div>
+
+<h3>The design you hand Tom</h3>
+
+<div class="table-wrapper">
+<table class="form-table">
+    <thead><tr><th>Who</th><th>Risk</th><th>Control</th><th>Acts within</th></tr></thead>
+    <tbody>
+        <tr><td>The project</td><td>The work runs over its monthly allowance</td><td>Budget on the project tag: 150 credits a month, email at 80%, stop the warehouse at 100%</td><td>Hours</td></tr>
+        <tr><td>Store managers</td><td>One manager, or a script, uses up the day's AI spend</td><td>Per-user quota on CoWork and Cortex Agents: 2 credits a day, blocking on</td><td>Minutes</td></tr>
+        <tr><td>Your delivery team</td><td>Cortex Code and AI-function work during the build eats the project budget</td><td>The same quota on Cortex Code and AI functions, for the team's users. Not built today: in this account the only team member is you.</td><td>Minutes</td></tr>
+    </tbody>
+</table>
+</div>
+
+<p>The quota stops a person in minutes; the budget stops the project in hours.</p>
+        <label class="completion-checkbox"><input type="checkbox" data-step="7"> Mark step 7 complete</label>
+    </div>
+</div>
+<div class="step-card" id="step-8">
+    <div class="step-header">
+        <span class="step-number">8</span>
+        <h2 class="step-title">Who sees what</h2>
+        <span class="step-duration">~10 min</span>
+    </div>
+    <div class="step-content">
+<p>Store managers should see stock and sales, not members' email addresses, and not the raw tables. One role, one masking policy, and a test that proves both.</p>
+
+<div class="code-block">
+    <div class="code-header"><span class="code-lang">sql</span><button class="btn-copy" type="button">Copy</button></div>
+    <pre><code>-- Lab 3 Step 8: who sees what. One role for store managers, one masking policy on member emails,
+-- and a test that proves both. Run it top to bottom. It ends back in ACCOUNTADMIN.
+USE ROLE ACCOUNTADMIN;
+
+-- 1. The store manager role: the curated layer only, plus member names for the kit offer.
+CREATE ROLE IF NOT EXISTS WILDERNESS_STORE_MANAGER COMMENT = 'Wilderness store managers: analytics, the assistant, CoWork';
+GRANT USAGE ON WAREHOUSE WILDERNESS_WH TO ROLE WILDERNESS_STORE_MANAGER;
+GRANT USAGE ON DATABASE WILDERNESS_HOL TO ROLE WILDERNESS_STORE_MANAGER;
+GRANT USAGE ON SCHEMA WILDERNESS_HOL.ANALYTICS TO ROLE WILDERNESS_STORE_MANAGER;
+GRANT USAGE ON SCHEMA WILDERNESS_HOL.AI TO ROLE WILDERNESS_STORE_MANAGER;
+GRANT USAGE ON SCHEMA WILDERNESS_HOL.AGENTS TO ROLE WILDERNESS_STORE_MANAGER;
+GRANT USAGE ON SCHEMA WILDERNESS_HOL.RAW TO ROLE WILDERNESS_STORE_MANAGER;
+GRANT SELECT ON ALL VIEWS IN SCHEMA WILDERNESS_HOL.ANALYTICS TO ROLE WILDERNESS_STORE_MANAGER;
+GRANT SELECT ON SEMANTIC VIEW WILDERNESS_HOL.ANALYTICS.SV_WILDERNESS_RETAIL TO ROLE WILDERNESS_STORE_MANAGER;
+GRANT USAGE ON CORTEX SEARCH SERVICE WILDERNESS_HOL.AI.CSS_CUSTOMER_FEEDBACK TO ROLE WILDERNESS_STORE_MANAGER;
+GRANT USAGE ON AGENT WILDERNESS_HOL.AGENTS.WILDERNESS_ASSISTANT TO ROLE WILDERNESS_STORE_MANAGER;
+GRANT SELECT ON TABLE WILDERNESS_HOL.RAW.DIM_MEMBER TO ROLE WILDERNESS_STORE_MANAGER;
+
+-- 2. Give the role to the demo store manager, and to you so you can test it.
+GRANT ROLE WILDERNESS_STORE_MANAGER TO USER STORE_MANAGER_DEMO;
+EXECUTE IMMEDIATE $$
+BEGIN
+  EXECUTE IMMEDIATE 'GRANT ROLE WILDERNESS_STORE_MANAGER TO USER "' || REPLACE(CURRENT_USER(), '"', '""') || '"';
+  RETURN 'Granted WILDERNESS_STORE_MANAGER to you';
+END;
+$$;
+
+-- 3. Member emails: shown in full to ACCOUNTADMIN, hidden from everyone else.
+CREATE OR REPLACE MASKING POLICY WILDERNESS_HOL.GOVERNANCE.MP_MEMBER_EMAIL AS (v VARCHAR) RETURNS VARCHAR -&gt;
+  CASE WHEN CURRENT_ROLE() = 'ACCOUNTADMIN' THEN v
+       ELSE REGEXP_REPLACE(v, '^[^@]+', '*****') END;
+ALTER TABLE WILDERNESS_HOL.RAW.DIM_MEMBER MODIFY COLUMN EMAIL
+  SET MASKING POLICY WILDERNESS_HOL.GOVERNANCE.MP_MEMBER_EMAIL FORCE;
+
+-- 4. The test. As ACCOUNTADMIN you see full emails.
+SELECT FIRST_NAME, EMAIL FROM WILDERNESS_HOL.RAW.DIM_MEMBER ORDER BY MEMBER_ID LIMIT 3;
+
+-- As a store manager, with only that role's rights (secondary roles off).
+USE ROLE WILDERNESS_STORE_MANAGER;
+USE SECONDARY ROLES NONE;
+SELECT FIRST_NAME, EMAIL FROM WILDERNESS_HOL.RAW.DIM_MEMBER ORDER BY MEMBER_ID LIMIT 3;
+SELECT STATE, COUNT(*) AS STORE_PRODUCT_ROWS FROM WILDERNESS_HOL.ANALYTICS.V_CHRISTMAS_STOCK_RISK
+  GROUP BY STATE ORDER BY STATE;
+
+-- This one should fail: store managers cannot read raw sales lines.
+SELECT COUNT(*) FROM WILDERNESS_HOL.RAW.FCT_SALES_LINE;</code></pre>
+</div>
+
+<div class="info-box success">
+    <strong>You should see</strong>
+    <p>As ACCOUNTADMIN, three members with full email addresses. As <code>WILDERNESS_STORE_MANAGER</code>, the same three with the part before the @ hidden, for example <code>*****@example.com</code>, and the stock plan by state. The last query fails with an error that the table does not exist or is not authorised. That error is the proof: the role cannot read raw sales.</p>
+</div>
+
+<p>Your session is now in the store-manager role. Run the next block to see why the <code>USE SECONDARY ROLES NONE</code> line is there, and to return to ACCOUNTADMIN.</p>
+
+<div class="code-block">
+    <div class="code-header"><span class="code-lang">sql</span><button class="btn-copy" type="button">Copy</button></div>
+    <pre><code>-- Lab 3 Step 8, block 2: why the secondary-roles line matters, then back to ACCOUNTADMIN.
+-- With secondary roles on, your other roles come along, and the same query now succeeds.
+USE SECONDARY ROLES ALL;
+SELECT COUNT(*) AS SALES_LINES_SEEN_THROUGH_YOUR_OTHER_ROLES FROM WILDERNESS_HOL.RAW.FCT_SALES_LINE;
+
+USE ROLE ACCOUNTADMIN;
+USE SECONDARY ROLES ALL;</code></pre>
+</div>
+
+<div class="info-box success">
+    <strong>You should see</strong>
+    <p>A count of about three million sales lines: with your other roles switched back on, the same query succeeds. Then the session is back in ACCOUNTADMIN.</p>
+</div>
+
+<div class="info-box warning">
+    <strong>Why the secondary-roles line matters</strong>
+    <p>New users get all their roles as secondary roles. Without <code>USE SECONDARY ROLES NONE</code>, ACCOUNTADMIN stays active behind the store-manager role, and the denial test passes for the wrong reason. Test access with secondary roles off.</p>
+</div>
+
+<div class="info-box info">
+    <strong>The same limits in CoWork</strong>
+    <p>CoWork runs as the person asking. A store manager who signs in with this role gets the same view of the data there, with no change to the agent. With Step 7, a store manager sees only what the role allows, up to 2 credits a day.</p>
+</div>
+        <label class="completion-checkbox"><input type="checkbox" data-step="8"> Mark step 8 complete</label>
+    </div>
+</div>
+<div class="step-card optional" id="step-9">
+    <div class="step-header">
+        <span class="step-number">9</span>
+        <h2 class="step-title">Push quality further: a second change, a third run <span class="badge-optional">Optional</span></h2>
+        <span class="step-duration">~10 min</span>
+    </div>
+    <div class="step-content">
+<p>The evaluation found a second kind of weakness you have not touched: how each tool is described. The agent reads those descriptions to decide which tool to call. Make one more change, as its own version, and test it the same way.</p>
+
+<div class="code-block prompt">
+    <div class="code-header"><span class="code-lang">cortex code</span><button class="btn-copy" type="button">Copy</button></div>
+    <pre><code>Use the agent-studio skill. Look at the evaluation runs baseline_run and candidate_run for the agent WILDERNESS_HOL.AGENTS.WILDERNESS_ASSISTANT. Improve only the descriptions of the retail_analyst and customer_feedback tools, so the agent picks the right tool the first time. Do not change the instructions, the semantic view or anything else, and do not put dates or definitions in the descriptions. Run SHOW VERSIONS IN AGENT before and after. Commit the change as a new version, never overwrite an existing one, and give the new version the alias candidate_2, without quotes. Do not change the default version. Do not start an evaluation.</code></pre>
+</div>
+
+<ol class="ui-steps">
+    <li>On the agent's <span class="path">Evaluations</span> tab, create <code class="chip" title="Select to copy">candidate_2_run</code> on version <code class="chip" title="Select to copy">candidate_2</code>, with the same dataset and the same three metrics.</li>
+    <li>When it completes, select <code>baseline_run</code>, <code>candidate_run</code> and <code>candidate_2_run</code>, then <span class="path">Compare</span>.</li>
+</ol>
+
+<div class="info-box success">
+    <strong>You should see</strong>
+    <p>Three runs side by side. <code>production</code> is still the default, so CoWork has not changed. With answer correctness already above 0.9, the third run may score the same or a little different: that is the run-to-run movement from Step 2, not necessarily the change.</p>
+</div>
+
+<div class="info-box tip">
+    <strong>Three rules for tuning</strong>
+    <p>Change one thing at a time, so you know what moved the score. Look for questions that got worse, not only the average. And do not tune to the eight questions: when a fix only makes sense for one question, add more questions to the dataset instead.</p>
+</div>
+    </div>
+</div>
+<div class="step-card optional" id="step-10">
+    <div class="step-header">
+        <span class="step-number">10</span>
+        <h2 class="step-title">Re-test production every night to Christmas <span class="badge-optional">Optional</span></h2>
+        <span class="step-duration">~10 min</span>
+    </div>
+    <div class="step-content">
+<p>Someone will change the semantic view, or the data, before Christmas Eve. A nightly evaluation of <code>production</code> finds the break before a store manager does. This block copies the evaluation settings from the workshop repository and schedules a run at 2am Sydney time.</p>
+
+<div class="code-block">
+    <div class="code-header"><span class="code-lang">sql</span><button class="btn-copy" type="button">Copy</button></div>
+    <pre><code>-- Lab 3 optional Step 10: re-test production every night until Christmas Eve.
+-- Copy the evaluation settings from the workshop repository, then schedule a nightly run.
+-- The task lives with the agent, in AGENTS: an evaluation started by SQL runs in the session's schema.
+ALTER GIT REPOSITORY WILDERNESS_HOL.GIT.WORKSHOP_REPO FETCH;
+COPY FILES INTO @WILDERNESS_HOL.EVALS.EVAL_CONFIG
+  FROM @WILDERNESS_HOL.GIT.WORKSHOP_REPO/branches/main/evals/
+  FILES = ('nightly_eval.yaml');
+
+CREATE OR REPLACE TASK WILDERNESS_HOL.AGENTS.NIGHTLY_EVAL
+  WAREHOUSE = WILDERNESS_WH
+  SCHEDULE = 'USING CRON 0 2 * * * Australia/Sydney'
+  COMMENT = 'Wilderness workshop: evaluate the production agent every night at 2am'
+AS
+EXECUTE IMMEDIATE $$
+BEGIN
+  CALL EXECUTE_AI_EVALUATION('START',
+    OBJECT_CONSTRUCT('run_name', 'nightly_' || TO_VARCHAR(CURRENT_TIMESTAMP(), 'YYYYMMDD_HH24MI')),
+    '@WILDERNESS_HOL.EVALS.EVAL_CONFIG/nightly_eval.yaml');
+END;
+$$;
+
+ALTER TASK WILDERNESS_HOL.AGENTS.NIGHTLY_EVAL RESUME;
+
+-- Run it once now, so you can see a run appear in the Evaluations tab in a few minutes.
+EXECUTE TASK WILDERNESS_HOL.AGENTS.NIGHTLY_EVAL;</code></pre>
+</div>
+
+<div class="info-box success">
+    <strong>You should see</strong>
+    <p>The task created and resumed, and one run started now. In about 3 to 5 minutes a run named <code>nightly_</code> with the date and time appears on the agent's <span class="path">Evaluations</span> tab, scoring <code>production</code>, with a fourth score column, <code>wilderness_dates</code>.</p>
+</div>
+
+<div class="info-box info">
+    <strong>A metric you write yourself</strong>
+    <p>The settings file, <code>evals/nightly_eval.yaml</code> in the repository, has the same three metrics plus one more: <code>wilderness_dates</code>, a judge prompt that checks every answer used Wilderness's own trading dates. Metrics you write yourself are set in this file, not in the Evaluations tab.</p>
+</div>
+
+<div class="info-box tip">
+    <strong>It costs every night</strong>
+    <p>Each run asks the eight questions and pays the judges, about what one of your runs today cost. The task uses <code>WILDERNESS_WH</code>, so it counts toward the project budget. Stop it with <code class="chip" title="Select to copy">ALTER TASK WILDERNESS_HOL.AGENTS.NIGHTLY_EVAL SUSPEND;</code>, and cleanup removes it.</p>
+</div>
+    </div>
+</div>
+<div class="step-card optional" id="step-11">
+    <div class="step-header">
+        <span class="step-number">11</span>
+        <h2 class="step-title">Add web search <span class="badge-optional">Optional</span></h2>
+        <span class="step-duration">~10 min</span>
+    </div>
+    <div class="step-content">
+<p>Some questions are not in Wilderness's data: a product recall, a supplier in the news. A web search tool lets the assistant look.</p>
+
+<div class="info-box warning">
+    <strong>This is an account setting</strong>
+    <p>Turning on web search lets any agent in the account send questions to a search service on the internet. Review it with whoever owns the account before turning it on anywhere real.</p>
+</div>
+
+<ol class="ui-steps">
+    <li>Go to <span class="path">AI &amp; ML » Agents</span>, open <span class="path">Settings</span> and turn on web search for the account.</li>
+    <li>Open <code class="chip" title="Select to copy">WILDERNESS_ASSISTANT</code>, select <span class="path">Edit</span>, open <span class="path">Tools</span> and turn on <strong>Web search</strong>. Save.</li>
+    <li>In the agent's chat in Snowsight, ask the question below.</li>
+</ol>
+
+<div class="code-block prompt">
+    <div class="code-header"><span class="code-lang">cortex code</span><button class="btn-copy" type="button">Copy</button></div>
+    <pre><code>Any tent pole recalls in Australia this year?</code></pre>
+</div>
+
+<div class="info-box success">
+    <strong>You should see</strong>
+    <p>An answer with links to the pages it found. CoWork does not change: it still uses <code>production</code>, which has no web search, until you commit a version with it, evaluate it and promote it as in Step 6.</p>
+</div>
+
+<div class="info-box tip">
+    <strong>Test it again</strong>
+    <p>Question 8 expects the assistant to say it has no weather data. With web search it might look the weather up instead. If you keep the tool, change the expected answer for question 8 and run the evaluation again.</p>
+</div>
+    </div>
+</div>
+<div class="step-card optional" id="step-12">
+    <div class="step-header">
+        <span class="step-number">12</span>
+        <h2 class="step-title">Clean up <span class="badge-optional">After the workshop</span></h2>
+        <span class="step-duration">~5 min</span>
+    </div>
+    <div class="step-content">
+<p>On a trial account, clean up when you are finished. The automation is the one thing that keeps spending overnight.</p>
+
+<ol class="ui-steps">
+    <li>In CoWork, ask <code class="chip" title="Select to copy">Delete my sleeping-gear automation.</code> and confirm. Or open the <span class="path">Automations</span> tab and delete it there.</li>
+    <li>In <code>lab3.sql</code>, run this block. It removes the quota, the budget, the demo user and role, the assistant from CoWork, the database and everything in it, the integrations and the warehouse.</li>
+</ol>
+
+<div class="code-block">
+    <div class="code-header"><span class="code-lang">sql</span><button class="btn-copy" type="button">Copy</button></div>
+    <pre><code>-- =====================================================================================
+-- 99_teardown.sql  ·  Wilderness Outfitters workshop
+-- Removes everything the workshop created in this account. Delete the CoWork automation first
+-- (CoWork » Automations), because it is personal and this file cannot see it.
+-- =====================================================================================
+USE ROLE ACCOUNTADMIN;
+
+-- Lab 3 cost controls and governance
+DROP SNOWFLAKE.CORE.QUOTA IF EXISTS WILDERNESS_HOL.GOVERNANCE.WILDERNESS_STORE_QUOTA;
+DROP SNOWFLAKE.CORE.BUDGET IF EXISTS WILDERNESS_HOL.GOVERNANCE.WILDERNESS_PROJECT_BUDGET;
+DROP USER IF EXISTS STORE_MANAGER_DEMO;
+DROP ROLE IF EXISTS WILDERNESS_STORE_MANAGER;
+
+-- The agent leaves CoWork, then the database goes (agent, search, semantic view, apps, data, tags)
+EXECUTE IMMEDIATE $$
+BEGIN
+  ALTER SNOWFLAKE INTELLIGENCE SNOWFLAKE_INTELLIGENCE_OBJECT_DEFAULT DROP AGENT WILDERNESS_HOL.AGENTS.WILDERNESS_ASSISTANT;
+  RETURN 'Removed the Wilderness Assistant from CoWork';
+EXCEPTION
+  WHEN OTHER THEN RETURN 'The Wilderness Assistant was not in CoWork';
+END;
+$$;
+DROP DATABASE IF EXISTS WILDERNESS_HOL;
+
+-- Account-level objects from setup
+DROP INTEGRATION IF EXISTS WILDERNESS_EMAIL;
+DROP INTEGRATION IF EXISTS WILDERNESS_GIT_API;
+DROP WAREHOUSE IF EXISTS WILDERNESS_WH;
+ALTER ACCOUNT UNSET TIMEZONE;
+
+SELECT 'Wilderness workshop removed' AS STATUS;</code></pre>
+</div>
+
+<div class="info-box success">
+    <strong>You should see</strong>
+    <p><code>Wilderness workshop removed</code>. The SQL file stays in your Workspace; delete it if you like.</p>
+</div>
+    </div>
+</div>
+    </main>
+</div>
+
+<section id="resources" class="content-section alt-bg">
+    <div class="section-container">
+        <h2 class="section-title">Further reading</h2>
+        <div class="resources-grid">
+            <a class="resource-card" href="https://docs.snowflake.com/en/user-guide/snowflake-cortex/cortex-agents-evaluations" target="_blank" rel="noopener"><h4>Cortex Agent evaluations</h4><p>Datasets, metrics, metric versions, comparing runs and the YAML for custom metrics.</p></a>
+            <a class="resource-card" href="https://docs.snowflake.com/en/user-guide/snowflake-cortex/cortex-analyst-evaluations" target="_blank" rel="noopener"><h4>Cortex Analyst evaluations</h4><p>Test a semantic view against its own verified queries, then Improve it.</p></a>
+            <a class="resource-card" href="https://docs.snowflake.com/en/user-guide/snowflake-cortex/cortex-agents-versioning" target="_blank" rel="noopener"><h4>Cortex Agent versioning</h4><p>Commit, aliases, the default version and how to roll back.</p></a>
+            <a class="resource-card" href="https://docs.snowflake.com/en/user-guide/budgets/per-user-quotas" target="_blank" rel="noopener"><h4>Per-user quotas</h4><p>Daily, weekly and monthly AI limits per user, with blocking within minutes.</p></a>
+            <a class="resource-card" href="https://docs.snowflake.com/en/user-guide/budgets/custom-budget" target="_blank" rel="noopener"><h4>Custom budgets</h4><p>A monthly credit limit for every object with a tag, with alerts and actions.</p></a>
+            <a class="resource-card" href="https://www.snowflake.com/en/developers/guides/build-evaluate-and-deploy-ai-agents-with-snowflake-cowork/" target="_blank" rel="noopener"><h4>Build, evaluate and deploy agents with CoWork</h4><p>The same evaluate, improve with Cortex Code, re-evaluate loop on another data set.</p></a>
+        </div>
+    </div>
+</section>
+
+<section class="completion-section" id="completionSection">
+    <div class="completion-container">
+<h2>Lab 3 complete</h2>
+<p>You measured the assistant on eight questions, found the two reasons it was wrong, fixed the definitions in the semantic view and the behaviour in a new version, proved the new version better and promoted it, with the baseline one line away. Then you set a budget for the project, a daily limit for store managers and a role that hides member emails.</p>
+<p>That is the answer to Tom's three questions: it is right, and here are the runs that show it; it will cost no more than the limits you set; and store managers see stock and sales, not customers.</p>
+        <div class="cta-row">
+            
+            <a class="btn-secondary" href="index.html">Workshop index</a>
+        </div>
+    </div>
+</section>
+
+<footer class="hol-footer">
+    <p>Wilderness Outfitters: Christmas Trading with an AI Workforce &middot; Lab 3 of 3</p>
+    <p>&copy; 2026 Snowflake Inc. All Rights Reserved.</p>
+</footer>
+
+<script>
+/* Wilderness workshop guide: copy buttons, copy chips, step toggles, core-only progress. */
+const STORAGE_KEY = 'workshop_wilderness_lab3_progress';
+const CORE_STEPS = [1, 2, 3, 4, 5, 6, 7, 8];
+
+function flash(el, cls, label, text, ms) {
+    el.classList.add(cls);
+    if (label !== null) { el.textContent = label; }
+    setTimeout(function () {
+        el.classList.remove(cls);
+        if (label !== null) { el.textContent = text; }
+    }, ms);
+}
+
+function copyText(text, onDone, onFail) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(onDone).catch(onFail);
+    } else {
+        onFail();
+    }
+}
+
+document.addEventListener('click', function (ev) {
+    const btn = ev.target.closest('.btn-copy');
+    if (btn) {
+        const code = btn.closest('.code-block').querySelector('code');
+        const original = btn.textContent;
+        copyText(code.textContent,
+            function () { flash(btn, 'copied', 'Copied', original, 2000); },
+            function () { flash(btn, 'copied', 'Press Ctrl+C', original, 2000); });
+        return;
+    }
+    const chip = ev.target.closest('code.chip');
+    if (chip) {
+        copyText(chip.textContent, function () { flash(chip, 'copied', null, null, 1200); }, function () {});
+        return;
+    }
+    const header = ev.target.closest('.step-header');
+    if (header) {
+        const content = header.parentElement.querySelector('.step-content');
+        if (content) { content.classList.toggle('collapsed'); }
+    }
+});
+
+function readState() {
+    try {
+        const parsed = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+        parsed.steps = parsed.steps || {};
+        return parsed;
+    } catch (e) {
+        return { steps: {} };
+    }
+}
+
+function writeState(state) {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) { /* not persisted */ }
+}
+
+function renderProgress(state) {
+    let done = 0;
+    CORE_STEPS.forEach(function (n) { if (state.steps[n] === true) { done++; } });
+    const pct = CORE_STEPS.length ? Math.round(done / CORE_STEPS.length * 100) : 0;
+    const fill = document.getElementById('progressFill');
+    const label = document.getElementById('progressPercent');
+    if (fill) { fill.style.width = pct + '%'; }
+    if (label) { label.textContent = pct + '%'; }
+    CORE_STEPS.forEach(function (n) {
+        const isDone = state.steps[n] === true;
+        const card = document.getElementById('step-' + n);
+        const nav = document.querySelector('.step-nav-item[data-step="' + n + '"]');
+        if (card) {
+            card.classList.toggle('completed', isDone);
+            const box = card.querySelector('.completion-checkbox input');
+            if (box) { box.checked = isDone; }
+        }
+        if (nav) { nav.classList.toggle('completed', isDone); }
+    });
+}
+
+document.addEventListener('change', function (ev) {
+    const box = ev.target.closest('.completion-checkbox input');
+    if (!box) { return; }
+    const state = readState();
+    state.steps[box.getAttribute('data-step')] = box.checked;
+    state.lastUpdated = new Date().toISOString();
+    writeState(state);
+    renderProgress(state);
+});
+
+function initScrollSpy() {
+    const cards = Array.prototype.slice.call(document.querySelectorAll('.step-card'));
+    if (!cards.length || !('IntersectionObserver' in window)) { return; }
+    function setActive(n) {
+        document.querySelectorAll('.step-nav-item').forEach(function (item) {
+            item.classList.toggle('active', item.getAttribute('data-step') === String(n));
+        });
+    }
+    const observer = new IntersectionObserver(function (entries) {
+        const visible = entries.filter(function (e) { return e.isIntersecting; });
+        if (!visible.length) { return; }
+        visible.sort(function (a, b) { return a.boundingClientRect.top - b.boundingClientRect.top; });
+        setActive(visible[0].target.id.replace('step-', ''));
+    }, { rootMargin: '-90px 0px -55% 0px', threshold: 0 });
+    cards.forEach(function (card) { observer.observe(card); });
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+    renderProgress(readState());
+    initScrollSpy();
+});
+</script>
+
+</body>
+</html>
