@@ -4,55 +4,55 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="snowflake-source" content="cortex-agent-authored">
-<title>Lab 3: Ready for Christmas: evaluate, tune, govern</title>
+<title>Lab 3: Ready for Christmas: evaluate, tune, control the cost</title>
 <script type="application/json" id="snowflake-report-metadata">{
  "generated": "2026-11-02",
- "intent": "Lab 3: Ready for Christmas: evaluate, tune, govern",
+ "intent": "Lab 3: Ready for Christmas: evaluate, tune, control the cost",
  "producerNotes": "Built by _build/build.py from _build/src/guides. Figures were measured on the build account; screenshots are captured at the dry run.",
  "sections": [
   {
    "id": "step-1",
-   "title": "Check the starting line and freeze the baseline"
+   "title": "Freeze the current version"
   },
   {
    "id": "step-2",
-   "title": "Run the baseline evaluation"
+   "title": "Run the evaluation"
   },
   {
    "id": "step-3",
-   "title": "Read the results and find the pattern"
+   "title": "Read the results and analyse them"
   },
   {
    "id": "step-4",
-   "title": "Fix Wilderness's definitions in the semantic view"
+   "title": "Fix issues in the semantic view"
   },
   {
    "id": "step-5",
-   "title": "Let Cortex Code improve the instructions, as a new version"
+   "title": "Fix issues in the agent"
   },
   {
    "id": "step-6",
-   "title": "Evaluate the new version, compare, promote"
+   "title": "Create a new version and evaluate it"
   },
   {
    "id": "step-7",
-   "title": "Set Wilderness's cost controls"
+   "title": "Promote the enhanced version"
   },
   {
    "id": "step-8",
-   "title": "Who sees what"
+   "title": "Review development spend"
   },
   {
    "id": "step-9",
-   "title": "Push quality further: a second change, a third run"
+   "title": "Estimate future cost for the project"
   },
   {
    "id": "step-10",
-   "title": "Re-test production every night to Christmas"
+   "title": "Set the project budget"
   },
   {
    "id": "step-11",
-   "title": "Add web search"
+   "title": "Set a per-user quota"
   },
   {
    "id": "step-12",
@@ -1019,13 +1019,12 @@ a.lab-card:hover { box-shadow: var(--shadow-md); border-color: var(--sf-blue); c
 <section class="hero-section">
     <div class="hero-container">
         <span class="hero-badge">Lab 3 of 3 · Afternoon</span>
-        <h1 class="hero-title">Ready for Christmas: evaluate, tune, govern</h1>
-        <p class="hero-subtitle">Measure how often the assistant is right, find out why it is wrong, fix the definitions in the semantic view and the behaviour in the agent, prove the new version is better and promote it. Then set the cost limits and decide who sees what.</p>
+        <h1 class="hero-title">Ready for Christmas: evaluate, tune, control the cost</h1>
+        <p class="hero-subtitle">Measure how often the assistant is right, find out why it is wrong, fix the semantic view and the agent, prove the new version is better and promote it. Then estimate what it will cost each month, set a budget for the project and a daily limit for each store manager.</p>
         <div class="hero-meta">
-            <div class="meta-item"><span class="meta-label">Core</span><span class="meta-value">89 min, 8 steps</span></div>
-            <div class="meta-item"><span class="meta-label">Optional</span><span class="meta-value">30 min, 3 steps</span></div>
+            <div class="meta-item"><span class="meta-label">Core</span><span class="meta-value">99 min, 11 steps</span></div>
             <div class="meta-item"><span class="meta-label">You use</span><span class="meta-value">Snowsight, Cortex Code and CoWork</span></div>
-            <div class="meta-item"><span class="meta-label">Code</span><span class="meta-value">SQL blocks to paste, 2 prompts</span></div>
+            <div class="meta-item"><span class="meta-label">Code</span><span class="meta-value">SQL blocks to paste, 3 prompts</span></div>
         </div>
     </div>
 </section>
@@ -1035,10 +1034,34 @@ a.lab-card:hover { box-shadow: var(--shadow-md); border-color: var(--sf-blue); c
 <section id="overview" class="content-section alt-bg">
     <div class="section-container">
         <h2 class="section-title">Overview</h2>
-        <div class="overview-grid">
-            <div class="overview-card highlight">
+        <div class="overview-card highlight">
                 <h3>The situation</h3>
-                <p>Technical track. Over lunch, Tom Walsh's team set the morning's assistant up as the production copy the stores will use. Tom, Head of Data &amp; Analytics, wants proof before 72 stores lean on it every morning to Christmas Eve: is it right, what will it cost, and who can see what.</p>
+                <p>Over lunch, Tom Walsh's team set the morning's assistant up as the production copy that 72 stores will use every morning until Christmas Eve. Tom, Head of Data &amp; Analytics, will not put it live on trust. He has two questions: is it right, and what will it cost?</p>
+                <p>This afternoon you answer them. You measure the assistant, find out why it is wrong, fix it, prove the fix and promote it. Then you estimate what it will cost each month and per store manager, and set a budget for the project and a daily limit for each person.</p>
+                <h3 style="margin-top:var(--space-xl);">What are we evaluating?</h3>
+                <p>The evaluation scores the whole assistant, then you fix what it finds in one of two places:</p>
+                <ul>
+                    <li><strong>The agent:</strong> its instructions and orchestration, meaning how it picks a tool for each question and how it writes the answer. <em>(Step 5)</em></li>
+                    <li><strong>The tools:</strong> what each tool gives back. The assistant has three: Cortex Analyst for the numbers, Cortex Search for the comments, and charts. This afternoon looks at one of them, the semantic view that Cortex Analyst writes its SQL from, with an evaluation of its own. <em>(Step 4)</em></li>
+                </ul>
+                <h3 style="margin-top:var(--space-xl);">The process</h3>
+                <p><em>Part 1: Is it right?</em></p>
+                <ol>
+                    <li>Freeze the current version</li>
+                    <li>Run the evaluation</li>
+                    <li>Read the results and analyse them</li>
+                    <li>Fix issues in the semantic view</li>
+                    <li>Fix issues in the agent</li>
+                    <li>Create a new version and evaluate it</li>
+                    <li>Promote the enhanced version</li>
+                </ol>
+                <p><em>Part 2: What will it cost?</em></p>
+                <ol start="8">
+                    <li>Review development spend</li>
+                    <li>Estimate future cost for the project</li>
+                    <li>Set the project budget</li>
+                    <li>Set a per-user quota</li>
+                </ol>
                 <h3 style="margin-top:var(--space-xl);">What you will use</h3>
                 <div class="tech-tags">
                     <span class="tech-tag">Agent evaluations</span>
@@ -1046,23 +1069,10 @@ a.lab-card:hover { box-shadow: var(--shadow-md); border-color: var(--sf-blue); c
                     <span class="tech-tag">Custom instructions</span>
                     <span class="tech-tag">Agent versions</span>
                     <span class="tech-tag">Cortex Code agent-studio</span>
+                    <span class="tech-tag">Account usage views</span>
                     <span class="tech-tag">Budgets</span>
                     <span class="tech-tag">Per-user quotas</span>
-                    <span class="tech-tag">Masking policies</span>
                 </div>
-            </div>
-            <div class="overview-card">
-                <h3>What you will build</h3>
-                <ul class="learning-list">
-                    <li>Freeze the production copy of the assistant as a baseline version, before you change anything.</li>
-                    <li>Score it on eight questions with an agent evaluation, and read why the low scores are low.</li>
-                    <li>Teach the semantic view two Wilderness terms, and prove the fix with a semantic view evaluation.</li>
-                    <li>Have Cortex Code rewrite the agent's instructions from the evaluation results, as a new version.</li>
-                    <li>Evaluate the new version, compare the two runs, and promote it to production in CoWork.</li>
-                    <li>Set a monthly budget for the project and a daily AI limit for store managers.</li>
-                    <li>Give store managers their own role, hide member emails from them, and prove it.</li>
-                </ul>
-            </div>
         </div>
     </div>
 </section>
@@ -1075,17 +1085,17 @@ a.lab-card:hover { box-shadow: var(--shadow-md); border-color: var(--sf-blue); c
         </div>
         <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
         <div class="steps-nav" id="stepsNav">
-            <a class="step-nav-item" href="#step-1" data-step="1"><span class="nav-index">1</span><span class="nav-text">Check the starting line and freeze the baseline</span><span class="nav-time">5 min</span></a>
-            <a class="step-nav-item" href="#step-2" data-step="2"><span class="nav-index">2</span><span class="nav-text">Run the baseline evaluation</span><span class="nav-time">15 min</span></a>
-            <a class="step-nav-item" href="#step-3" data-step="3"><span class="nav-index">3</span><span class="nav-text">Read the results and find the pattern</span><span class="nav-time">10 min</span></a>
-            <a class="step-nav-item" href="#step-4" data-step="4"><span class="nav-index">4</span><span class="nav-text">Fix Wilderness's definitions in the semantic view</span><span class="nav-time">14 min</span></a>
-            <a class="step-nav-item" href="#step-5" data-step="5"><span class="nav-index">5</span><span class="nav-text">Let Cortex Code improve the instructions, as a new version</span><span class="nav-time">8 min</span></a>
-            <a class="step-nav-item" href="#step-6" data-step="6"><span class="nav-index">6</span><span class="nav-text">Evaluate the new version, compare, promote</span><span class="nav-time">12 min</span></a>
-            <a class="step-nav-item" href="#step-7" data-step="7"><span class="nav-index">7</span><span class="nav-text">Set Wilderness's cost controls</span><span class="nav-time">15 min</span></a>
-            <a class="step-nav-item" href="#step-8" data-step="8"><span class="nav-index">8</span><span class="nav-text">Who sees what</span><span class="nav-time">10 min</span></a>
-            <a class="step-nav-item optional" href="#step-9" data-step="9"><span class="nav-index">9</span><span class="nav-text">Push quality further: a second change, a third run</span><span class="nav-time">10 min</span></a>
-            <a class="step-nav-item optional" href="#step-10" data-step="10"><span class="nav-index">10</span><span class="nav-text">Re-test production every night to Christmas</span><span class="nav-time">10 min</span></a>
-            <a class="step-nav-item optional" href="#step-11" data-step="11"><span class="nav-index">11</span><span class="nav-text">Add web search</span><span class="nav-time">10 min</span></a>
+            <a class="step-nav-item" href="#step-1" data-step="1"><span class="nav-index">1</span><span class="nav-text">Freeze the current version</span><span class="nav-time">5 min</span></a>
+            <a class="step-nav-item" href="#step-2" data-step="2"><span class="nav-index">2</span><span class="nav-text">Run the evaluation</span><span class="nav-time">15 min</span></a>
+            <a class="step-nav-item" href="#step-3" data-step="3"><span class="nav-index">3</span><span class="nav-text">Read the results and analyse them</span><span class="nav-time">10 min</span></a>
+            <a class="step-nav-item" href="#step-4" data-step="4"><span class="nav-index">4</span><span class="nav-text">Fix issues in the semantic view</span><span class="nav-time">12 min</span></a>
+            <a class="step-nav-item" href="#step-5" data-step="5"><span class="nav-index">5</span><span class="nav-text">Fix issues in the agent</span><span class="nav-time">8 min</span></a>
+            <a class="step-nav-item" href="#step-6" data-step="6"><span class="nav-index">6</span><span class="nav-text">Create a new version and evaluate it</span><span class="nav-time">14 min</span></a>
+            <a class="step-nav-item" href="#step-7" data-step="7"><span class="nav-index">7</span><span class="nav-text">Promote the enhanced version</span><span class="nav-time">4 min</span></a>
+            <a class="step-nav-item" href="#step-8" data-step="8"><span class="nav-index">8</span><span class="nav-text">Review development spend</span><span class="nav-time">5 min</span></a>
+            <a class="step-nav-item" href="#step-9" data-step="9"><span class="nav-index">9</span><span class="nav-text">Estimate future cost for the project</span><span class="nav-time">10 min</span></a>
+            <a class="step-nav-item" href="#step-10" data-step="10"><span class="nav-index">10</span><span class="nav-text">Set the project budget</span><span class="nav-time">8 min</span></a>
+            <a class="step-nav-item" href="#step-11" data-step="11"><span class="nav-index">11</span><span class="nav-text">Set a per-user quota</span><span class="nav-time">8 min</span></a>
             <a class="step-nav-item optional" href="#step-12" data-step="12"><span class="nav-index">12</span><span class="nav-text">Clean up</span><span class="nav-time">5 min</span></a>
         </div>
     </nav>
@@ -1093,12 +1103,7 @@ a.lab-card:hover { box-shadow: var(--shadow-md); border-color: var(--sf-blue); c
     <main class="steps-container" id="steps">
 <div class="info-box info">
     <strong>Technical track: can we trust it until Christmas Eve?</strong>
-    <p>Over lunch, Tom Walsh's team set the morning's assistant up as the production copy the stores will use. This afternoon you test it, fix it and harden it. The production copy is already in your account, so this lab does not depend on how far you got in Lab 1 or Lab 2.</p>
-</div>
-
-<div class="info-box warning">
-    <strong>Synthetic data</strong>
-    <p>Wilderness Outfitters is a fictional company. All stores, products, people, sales and feedback in this workshop are synthetic and generated for training. Any resemblance to a real business is coincidental.</p>
+    <p>The production copy of the assistant is already in your account, so this lab does not depend on how far you got in Lab 1 or Lab 2.</p>
 </div>
 
 <p>You run this lab's SQL in one SQL file. In Snowsight, go to <span class="path">Projects » Workspaces</span>, select <span class="path">+ Add new » SQL File</span>, name it <code class="chip" title="Select to copy">lab3.sql</code>, and keep it open all afternoon. Paste each block into it and select <span class="path">Run all</span>, unless a step says otherwise. The evaluations, the semantic view and Cortex Code are in other Snowsight pages; each step says where.</p>
@@ -1108,19 +1113,22 @@ a.lab-card:hover { box-shadow: var(--shadow-md); border-color: var(--sf-blue); c
 <div class="step-card" id="step-1">
     <div class="step-header">
         <span class="step-number">1</span>
-        <h2 class="step-title">Check the starting line and freeze the baseline</h2>
+        <h2 class="step-title">Freeze the current version</h2>
         <span class="step-duration">~5 min</span>
     </div>
     <div class="step-content">
-<p>Tom Walsh: "The store managers like it. Before 72 stores lean on it every morning to Christmas Eve I need to know it is right, what it will cost and who can see what. And I need you to set the limits."</p>
+<p>Part 1: is it right? Tom Walsh: "The store managers like it. Before 72 stores lean on it every morning to Christmas Eve, I need to know it is right, and what it will cost." Before you change anything, freeze what the stores have now.</p>
 
-<p>This step checks that the production copy is in place, then freezes it as it is now, so you can change it this afternoon and always have a known starting point to go back to.</p>
+<p>An agent keeps a working draft and a list of committed versions, and a committed version never changes. Freezing the assistant as it is now gives you a fixed point to measure against and to roll back to. Pinning it as the default keeps everyone on it while you change the draft: until you pin it, the default is the latest commit, so this afternoon's new version would reach every store manager before anyone had tested it. You never type a version number; the blocks look it up.</p>
 
-<h3>Check the starting line</h3>
+<p>In <code>lab3.sql</code>, run this block. It checks that the production copy is in place, then commits the draft as a new version, labels it <code>baseline</code> and makes it the default.</p>
 
 <div class="code-block">
     <div class="code-header"><span class="code-lang">sql</span><button class="btn-copy" type="button">Copy</button></div>
-    <pre><code>-- Lab 3 Step 1, block 1: check the production copy setup built. Every row should say OK.
+    <pre><code>-- Lab 3 Step 1: check the production copy setup built, then freeze it as the baseline.
+-- If anything is missing it stops and says what, and nothing is committed. Otherwise it commits the
+-- draft as a new version, labels it baseline and makes it the default, so nothing you change later in
+-- this lab reaches the store managers until you promote it.
 -- The first three lines set this SQL file's context for the rest of the afternoon.
 USE ROLE ACCOUNTADMIN;
 USE WAREHOUSE WILDERNESS_WH;
@@ -1129,75 +1137,57 @@ USE SCHEMA WILDERNESS_HOL.LAB3_PRODUCTION;
 EXECUTE IMMEDIATE $$
 DECLARE
   v_tools   VARCHAR DEFAULT '';
-  v_metric  INT DEFAULT 0;
-  v_search  INT DEFAULT 0;
-  v_dataset INT DEFAULT 0;
-  res RESULTSET;
+  v_missing VARCHAR DEFAULT '';
+  v_n       INT DEFAULT 0;
+  v_version VARCHAR;
 BEGIN
-  CREATE OR REPLACE TEMPORARY TABLE WILDERNESS_HOL.LAB3_PRODUCTION.LAB3_CHECK (CHECK_NAME VARCHAR, STATUS VARCHAR, DETAIL VARCHAR);
-
   BEGIN
     DESCRIBE AGENT WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_ASSISTANT;
     SELECT ARRAY_TO_STRING(ARRAY_AGG(t.value:tool_spec:name::VARCHAR), ', ') INTO :v_tools
       FROM TABLE(RESULT_SCAN(LAST_QUERY_ID())) d, LATERAL FLATTEN(PARSE_JSON(d."agent_spec"):tools) t;
   EXCEPTION WHEN OTHER THEN v_tools := '';
   END;
-  INSERT INTO LAB3_CHECK SELECT 'Production Wilderness Assistant and its tools',
-    IFF(CONTAINS(:v_tools, 'retail_analyst') AND CONTAINS(:v_tools, 'customer_feedback')
-        AND CONTAINS(:v_tools, 'data_to_chart'), 'OK', 'MISSING'), :v_tools;
+  IF (NOT (CONTAINS(:v_tools, 'retail_analyst') AND CONTAINS(:v_tools, 'customer_feedback')
+           AND CONTAINS(:v_tools, 'data_to_chart'))) THEN
+    v_missing := v_missing || 'the production assistant and its three tools; ';
+  END IF;
 
   SHOW CORTEX SEARCH SERVICES LIKE 'CSS_CUSTOMER_FEEDBACK' IN SCHEMA WILDERNESS_HOL.LAB3_PRODUCTION;
-  SELECT COUNT(*) INTO :v_search FROM TABLE(RESULT_SCAN(LAST_QUERY_ID()));
-  INSERT INTO LAB3_CHECK SELECT 'Customer feedback search', IFF(:v_search = 1, 'OK', 'MISSING'), 'LAB3_PRODUCTION.CSS_CUSTOMER_FEEDBACK';
+  SELECT COUNT(*) INTO :v_n FROM TABLE(RESULT_SCAN(LAST_QUERY_ID()));
+  IF (v_n &lt;&gt; 1) THEN v_missing := v_missing || 'the customer feedback search; '; END IF;
 
   SHOW SEMANTIC METRICS IN WILDERNESS_HOL.LAB3_PRODUCTION.SV_WILDERNESS_RETAIL;
-  SELECT COUNT(*) INTO :v_metric FROM TABLE(RESULT_SCAN(LAST_QUERY_ID())) WHERE "name" = 'RETURN_RATE';
-  INSERT INTO LAB3_CHECK SELECT 'RETURN_RATE on the semantic view', IFF(:v_metric = 1, 'OK', 'MISSING'), 'LAB3_PRODUCTION.SV_WILDERNESS_RETAIL';
+  SELECT COUNT(*) INTO :v_n FROM TABLE(RESULT_SCAN(LAST_QUERY_ID())) WHERE "name" = 'RETURN_RATE';
+  IF (v_n &lt;&gt; 1) THEN v_missing := v_missing || 'RETURN_RATE on the semantic view; '; END IF;
 
   SHOW DATASETS LIKE 'CHRISTMAS_EVAL_SET' IN SCHEMA WILDERNESS_HOL.LAB3_PRODUCTION;
-  SELECT COUNT(*) INTO :v_dataset FROM TABLE(RESULT_SCAN(LAST_QUERY_ID()));
-  INSERT INTO LAB3_CHECK SELECT 'Evaluation dataset', IFF(:v_dataset = 1, 'OK', 'MISSING'), 'LAB3_PRODUCTION.CHRISTMAS_EVAL_SET, 8 questions';
+  SELECT COUNT(*) INTO :v_n FROM TABLE(RESULT_SCAN(LAST_QUERY_ID()));
+  IF (v_n &lt;&gt; 1) THEN v_missing := v_missing || 'the evaluation dataset; '; END IF;
 
-  res := (SELECT * FROM LAB3_CHECK);
-  RETURN TABLE(res);
-END;
-$$;</code></pre>
-</div>
+  IF (v_missing &lt;&gt; '') THEN
+    RETURN 'MISSING: ' || RTRIM(:v_missing, '; ') || '. Nothing was frozen. See If you get stuck.';
+  END IF;
 
-<div class="info-box success">
-    <strong>You should see</strong>
-    <p>Every row <code>OK</code>: the production Wilderness Assistant with its tools (<code>retail_analyst</code>, <code>customer_feedback</code> and <code>data_to_chart</code>), its customer feedback search, <code>RETURN_RATE</code> on its semantic view, and an evaluation dataset of eight questions. Setup built all of it for this lab.</p>
-</div>
+  -- Run twice, it does not freeze again: the baseline stays the version you first measured.
+  SHOW VERSIONS IN AGENT WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_ASSISTANT;
+  SELECT MAX("name") INTO :v_version FROM TABLE(RESULT_SCAN(LAST_QUERY_ID())) WHERE "alias" = 'BASELINE';
+  IF (v_version IS NOT NULL) THEN
+    RETURN 'Already frozen: the baseline is ' || :v_version || '. Nothing changed. Carry on with Step 2.';
+  END IF;
 
-<div class="info-box tip">
-    <strong>A row says MISSING</strong>
-    <p>Run the setup script from Lab 1 Step 1 again. It rebuilds the production copy and leaves everything else as it was. Then run the check again. Do this only before you freeze the baseline: rebuilding the agent deletes its versions and its evaluation runs.</p>
-</div>
-
-<h3>Freeze the baseline</h3>
-
-<p>An agent keeps a working draft and a list of committed versions. A committed version never changes. This block commits the draft as a new version, labels it <code>baseline</code> and makes it the default, the version anyone who asks the agent gets.</p>
-
-<div class="code-block">
-    <div class="code-header"><span class="code-lang">sql</span><button class="btn-copy" type="button">Copy</button></div>
-    <pre><code>-- Lab 3 Step 1, block 2: freeze the agent you built this morning as the baseline.
--- Commits the draft as a new version, labels it baseline, and makes it the version CoWork uses,
--- so nothing you change later in this lab reaches the store managers until you promote it.
-ALTER AGENT WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_ASSISTANT
-  COMMIT COMMENT = 'Baseline: the agent from Lab 1, before any Lab 3 change';
-
-EXECUTE IMMEDIATE $$
-DECLARE
-  v_version VARCHAR;
-BEGIN
+  ALTER AGENT WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_ASSISTANT
+    COMMIT COMMENT = 'Baseline: the production copy, before any Lab 3 change';
   SHOW VERSIONS IN AGENT WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_ASSISTANT;
   SELECT "name" INTO :v_version FROM TABLE(RESULT_SCAN(LAST_QUERY_ID()))
     WHERE "name" IS NOT NULL ORDER BY "created_on" DESC LIMIT 1;
   EXECUTE IMMEDIATE 'ALTER AGENT WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_ASSISTANT MODIFY VERSION '
-                 || :v_version || ' SET ALIAS = baseline';
+                    || :v_version || ' SET ALIAS = baseline';
   EXECUTE IMMEDIATE 'ALTER AGENT WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_ASSISTANT SET DEFAULT_VERSION = '''
-                 || :v_version || '''';
-  RETURN 'Baseline is ' || :v_version || ', and CoWork now uses it';
+                    || :v_version || '''';
+  -- A commit leaves no draft; open a fresh one from the baseline for Step 5 to change.
+  ALTER AGENT WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_ASSISTANT ADD LIVE VERSION FROM LAST;
+  RETURN 'All checks OK (assistant and tools, feedback search, RETURN_RATE, 8-question dataset). Baseline is '
+         || :v_version || ', and it is the default.';
 END;
 $$;
 
@@ -1206,33 +1196,27 @@ SHOW VERSIONS IN AGENT WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_ASSISTANT;</cod
 
 <div class="info-box success">
     <strong>You should see</strong>
-    <p><code>Baseline is VERSION$2</code> (the number can differ), then the versions. The new one has the alias <code>BASELINE</code> and <code>is_default</code> true.</p>
+    <p><code>All checks OK</code>, for the production Wilderness Assistant and its tools, its customer feedback search, <code>RETURN_RATE</code> on its semantic view and an evaluation dataset of eight questions, then <code>Baseline is VERSION$2, and it is the default</code> (the number can differ). Below it, the versions: the new one has the alias <code>BASELINE</code> and <code>is_default</code> true. If the message starts <code>MISSING</code>, nothing was frozen; see <a href="#stuck">If you get stuck</a>.</p>
 </div>
-
-<div class="info-box info">
-    <strong>Why pin the default</strong>
-    <p>Until you pin it, the default is the latest commit, so committing a change this afternoon would make it the version everyone gets before anyone had tested it. Pinned, the default stays on the baseline until Step 6 promotes a better version and puts it in CoWork. You never type a version number: the blocks look it up.</p>
-</div>
-
-<details class="callout stuck">
-    <summary>Stuck? "No live version to commit"</summary>
-    <div>
-        <p>You already ran the block once, so there is nothing new to commit. Run <code class="chip" title="Select to copy">SHOW VERSIONS IN AGENT WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_ASSISTANT;</code> and check that one version has the alias <code>BASELINE</code> and <code>is_default</code> true. If it does, carry on.</p>
-    </div>
-</details>
         <label class="completion-checkbox"><input type="checkbox" data-step="1"> Mark step 1 complete</label>
     </div>
 </div>
 <div class="step-card" id="step-2">
     <div class="step-header">
         <span class="step-number">2</span>
-        <h2 class="step-title">Run the baseline evaluation</h2>
+        <h2 class="step-title">Run the evaluation</h2>
         <span class="step-duration">~15 min</span>
     </div>
     <div class="step-content">
-<p>An agent evaluation asks the assistant a set of questions and scores every answer. You give each question the answer a right reply contains, and the tools it should use. Setup made the set: eight questions a store manager would ask.</p>
+<p>Measure the frozen version on the questions store managers ask.</p>
 
-<h3>Start the run</h3>
+<p>An agent evaluation asks the assistant a fixed set of questions and scores every answer. For each question you give what a right answer contains and the tools it should use. Three metrics, each scored 0 to 1 per question:</p>
+<ul>
+    <li><strong>Answer correctness:</strong> a judge model compares the answer with the expected answer.</li>
+    <li><strong>Logical consistency:</strong> a judge reads the agent's own steps and checks that they hang together, with no expected answer needed.</li>
+    <li><strong>Tool selection accuracy:</strong> compares the tools it called with the tools you listed, worked out without a judge.</li>
+</ul>
+<p>The run asks <code>baseline</code>, a version that cannot change, so whatever you edit while it runs does not change what is scored.</p>
 
 <ol class="ui-steps">
     <li>Go to <span class="path">AI &amp; ML » Agents</span> and open <code class="chip" title="Select to copy">WILDERNESS_ASSISTANT</code>.</li>
@@ -1241,17 +1225,8 @@ SHOW VERSIONS IN AGENT WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_ASSISTANT;</cod
     <li>Dataset: select the existing dataset <code class="chip" title="Select to copy">CHRISTMAS_EVAL_SET</code>.</li>
     <li>Metrics: <strong>Answer correctness</strong>, <strong>Logical consistency</strong> and <strong>Tool selection accuracy</strong>, each on version <strong>v3</strong>.</li>
     <li>Select <span class="path">Create</span>.</li>
+    <li>While it runs, run this in <code>lab3.sql</code> to see each question, what a right answer contains, and the tools it should use.</li>
 </ol>
-
-
-<div class="info-box success">
-    <strong>You should see</strong>
-    <p><code>baseline_run</code> in the list with a status that moves on as it works. It takes about 4 to 5 minutes. Stay on this page and read the rest of the step while it runs.</p>
-</div>
-
-<h3>The eight questions</h3>
-
-<p>Run this in <code>lab3.sql</code> to see each question, what a right answer contains, and the tools it should use.</p>
 
 <div class="code-block">
     <div class="code-header"><span class="code-lang">sql</span><button class="btn-copy" type="button">Copy</button></div>
@@ -1268,8 +1243,7 @@ ORDER BY QUESTION_ID;</code></pre>
 <table class="form-table">
     <thead><tr><th>#</th><th>What it tests</th></tr></thead>
     <tbody>
-        <tr><td>1 to 3</td><td>The morning's questions: tents, sleeping gear, and why the Summit 2P comes back. Question 3 needs both tools.</td></tr>
-        <tr><td>4</td><td>Customer comments only, so the assistant should use the search and nothing else.</td></tr>
+        <tr><td>1 to 4</td><td>The morning's four questions from Lab 1: what customers say about the tents, where tents run out and are left over, and two that need both tools, ending on the Summit Tent and its faulty batch.</td></tr>
         <tr><td>5 and 7</td><td>Wilderness's <em>launch weekend</em>, a trading term with its own dates: 1 to 3 November.</td></tr>
         <tr><td>6</td><td>The financial year. A control: it should pass today.</td></tr>
         <tr><td>8</td><td>The weather. The assistant has no weather data, so the right answer says so and stops there.</td></tr>
@@ -1277,28 +1251,28 @@ ORDER BY QUESTION_ID;</code></pre>
 </table>
 </div>
 
-<div class="info-box info">
-    <strong>What each metric scores</strong>
-    <p><strong>Answer correctness</strong>: a judge model compares the answer with the expected answer. <strong>Logical consistency</strong>: a judge reads the agent's own steps and checks that they hang together, with no expected answer needed. <strong>Tool selection accuracy</strong> compares the tools it called with the tools you listed, and is worked out without a judge. Each is scored 0 to 1 per question.</p>
+<div class="info-box success">
+    <strong>You should see</strong>
+    <p><code>baseline_run</code> in the list with a status that moves on as it works. It takes about 4 to 5 minutes. The query shows eight questions, each with its expected answer and tools. Wait until <code>baseline_run</code> shows <strong>Completed</strong> before Step 3.</p>
 </div>
 
 <div class="info-box tip">
-    <strong>Why a version, and why scores move</strong>
-    <p>The run asks <code>baseline</code>, a version that cannot change, so whatever you edit while it runs does not change what is scored. Each run asks the questions again, and models do not answer the same way twice, so a score can move by a few points between two runs of the same version. Read the pattern, not the second decimal place.</p>
+    <strong>Scores move between runs</strong>
+    <p>Each run asks the questions again, and models do not answer the same way twice, so a score can move by a few points between two runs of the same version. Read the pattern, not the second decimal place.</p>
 </div>
-
-<p>Wait until <code>baseline_run</code> shows <strong>Completed</strong> before Step 3.</p>
         <label class="completion-checkbox"><input type="checkbox" data-step="2"> Mark step 2 complete</label>
     </div>
 </div>
 <div class="step-card" id="step-3">
     <div class="step-header">
         <span class="step-number">3</span>
-        <h2 class="step-title">Read the results and find the pattern</h2>
+        <h2 class="step-title">Read the results and analyse them</h2>
         <span class="step-duration">~10 min</span>
     </div>
     <div class="step-content">
 <p>The scores say what is wrong. The records say why.</p>
+
+<p>Each record shows the judge's explanation next to the agent's own steps, including the SQL Cortex Analyst wrote, so you can see where an answer went wrong. Cortex Code's agent-studio skill reads a whole run at once and groups the failures. Where a failure is fixed matters: the semantic view is shared, so a definition you put there reaches every agent and tool that reads it at once; the instructions belong to this agent, and a committed version keeps them.</p>
 
 <ol class="ui-steps">
     <li>Open <code>baseline_run</code>. Sort the records by <strong>Answer correctness</strong>, lowest first.</li>
@@ -1307,20 +1281,14 @@ ORDER BY QUESTION_ID;</code></pre>
     <li>Select the <code>retail_analyst</code> step and read the SQL it ran.</li>
 </ol>
 
-
 <div class="info-box success">
     <strong>You should see</strong>
     <p>Answer correctness about 0.6 to 0.7 across the eight. The lowest records are the launch-weekend questions, 5 and 7. The SQL counts the wrong days, often a two-day weekend of 1 and 2 November, or the answer asks you which weekend you mean. Question 8 points you to a weather website, and some answers called the same tool twice, which costs tool selection points.</p>
 </div>
 
-<div class="info-box warning">
-    <strong>This is expected</strong>
-    <p>The answer is well formatted, confident and wrong. A store manager would not catch it. The evaluation did.</p>
-</div>
-
-<h3>Ask Cortex Code for the pattern</h3>
-
-<p>Open the Cortex Code panel in Snowsight, the same one you used in Lab 2, and paste this. It only reads.</p>
+<ol class="ui-steps" start="5" style="counter-reset: ui 4;">
+    <li>Open the Cortex Code panel in Snowsight, the same one you used in Lab 2, and paste this. It only reads.</li>
+</ol>
 
 <div class="code-block prompt">
     <div class="code-header"><span class="code-lang">cortex code</span><button class="btn-copy" type="button">Copy</button></div>
@@ -1329,12 +1297,12 @@ ORDER BY QUESTION_ID;</code></pre>
 
 <div class="info-box success">
     <strong>You should see</strong>
-    <p>Two kinds of failure. The dates: the assistant does not know Wilderness's trading terms, and that belongs in the semantic view. The behaviour: tools called twice and a refusal that sends people elsewhere, and that belongs in the agent's instructions. Its wording will differ from your neighbour's.</p>
+    <p>Two kinds of failure. The dates: the assistant does not know Wilderness's trading terms, and that belongs in the semantic view. The behaviour: tools called twice and a refusal that sends people elsewhere, and that belongs in the agent's instructions. Step 4 fixes the definitions, Step 5 the behaviour. Its wording will differ from your neighbour's.</p>
 </div>
 
-<div class="info-box info">
-    <strong>Why the split matters</strong>
-    <p>The semantic view is shared. Every agent and every tool that reads it gets a definition you put there, at once. The instructions belong to this agent, and a committed version keeps them. Step 4 fixes the definitions, Step 5 the behaviour.</p>
+<div class="info-box warning">
+    <strong>Confident and wrong</strong>
+    <p>The answer is well formatted, confident and wrong. A store manager would not catch it. The evaluation did.</p>
 </div>
         <label class="completion-checkbox"><input type="checkbox" data-step="3"> Mark step 3 complete</label>
     </div>
@@ -1342,22 +1310,22 @@ ORDER BY QUESTION_ID;</code></pre>
 <div class="step-card" id="step-4">
     <div class="step-header">
         <span class="step-number">4</span>
-        <h2 class="step-title">Fix Wilderness's definitions in the semantic view</h2>
-        <span class="step-duration">~14 min</span>
+        <h2 class="step-title">Fix issues in the semantic view</h2>
+        <span class="step-duration">~12 min</span>
     </div>
     <div class="step-content">
-<p>Wilderness says <em>launch weekend</em> and <em>Peak Week</em>, and each means fixed dates. Nothing in the data says so, so the assistant guesses or asks. The fix goes in the semantic view, where every agent and tool that reads it will get it. You prove it with a semantic view evaluation, before and after.</p>
+<p>Wilderness says <em>launch weekend</em> and <em>Peak Week</em>, and each means fixed dates. Nothing in the data says so, so the assistant guesses or asks.</p>
 
-<div class="info-box info">
-    <strong>What a semantic view evaluation is</strong>
-    <p>It tests one layer: the SQL Cortex Analyst writes. The right answers are your own verified queries. During the run they are removed from a temporary copy of the view, so Cortex Analyst has to write the SQL itself, and its result is compared with yours.</p>
-</div>
-
-<h3>1. Add two verified queries</h3>
+<p>Two features, used together:</p>
+<ul>
+    <li><strong>A semantic view evaluation</strong> tests one layer, the SQL Cortex Analyst writes. The right answers are your own verified queries. During the run they are removed from a temporary copy of the view, so Cortex Analyst has to write the SQL itself, and its result is compared with yours.</li>
+    <li><strong>Custom instructions</strong> tell Cortex Analyst what the tables cannot: here, which dates Wilderness's terms mean.</li>
+</ul>
+<p>You add two verified queries, show that the view gets them wrong, add the definitions, and show that it now gets them right.</p>
 
 <ol class="ui-steps">
     <li>Go to <span class="path">AI &amp; ML » Cortex Analyst</span>, open <code class="chip" title="Select to copy">SV_WILDERNESS_RETAIL</code> in <code>LAB3_PRODUCTION</code> (not the one in <code>LAB1_ASSISTANT</code>) and select <span class="path">Edit</span>.</li>
-    <li>Add each verified query below with its question and its SQL, then select <span class="path">Save</span>.</li>
+    <li>Add each verified query below with its question and its SQL, then select <span class="path">Save</span>. Each returns one total for a fixed range of days, so a wrong range gives a plainly wrong number.</li>
 </ol>
 
 <p>Question: <code class="chip" title="Select to copy">What were net sales over the launch weekend last year?</code></p>
@@ -1376,14 +1344,8 @@ FROM __sales AS s
 WHERE s.order_date BETWEEN '2025-12-18' AND '2025-12-24'</code></pre>
 </div>
 
-<p>Each returns one total for a fixed range of days, so a wrong range gives a plainly wrong number.</p>
-
-<h3>2. Evaluate before the fix</h3>
-
-<ol class="ui-steps">
-    <li>Open the semantic view's <span class="path">Evaluations</span> tab and select <span class="path">Create evaluation run</span>.</li>
-    <li>Run name <code class="chip" title="Select to copy">before_fix</code>, metric <strong>SQL correctness</strong> on <strong>v3</strong>.</li>
-    <li>Select only the two queries you just added, then <span class="path">Run evaluation</span>.</li>
+<ol class="ui-steps" start="3" style="counter-reset: ui 2;">
+    <li>Open the semantic view's <span class="path">Evaluations</span> tab and select <span class="path">Create evaluation run</span>. Run name <code class="chip" title="Select to copy">before_fix</code>, metric <strong>SQL correctness</strong> on <strong>v3</strong>. Select only the two queries you just added, then <span class="path">Run evaluation</span>.</li>
 </ol>
 
 <div class="info-box success">
@@ -1391,15 +1353,9 @@ WHERE s.order_date BETWEEN '2025-12-18' AND '2025-12-24'</code></pre>
     <p>After 2 to 3 minutes, <strong>0 of 2</strong> correct. Open a result: Cortex Analyst did not answer, and asked what "Peak Week" or "launch weekend" means.</p>
 </div>
 
-
-<div class="info-box tip">
-    <strong>Why only these two</strong>
-    <p>A question with a fixed total gives the same result every run. Lab 1's sleeping-gear query returns a list, and how the list is shaped can change its score from run to run, which would blur the before and after.</p>
-</div>
-
-<h3>3. Add the definitions</h3>
-
-<p>Custom instructions tell Cortex Analyst things the tables cannot. In the editor, open <span class="path">Custom instructions</span>, paste the two blocks below into their fields, and select <span class="path">Save</span>.</p>
+<ol class="ui-steps" start="4" style="counter-reset: ui 3;">
+    <li>In the editor, open <span class="path">Custom instructions</span>, paste the two blocks below into their fields, and select <span class="path">Save</span>.</li>
+</ol>
 
 <p><strong>Question categorization</strong>, so a question that uses a Wilderness term counts as clear instead of unclear:</p>
 <div class="code-block prompt">
@@ -1413,28 +1369,28 @@ WHERE s.order_date BETWEEN '2025-12-18' AND '2025-12-24'</code></pre>
     <pre><code>Wilderness uses these trading terms. The launch weekend is the first three days of Christmas trading, 1 to 3 November. Peak Week is the seven days to Christmas Eve, 18 to 24 December. The Christmas trading period runs from 1 November to 24 December, never calendar December. 'Last year' and 'last Christmas' mean 2025. The financial year runs from 1 July to 30 June, and 'last financial year' means FY26, 1 July 2025 to 30 June 2026. Always say which dates you used.</code></pre>
 </div>
 
-
-<div class="info-box info">
-    <strong>Both are needed</strong>
-    <p>At the build, SQL generation on its own still scored 0 of 2: Cortex Analyst kept asking what the terms meant before it reached the SQL. Question categorization lets the question through; SQL generation gets the dates right.</p>
-</div>
-
-<h3>4. Evaluate after the fix</h3>
-
-<p>Create a second run, <code class="chip" title="Select to copy">after_fix</code>, the same way, on the same two queries.</p>
+<ol class="ui-steps" start="5" style="counter-reset: ui 4;">
+    <li>Create a second run, <code class="chip" title="Select to copy">after_fix</code>, the same way, on the same two queries.</li>
+</ol>
 
 <div class="info-box success">
     <strong>You should see</strong>
     <p><strong>2 of 2</strong> correct, with SQL that uses 1 to 3 November 2025 and 18 to 24 December 2025.</p>
 </div>
 
-<h3>5. Look at Improve</h3>
+<div class="info-box info">
+    <strong>Both instructions are needed</strong>
+    <p>At the build, SQL generation on its own still scored 0 of 2: Cortex Analyst kept asking what the terms meant before it reached the SQL. Question categorization lets the question through; SQL generation gets the dates right.</p>
+</div>
 
-<p>Open <code>after_fix</code> and select <span class="path">Improve</span> in the accuracy panel. It suggests changes to the semantic view from the results. Read one; you do not need to accept it.</p>
+<div class="info-box info">
+    <strong>In a real project, change a copy first</strong>
+    <p>A semantic view has no versions, so this edit reaches production the moment you save it, before the agent is evaluated again. Here you edit the production view to keep the afternoon short. In a real project, make the change on a development copy, evaluate it, then deploy it to the view production reads.</p>
+</div>
 
 <div class="info-box tip">
-    <strong>Run it whenever the view changes</strong>
-    <p>A semantic view evaluation takes minutes and tests only the view. Run it every time someone changes the view, so a broken definition is caught before any agent uses it.</p>
+    <strong>Why only these two queries</strong>
+    <p>A question with one fixed total gives the same result every run. The morning's "stores running out of tents" query returns a list, and how a list is shaped can change its score from run to run, which would blur the before and after.</p>
 </div>
         <label class="completion-checkbox"><input type="checkbox" data-step="4"> Mark step 4 complete</label>
     </div>
@@ -1442,22 +1398,24 @@ WHERE s.order_date BETWEEN '2025-12-18' AND '2025-12-24'</code></pre>
 <div class="step-card" id="step-5">
     <div class="step-header">
         <span class="step-number">5</span>
-        <h2 class="step-title">Let Cortex Code improve the instructions, as a new version</h2>
+        <h2 class="step-title">Fix issues in the agent</h2>
         <span class="step-duration">~8 min</span>
     </div>
     <div class="step-content">
-<p>The definitions are fixed in the semantic view. The behaviour is the agent's: calling the same tool twice, and sending people to a weather website. You ask Cortex Code to fix only that, as a new version, and to leave the store managers on the baseline.</p>
+<p>The definitions are fixed. The behaviour is not: calling the same tool twice, and sending people to a weather website.</p>
+
+<p>Cortex Code's agent-studio skill reads the evaluation and rewrites the agent's instructions. It changes the agent's draft only: the store managers keep getting the frozen baseline, and nothing is a version until you commit it in Step 6.</p>
 
 <p>In the Cortex Code panel, paste this prompt. Read what it found and the instructions it proposes before you approve each change.</p>
 
 <div class="code-block prompt">
     <div class="code-header"><span class="code-lang">cortex code</span><button class="btn-copy" type="button">Copy</button></div>
-    <pre><code>Use the agent-studio skill. Based on the failures in evaluation run baseline_run for the agent WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_ASSISTANT, improve only the orchestration and response instructions. The semantic view already defines Wilderness's trading terms, such as the launch weekend, so do not put dates or definitions in the instructions. Do not change the tools, the tool descriptions, the semantic view or anything else. Run SHOW VERSIONS IN AGENT before and after. Commit the change as a new version, never overwrite an existing one, and give the new version the alias candidate, without quotes. Do not change the default version. Do not start an evaluation.</code></pre>
+    <pre><code>Use the agent-studio skill. Based on the failures in evaluation run baseline_run for the agent WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_ASSISTANT, improve only the orchestration and response instructions. The semantic view already defines Wilderness's trading terms, such as the launch weekend, so do not put dates or definitions in the instructions. Do not change the tools, the tool descriptions, the semantic view or anything else. Change the agent's live version only: do not commit a version, do not change the default version and do not start an evaluation. Show me the instructions before and after.</code></pre>
 </div>
 
 <div class="info-box success">
     <strong>You should see</strong>
-    <p>A summary of the failures, new response and orchestration instructions, and a new version in <code>SHOW VERSIONS</code> with the alias <code>CANDIDATE</code>. <code>BASELINE</code> is still the default. At the build, four tries each committed exactly one new version, changed only the two instruction fields and left the baseline as the default. It takes about 5 to 10 minutes.</p>
+    <p>A summary of the failures, then the response and orchestration instructions before and after. <code>SHOW VERSIONS</code> is unchanged: <code>BASELINE</code> is still the only labelled version and still the default. It takes about 5 minutes.</p>
 </div>
 
 <div class="info-box info">
@@ -1470,21 +1428,13 @@ WHERE s.order_date BETWEEN '2025-12-18' AND '2025-12-24'</code></pre>
 <div class="step-card" id="step-6">
     <div class="step-header">
         <span class="step-number">6</span>
-        <h2 class="step-title">Evaluate the new version, compare, promote</h2>
-        <span class="step-duration">~12 min</span>
+        <h2 class="step-title">Create a new version and evaluate it</h2>
+        <span class="step-duration">~14 min</span>
     </div>
     <div class="step-content">
-<p>The same questions and the same metrics, on the new version. Only the version changes, so any difference comes from the changes.</p>
+<p>Same questions, same metrics, new version. Only the version changes, so any difference comes from the changes.</p>
 
-<h3>Run it</h3>
-
-<ol class="ui-steps">
-    <li>Back on the agent's <span class="path">Evaluations</span> tab, select <span class="path">Create evaluation run » Run an evaluation manually</span>.</li>
-    <li>Run name <code class="chip" title="Select to copy">candidate_run</code>. Agent version <code class="chip" title="Select to copy">candidate</code>.</li>
-    <li>The same dataset, <code class="chip" title="Select to copy">CHRISTMAS_EVAL_SET</code>, and the same three metrics on <strong>v3</strong>. Select <span class="path">Create</span>.</li>
-</ol>
-
-<p>It takes about 4 to 5 minutes. Read this while it runs.</p>
+<p>Committing the draft makes the changes a version that cannot change, so the evaluation scores exactly what you would promote. The Evaluations tab then compares runs side by side, question by question, so you see what got better and whether anything got worse. The two kinds of evaluation do different jobs:</p>
 
 <div class="table-wrapper">
 <table class="form-table">
@@ -1498,31 +1448,72 @@ WHERE s.order_date BETWEEN '2025-12-18' AND '2025-12-24'</code></pre>
 </table>
 </div>
 
-<div class="info-box warning">
-    <strong>The baseline would pass the date questions now too</strong>
-    <p>A version freezes the agent's instructions and tools, not the semantic view it reads. The view fix in Step 4 reached every version at once, the baseline included. If you ran <code>baseline</code> again now, it would also get the launch weekend right. So this comparison shows the two fixes together. To see the instructions alone, you would compare two runs made after Step 4.</p>
-</div>
-
-<h3>Compare the two runs</h3>
-
 <ol class="ui-steps">
-    <li>When <code>candidate_run</code> shows <strong>Completed</strong>, select <code>baseline_run</code> and <code>candidate_run</code> in the list.</li>
-    <li>Select <span class="path">Compare</span>, then <span class="path">Hide unchanged metrics</span>.</li>
+    <li>Run this block. It commits the draft as a new version and labels it <code>candidate</code>. The default stays on the baseline.</li>
 </ol>
-
-
-<div class="info-box success">
-    <strong>You should see</strong>
-    <p>Answer correctness up from about 0.6 to 0.7 to about 0.9 or higher, and tool selection up from about 0.7 to 0.9 to about 1.0. The launch-weekend questions pass, from the semantic view. The weather question improves, from the instructions. Nothing that passed before fails now. Your numbers will differ a little: at the build the baseline scored 0.58 to 0.71 and the candidate 0.92 to 1.00 across several runs.</p>
-</div>
-
-<h3>Promote it</h3>
-
-<p>Labelling it <code>production</code>, making it the default and adding it to CoWork as <strong>Wilderness Assistant (production)</strong> puts it in front of every store manager at once.</p>
 
 <div class="code-block">
     <div class="code-header"><span class="code-lang">sql</span><button class="btn-copy" type="button">Copy</button></div>
-    <pre><code>-- Lab 3 Step 6, block 1: promote the candidate and put the production assistant in CoWork.
+    <pre><code>-- Lab 3 Step 6: commit the draft Step 5 changed as a new version, and label it candidate.
+-- The default stays on the baseline, so the store managers keep getting the baseline until Step 7.
+ALTER AGENT WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_ASSISTANT
+  COMMIT COMMENT = 'Candidate: improved instructions from Lab 3 Step 5';
+
+EXECUTE IMMEDIATE $$
+DECLARE
+  v_version VARCHAR;
+BEGIN
+  SHOW VERSIONS IN AGENT WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_ASSISTANT;
+  SELECT "name" INTO :v_version FROM TABLE(RESULT_SCAN(LAST_QUERY_ID()))
+    WHERE "name" IS NOT NULL ORDER BY "created_on" DESC LIMIT 1;
+  EXECUTE IMMEDIATE 'ALTER AGENT WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_ASSISTANT MODIFY VERSION '
+                    || :v_version || ' SET ALIAS = candidate';
+  RETURN 'Candidate is ' || :v_version || '. The baseline is still the default.';
+END;
+$$;
+
+SHOW VERSIONS IN AGENT WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_ASSISTANT;</code></pre>
+</div>
+
+<div class="info-box success">
+    <strong>You should see</strong>
+    <p><code>Candidate is VERSION$3</code> (the number can differ), then the versions: <code>CANDIDATE</code> new, <code>BASELINE</code> still the default.</p>
+</div>
+
+<ol class="ui-steps" start="2" style="counter-reset: ui 1;">
+    <li>Back on the agent's <span class="path">Evaluations</span> tab, select <span class="path">Create evaluation run » Run an evaluation manually</span>.</li>
+    <li>Run name <code class="chip" title="Select to copy">candidate_run</code>. Agent version <code class="chip" title="Select to copy">candidate</code>. The same dataset, <code class="chip" title="Select to copy">CHRISTMAS_EVAL_SET</code>, and the same three metrics on <strong>v3</strong>. Select <span class="path">Create</span>. It takes about 4 to 5 minutes.</li>
+    <li>When it shows <strong>Completed</strong>, select <code>baseline_run</code> and <code>candidate_run</code> in the list, then <span class="path">Compare</span>, then <span class="path">Hide unchanged metrics</span>.</li>
+</ol>
+
+<div class="info-box success">
+    <strong>You should see</strong>
+    <p>Answer correctness up from about 0.6 to 0.7 to about 0.9 or higher, and tool selection up from about 0.7 to 0.9 to about 1.0. The launch-weekend questions pass, from the semantic view. The weather question improves, from the instructions. Nothing that passed before fails now.</p>
+</div>
+
+<div class="info-box warning">
+    <strong>The baseline would pass the date questions now too</strong>
+    <p>A version freezes the agent's instructions and tools, not the semantic view it reads. The view fix in Step 4 reached every version at once, the baseline included. So this comparison shows the two fixes together. To see the instructions alone, compare two runs made after Step 4.</p>
+</div>
+        <label class="completion-checkbox"><input type="checkbox" data-step="6"> Mark step 6 complete</label>
+    </div>
+</div>
+<div class="step-card" id="step-7">
+    <div class="step-header">
+        <span class="step-number">7</span>
+        <h2 class="step-title">Promote the enhanced version</h2>
+        <span class="step-duration">~4 min</span>
+    </div>
+    <div class="step-content">
+<p>The new version is better and nothing got worse. Put it in front of the stores.</p>
+
+<p>Promoting is a label and a default, not a rebuild: the version that scored better is the version the store managers get, and the baseline stays one line away.</p>
+
+<p>Run this block. It labels the candidate <code>production</code>, makes it the default and adds it to CoWork as <strong>Wilderness Assistant (production)</strong>, in front of every store manager at once.</p>
+
+<div class="code-block">
+    <div class="code-header"><span class="code-lang">sql</span><button class="btn-copy" type="button">Copy</button></div>
+    <pre><code>-- Lab 3 Step 7: promote the candidate and put the production assistant in CoWork.
 -- The candidate's label becomes production; the baseline stays as it is, so rolling back is one line.
 -- @ACCOUNT_LEVEL
 EXECUTE IMMEDIATE $$
@@ -1534,7 +1525,7 @@ BEGIN
   SELECT "name" INTO :v_version FROM TABLE(RESULT_SCAN(LAST_QUERY_ID()))
     WHERE UPPER("alias") = 'CANDIDATE';
   IF (v_version IS NULL) THEN
-    RETURN 'No version is labelled candidate yet. Finish Step 5 first.';
+    RETURN 'No version is labelled candidate yet. Finish Step 6 first.';
   END IF;
   EXECUTE IMMEDIATE 'ALTER AGENT WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_ASSISTANT MODIFY VERSION '
                  || :v_version || ' SET ALIAS = production';
@@ -1566,23 +1557,25 @@ SHOW VERSIONS IN AGENT WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_ASSISTANT;</cod
     <strong>Rolling back is one line</strong>
     <p>If production misbehaves, set the default back to the baseline's version, for example <code class="chip" title="Select to copy">ALTER AGENT WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_ASSISTANT SET DEFAULT_VERSION = 'VERSION$2';</code> with the name <code>SHOW VERSIONS</code> gives for <code>BASELINE</code>. Nothing is rebuilt and the runs stay.</p>
 </div>
-        <label class="completion-checkbox"><input type="checkbox" data-step="6"> Mark step 6 complete</label>
+        <label class="completion-checkbox"><input type="checkbox" data-step="7"> Mark step 7 complete</label>
     </div>
 </div>
-<div class="step-card" id="step-7">
+<div class="step-card" id="step-8">
     <div class="step-header">
-        <span class="step-number">7</span>
-        <h2 class="step-title">Set Wilderness's cost controls</h2>
-        <span class="step-duration">~15 min</span>
+        <span class="step-number">8</span>
+        <h2 class="step-title">Review development spend</h2>
+        <span class="step-duration">~5 min</span>
     </div>
     <div class="step-content">
-<p>Tom wants a set of limits he can sign off before 72 stores go live. Start with what today has cost, then set two controls: one for the project, one for each store manager.</p>
+<p>Part 2: what will it cost? Start with what building and testing it cost today.</p>
 
-<h3>1. What today has cost</h3>
+<p>Account usage views break today's credits down by service: Cortex Agents, CoWork, AI functions, Cortex Search, Cortex Code and the warehouse. Setup tagged the database and the warehouse <code>PROJECT = 'wilderness_christmas'</code>, so the project's spend can be counted on its own.</p>
+
+<p>Run this block.</p>
 
 <div class="code-block">
     <div class="code-header"><span class="code-lang">sql</span><button class="btn-copy" type="button">Copy</button></div>
-    <pre><code>-- Lab 3 Step 7, block 1: what this account has spent in the last 24 hours, by service.
+    <pre><code>-- Lab 3 Step 8: what this account has spent in the last 24 hours, by service.
 -- Usage reaches this view an hour or two after it happens, so the last hour may be missing.
 SELECT CASE SERVICE_TYPE
          WHEN 'CORTEX_AGENTS'            THEN 'Cortex Agents (the assistant outside CoWork, and evaluations)'
@@ -1610,16 +1603,81 @@ ORDER BY CREDITS DESC;</code></pre>
 
 <div class="info-box info">
     <strong>Same assistant, two lines</strong>
-    <p>The questions you asked in CoWork this morning are billed to CoWork, not to Cortex Agents, even though an agent answered them. A limit on the agent alone would miss most of what store managers do. That is why the store-manager limit below covers both.</p>
+    <p>The questions you asked in CoWork this morning are billed to CoWork, not to Cortex Agents, even though an agent answered them. Count both when you estimate what store managers will cost.</p>
+</div>
+        <label class="completion-checkbox"><input type="checkbox" data-step="8"> Mark step 8 complete</label>
+    </div>
+</div>
+<div class="step-card" id="step-9">
+    <div class="step-header">
+        <span class="step-number">9</span>
+        <h2 class="step-title">Estimate future cost for the project</h2>
+        <span class="step-duration">~10 min</span>
+    </div>
+    <div class="step-content">
+<p>Today's spend was building and testing. From tomorrow the cost is 72 store managers asking questions every morning, plus the email each one gets. The budget is monthly and the limit is per person, so the estimate needs both.</p>
+
+<p>Cortex Code reads the same usage views, works out what one question and one automation email cost today, and scales that to a month and to one person. It writes the assumptions down, so Tom can change them.</p>
+
+<ol class="ui-steps">
+    <li>In the Cortex Code panel, paste this prompt.</li>
+</ol>
+
+<div class="code-block prompt">
+    <div class="code-header"><span class="code-lang">cortex code</span><button class="btn-copy" type="button">Copy</button></div>
+    <pre><code>Using today's usage in SNOWFLAKE.ACCOUNT_USAGE, estimate a month of the Wilderness assistant in production. Assume 72 store managers each ask 5 questions in CoWork a day and get one automation email each weekday morning, and include the warehouse. Show the credits for one question and one email, for one store manager a day and a month, and for all 72 a month. Compare the automation running hourly with weekdays at 7am. List every assumption.</code></pre>
 </div>
 
-<h3>2. A budget for the project</h3>
+<div class="info-box success">
+    <strong>You should see</strong>
+    <p>A short table with each assumption listed:</p>
+    <ul>
+        <li>credits for one question and for one email;</li>
+        <li>one store manager, a day and a month: the number the per-user limit in Step 11 is set from;</li>
+        <li>all 72, a month: the number the budget in Step 10 is set from.</li>
+    </ul>
+    <p>Hourly runs the automation 168 times a week, against 5 for weekdays at 7am, so moving it cuts that line by about 30 times.</p>
+</div>
 
-<p>Setup tagged the database and the warehouse <code>PROJECT = 'wilderness_christmas'</code>. A budget on that tag counts everything inside them, the agent, the search service and the tasks included, against one monthly limit.</p>
+<ol class="ui-steps" start="2" style="counter-reset: ui 1;">
+    <li>Take the first saving. In CoWork, ask:</li>
+</ol>
+
+<div class="code-block prompt">
+    <div class="code-header"><span class="code-lang">cowork</span><button class="btn-copy" type="button">Copy</button></div>
+    <pre><code>Change my stores running out of tents automation to weekdays at 7am.</code></pre>
+</div>
+
+<div class="info-box success">
+    <strong>You should see</strong>
+    <p>CoWork proposes the new schedule. After you confirm, the automation shows weekdays at 7:00 in the <span class="path">Automations</span> tab.</p>
+</div>
+
+<div class="info-box tip">
+    <strong>It is an estimate, not a quote</strong>
+    <p>One morning's questions are a small sample, and a busy Saturday in December will not look like a Wednesday in November. Use the estimate to set the limits, then let the limits tell you when it was wrong.</p>
+</div>
+        <label class="completion-checkbox"><input type="checkbox" data-step="9"> Mark step 9 complete</label>
+    </div>
+</div>
+<div class="step-card" id="step-10">
+    <div class="step-header">
+        <span class="step-number">10</span>
+        <h2 class="step-title">Set the project budget</h2>
+        <span class="step-duration">~8 min</span>
+    </div>
+    <div class="step-content">
+<p>Tom wants a monthly limit for the project he can sign off, set from the estimate for all 72 stores.</p>
+
+<p>A budget on the project tag counts everything inside the project, the agent, the search service and the tasks included, against one monthly limit. It emails you at 80% and runs an action at 100%, here stopping the warehouse. It acts within hours.</p>
+
+<ol class="ui-steps">
+    <li>Run this block. It sets 150 credits a month, comfortably above the monthly estimate for all 72 stores.</li>
+</ol>
 
 <div class="code-block">
     <div class="code-header"><span class="code-lang">sql</span><button class="btn-copy" type="button">Copy</button></div>
-    <pre><code>-- Lab 3 Step 7, block 2: a monthly budget for the whole Wilderness project.
+    <pre><code>-- Lab 3 Step 10: a monthly budget for the whole Wilderness project.
 -- It counts every object tagged PROJECT = 'wilderness_christmas': the database (and so the agent, the
 -- search service and the tasks in it) and the warehouse. It emails you at 80% and stops the warehouse at 100%.
 USE ROLE ACCOUNTADMIN;
@@ -1677,20 +1735,42 @@ CALL WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_PROJECT_BUDGET!GET_CUSTOM_ACTIONS
     <p><code>Budget alerts go to</code> your email, then the tag the budget watches (<code>PROJECT</code> = <code>wilderness_christmas</code>) and one custom action, <code>STOP_WILDERNESS_WH</code> at 100% of actual spend.</p>
 </div>
 
-<h3>3. A daily limit for each store manager</h3>
+<ol class="ui-steps" start="2" style="counter-reset: ui 1;">
+    <li>See it as a reviewer would: go to <span class="path">Admin » Cost management</span>, open the <span class="path">Budgets</span> tab and open <code>WILDERNESS_PROJECT_BUDGET</code>.</li>
+</ol>
 
-<p>A per-user quota gives every user in scope the same AI limit, and blocks a user who reaches it within minutes, until the next day. You try it on a demo store manager, never on yourself.</p>
+<div class="info-box info">
+    <strong>A budget stops the project, not a person</strong>
+    <p>A budget acts within hours, on the whole project. It does not stop one store manager, or a script, using up the day's AI spend in minutes. Step 11 adds that.</p>
+</div>
+        <label class="completion-checkbox"><input type="checkbox" data-step="10"> Mark step 10 complete</label>
+    </div>
+</div>
+<div class="step-card" id="step-11">
+    <div class="step-header">
+        <span class="step-number">11</span>
+        <h2 class="step-title">Set a per-user quota</h2>
+        <span class="step-duration">~8 min</span>
+    </div>
+    <div class="step-content">
+<p>One store manager, or a script running as one, could use up a day's AI spend in minutes, long before the budget notices. Tom wants a daily limit for each person, set from the estimate for one store manager.</p>
+
+<p>A per-user quota gives every user in scope the same AI limit and blocks a user who reaches it within minutes, until the next day. It counts the services you add to it: here CoWork and Cortex Agents, the two ways a store manager reaches the assistant, because CoWork questions are billed to CoWork, not to the agent. You try it on a demo store manager, never on yourself.</p>
+
+<ol class="ui-steps">
+    <li>Run this block. It creates a demo store manager, tags them, sets 2 credits a day, checks who is in scope, then turns blocking on.</li>
+</ol>
 
 <div class="code-block">
     <div class="code-header"><span class="code-lang">sql</span><button class="btn-copy" type="button">Copy</button></div>
-    <pre><code>-- Lab 3 Step 7, block 3: a daily AI limit for store managers, tried on a demo user.
+    <pre><code>-- Lab 3 Step 11: a daily AI limit for store managers, tried on a demo user.
 -- A new quota covers every user in the account. This block narrows it to users tagged as store managers,
 -- and leaves you out by name, so it can never block you during the workshop.
 USE ROLE ACCOUNTADMIN;
 
 -- A store manager to apply the limit to. No password: nobody signs in as this user today.
 CREATE USER IF NOT EXISTS STORE_MANAGER_DEMO
-  COMMENT = 'Wilderness workshop: a demo store manager for the AI quota and the masking test';
+  COMMENT = 'Wilderness workshop: a demo store manager for the AI quota';
 
 -- The team tag that decides who the limit applies to.
 CREATE TAG IF NOT EXISTS WILDERNESS_HOL.LAB3_PRODUCTION.TEAM ALLOWED_VALUES 'store_managers';
@@ -1730,267 +1810,18 @@ CALL WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_STORE_QUOTA!GET_CONFIG();</code><
 
 <div class="info-box success">
     <strong>You should see</strong>
-    <p>The scope check lists <code>STORE_MANAGER_DEMO</code> under included users, you under excluded users, and the two domains it counts, <code>CORTEX_AGENT</code> and <code>SNOWFLAKE_INTELLIGENCE</code>, which is CoWork. The last result shows <code>PER_USER_LIMIT_DAILY</code> 2 and <code>BLOCK_ENFORCEMENT_ENABLED</code> true. The Budgets page can take up to two hours to list the demo user under the quota's users.</p>
+    <p>The scope check lists <code>STORE_MANAGER_DEMO</code> under included users, you under excluded users, and the two domains it counts, <code>CORTEX_AGENT</code> and <code>SNOWFLAKE_INTELLIGENCE</code>, which is CoWork. The last result shows <code>PER_USER_LIMIT_DAILY</code> 2 and <code>BLOCK_ENFORCEMENT_ENABLED</code> true.</p>
 </div>
 
+<ol class="ui-steps" start="2" style="counter-reset: ui 1;">
+    <li>See it as a reviewer would: on the <span class="path">Budgets</span> tab in <span class="path">Admin » Cost management</span>, open <code>WILDERNESS_STORE_QUOTA</code>. It can take up to two hours to list the demo user under the quota's users.</li>
+</ol>
+
 <div class="info-box warning">
-    <strong>Why the block leaves you out by name</strong>
+    <strong>Why the quota leaves you out by name</strong>
     <p>A new quota covers every user in the account. You have used far more than 2 credits today, so a quota that included you would block your CoWork and agent requests for the rest of the day. The block narrows the quota to a store-manager tag, excludes you by name, and turns blocking on only after the scope check has shown who is in it.</p>
 </div>
-
-<h3>4. See them as a reviewer would</h3>
-
-<ol class="ui-steps">
-    <li>Go to <span class="path">Admin » Cost management</span> and open the <span class="path">Budgets</span> tab.</li>
-    <li>Open <code>WILDERNESS_PROJECT_BUDGET</code>, then go back and open <code>WILDERNESS_STORE_QUOTA</code>.</li>
-</ol>
-
-
-<h3>5. Make the morning email cost less</h3>
-
-<p>The Lab 1 automation runs every hour, which was for proving it works. A store manager needs one email before the shop opens. In CoWork, ask:</p>
-
-<div class="code-block prompt">
-    <div class="code-header"><span class="code-lang">cortex code</span><button class="btn-copy" type="button">Copy</button></div>
-    <pre><code>Change my sleeping-gear report to weekdays at 7am.</code></pre>
-</div>
-
-<div class="info-box success">
-    <strong>You should see</strong>
-    <p>CoWork proposes the new schedule. After you confirm, the automation shows weekdays at 7:00 in the <span class="path">Automations</span> tab.</p>
-</div>
-
-<h3>The design you hand Tom</h3>
-
-<div class="table-wrapper">
-<table class="form-table">
-    <thead><tr><th>Who</th><th>Risk</th><th>Control</th><th>Acts within</th></tr></thead>
-    <tbody>
-        <tr><td>The project</td><td>The work runs over its monthly allowance</td><td>Budget on the project tag: 150 credits a month, email at 80%, stop the warehouse at 100%</td><td>Hours</td></tr>
-        <tr><td>Store managers</td><td>One manager, or a script, uses up the day's AI spend</td><td>Per-user quota on CoWork and Cortex Agents: 2 credits a day, blocking on</td><td>Minutes</td></tr>
-        <tr><td>Your delivery team</td><td>Cortex Code and AI-function work during the build eats the project budget</td><td>The same quota on Cortex Code and AI functions, for the team's users. Not built today: in this account the only team member is you.</td><td>Minutes</td></tr>
-    </tbody>
-</table>
-</div>
-
-<p>The quota stops a person in minutes; the budget stops the project in hours.</p>
-        <label class="completion-checkbox"><input type="checkbox" data-step="7"> Mark step 7 complete</label>
-    </div>
-</div>
-<div class="step-card" id="step-8">
-    <div class="step-header">
-        <span class="step-number">8</span>
-        <h2 class="step-title">Who sees what</h2>
-        <span class="step-duration">~10 min</span>
-    </div>
-    <div class="step-content">
-<p>Store managers should see stock and sales, not members' email addresses, and not the raw sales lines. One role, one masking policy, and a test that proves both.</p>
-
-<div class="code-block">
-    <div class="code-header"><span class="code-lang">sql</span><button class="btn-copy" type="button">Copy</button></div>
-    <pre><code>-- Lab 3 Step 8: who sees what. One role for store managers, one masking policy on member emails,
--- and a test that proves both. Run it top to bottom. It ends back in ACCOUNTADMIN.
-USE ROLE ACCOUNTADMIN;
-USE WAREHOUSE WILDERNESS_WH;
-
--- 1. The store manager role: the production assistant and the curated views, plus member names
---    for the sleeping-gear offer. Not the raw sales lines.
-CREATE ROLE IF NOT EXISTS WILDERNESS_STORE_MANAGER COMMENT = 'Wilderness store managers: curated views, the assistant, CoWork';
-GRANT USAGE ON WAREHOUSE WILDERNESS_WH TO ROLE WILDERNESS_STORE_MANAGER;
-GRANT USAGE ON DATABASE WILDERNESS_HOL TO ROLE WILDERNESS_STORE_MANAGER;
-GRANT USAGE ON SCHEMA WILDERNESS_HOL.RAW TO ROLE WILDERNESS_STORE_MANAGER;
-GRANT USAGE ON SCHEMA WILDERNESS_HOL.LAB3_PRODUCTION TO ROLE WILDERNESS_STORE_MANAGER;
-GRANT SELECT ON ALL VIEWS IN SCHEMA WILDERNESS_HOL.RAW TO ROLE WILDERNESS_STORE_MANAGER;
-GRANT SELECT ON TABLE WILDERNESS_HOL.RAW.DIM_STORE TO ROLE WILDERNESS_STORE_MANAGER;
-GRANT SELECT ON TABLE WILDERNESS_HOL.RAW.DIM_PRODUCT TO ROLE WILDERNESS_STORE_MANAGER;
-GRANT SELECT ON TABLE WILDERNESS_HOL.RAW.DIM_MEMBER TO ROLE WILDERNESS_STORE_MANAGER;
-GRANT SELECT ON SEMANTIC VIEW WILDERNESS_HOL.LAB3_PRODUCTION.SV_WILDERNESS_RETAIL TO ROLE WILDERNESS_STORE_MANAGER;
-GRANT USAGE ON CORTEX SEARCH SERVICE WILDERNESS_HOL.LAB3_PRODUCTION.CSS_CUSTOMER_FEEDBACK TO ROLE WILDERNESS_STORE_MANAGER;
-GRANT USAGE ON AGENT WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_ASSISTANT TO ROLE WILDERNESS_STORE_MANAGER;
-
--- 2. Give the role to the demo store manager, and to you so you can test it.
-GRANT ROLE WILDERNESS_STORE_MANAGER TO USER STORE_MANAGER_DEMO;
-EXECUTE IMMEDIATE $$
-BEGIN
-  EXECUTE IMMEDIATE 'GRANT ROLE WILDERNESS_STORE_MANAGER TO USER "' || REPLACE(CURRENT_USER(), '"', '""') || '"';
-  RETURN 'Granted WILDERNESS_STORE_MANAGER to you';
-END;
-$$;
-
--- 3. Member emails: shown in full to ACCOUNTADMIN, hidden from everyone else.
-CREATE MASKING POLICY IF NOT EXISTS WILDERNESS_HOL.LAB3_PRODUCTION.MP_MEMBER_EMAIL AS (v VARCHAR) RETURNS VARCHAR -&gt;
-  CASE WHEN CURRENT_ROLE() = 'ACCOUNTADMIN' THEN v
-       ELSE REGEXP_REPLACE(v, '^[^@]+', '*****') END;
-ALTER TABLE WILDERNESS_HOL.RAW.DIM_MEMBER MODIFY COLUMN EMAIL
-  SET MASKING POLICY WILDERNESS_HOL.LAB3_PRODUCTION.MP_MEMBER_EMAIL FORCE;
-
--- 4. The test. As ACCOUNTADMIN you see full emails.
-SELECT FIRST_NAME, EMAIL FROM WILDERNESS_HOL.RAW.DIM_MEMBER ORDER BY MEMBER_ID LIMIT 3;
-
--- As a store manager, with only that role's rights (secondary roles off).
-USE ROLE WILDERNESS_STORE_MANAGER;
-USE SECONDARY ROLES NONE;
-SELECT FIRST_NAME, EMAIL FROM WILDERNESS_HOL.RAW.DIM_MEMBER ORDER BY MEMBER_ID LIMIT 3;
-SELECT STATUS, COUNT(*) AS STORES FROM WILDERNESS_HOL.RAW.V_TENT_COVER
-  GROUP BY STATUS ORDER BY STATUS;
-
--- This one should fail: store managers cannot read raw sales lines.
-SELECT COUNT(*) FROM WILDERNESS_HOL.RAW.FCT_SALES_LINE;</code></pre>
-</div>
-
-<div class="info-box success">
-    <strong>You should see</strong>
-    <p>As ACCOUNTADMIN, three members with full email addresses. As <code>WILDERNESS_STORE_MANAGER</code>, the same three with the part before the @ hidden, for example <code>*****@example.com</code>, and the stores by tent status. The last query fails with an error that the table does not exist or is not authorised. That error is the proof: the role cannot read raw sales.</p>
-</div>
-
-<p>Your session is now in the store-manager role. Run the next block to see why the <code>USE SECONDARY ROLES NONE</code> line is there, and to return to ACCOUNTADMIN.</p>
-
-<div class="code-block">
-    <div class="code-header"><span class="code-lang">sql</span><button class="btn-copy" type="button">Copy</button></div>
-    <pre><code>-- Lab 3 Step 8, block 2: why the secondary-roles line matters, then back to ACCOUNTADMIN.
--- With secondary roles on, your other roles come along, and the same query now succeeds.
-USE SECONDARY ROLES ALL;
-SELECT COUNT(*) AS SALES_LINES_SEEN_THROUGH_YOUR_OTHER_ROLES FROM WILDERNESS_HOL.RAW.FCT_SALES_LINE;
-
-USE ROLE ACCOUNTADMIN;
-USE SECONDARY ROLES ALL;</code></pre>
-</div>
-
-<div class="info-box success">
-    <strong>You should see</strong>
-    <p>A count of about three million sales lines: with your other roles switched back on, the same query succeeds. Then the session is back in ACCOUNTADMIN.</p>
-</div>
-
-<div class="info-box warning">
-    <strong>Why the secondary-roles line matters</strong>
-    <p>New users get all their roles as secondary roles. Without <code>USE SECONDARY ROLES NONE</code>, ACCOUNTADMIN stays active behind the store-manager role, and the denial test passes for the wrong reason. Test access with secondary roles off.</p>
-</div>
-
-<div class="info-box info">
-    <strong>The same limits in CoWork</strong>
-    <p>CoWork runs as the person asking. A store manager who signs in with this role gets the same view of the data there, with no change to the agent. With Step 7, a store manager sees only what the role allows, up to 2 credits a day.</p>
-</div>
-        <label class="completion-checkbox"><input type="checkbox" data-step="8"> Mark step 8 complete</label>
-    </div>
-</div>
-<div class="step-card optional" id="step-9">
-    <div class="step-header">
-        <span class="step-number">9</span>
-        <h2 class="step-title">Push quality further: a second change, a third run <span class="badge-optional">Optional</span></h2>
-        <span class="step-duration">~10 min</span>
-    </div>
-    <div class="step-content">
-<p>The evaluation found a second kind of weakness you have not touched: how each tool is described. The agent reads those descriptions to decide which tool to call. Make one more change, as its own version, and test it the same way.</p>
-
-<div class="code-block prompt">
-    <div class="code-header"><span class="code-lang">cortex code</span><button class="btn-copy" type="button">Copy</button></div>
-    <pre><code>Use the agent-studio skill. Look at the evaluation runs baseline_run and candidate_run for the agent WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_ASSISTANT. Improve only the descriptions of the retail_analyst and customer_feedback tools, so the agent picks the right tool the first time. Do not change the instructions, the semantic view or anything else, and do not put dates or definitions in the descriptions. Run SHOW VERSIONS IN AGENT before and after. Commit the change as a new version, never overwrite an existing one, and give the new version the alias candidate_2, without quotes. Do not change the default version. Do not start an evaluation.</code></pre>
-</div>
-
-<ol class="ui-steps">
-    <li>On the agent's <span class="path">Evaluations</span> tab, create <code class="chip" title="Select to copy">candidate_2_run</code> on version <code class="chip" title="Select to copy">candidate_2</code>, with the same dataset and the same three metrics.</li>
-    <li>When it completes, select <code>baseline_run</code>, <code>candidate_run</code> and <code>candidate_2_run</code>, then <span class="path">Compare</span>.</li>
-</ol>
-
-<div class="info-box success">
-    <strong>You should see</strong>
-    <p>Three runs side by side. <code>production</code> is still the default, so CoWork has not changed. With answer correctness already above 0.9, the third run may score the same or a little different: that is the run-to-run movement from Step 2, not necessarily the change.</p>
-</div>
-
-<div class="info-box tip">
-    <strong>Three rules for tuning</strong>
-    <p>Change one thing at a time, so you know what moved the score. Look for questions that got worse, not only the average. And do not tune to the eight questions: when a fix only makes sense for one question, add more questions to the dataset instead.</p>
-</div>
-    </div>
-</div>
-<div class="step-card optional" id="step-10">
-    <div class="step-header">
-        <span class="step-number">10</span>
-        <h2 class="step-title">Re-test production every night to Christmas <span class="badge-optional">Optional</span></h2>
-        <span class="step-duration">~10 min</span>
-    </div>
-    <div class="step-content">
-<p>Someone will change the semantic view, or the data, before Christmas Eve. A nightly evaluation of <code>production</code> finds the break before a store manager does. This block copies the evaluation settings from the workshop repository and schedules a run at 2am Sydney time.</p>
-
-<div class="code-block">
-    <div class="code-header"><span class="code-lang">sql</span><button class="btn-copy" type="button">Copy</button></div>
-    <pre><code>-- Lab 3 optional Step 10: re-test production every night until Christmas Eve.
--- Copy the evaluation settings from the workshop repository, then schedule a nightly run.
--- The task lives with the agent, in LAB3_PRODUCTION: an evaluation started by SQL runs in the session's schema.
-ALTER GIT REPOSITORY WILDERNESS_HOL.SETUP.WORKSHOP_REPO FETCH;
-COPY FILES INTO @WILDERNESS_HOL.LAB3_PRODUCTION.EVAL_CONFIG
-  FROM @WILDERNESS_HOL.SETUP.WORKSHOP_REPO/branches/main/evals/
-  FILES = ('nightly_eval.yaml');
-
-CREATE OR REPLACE TASK WILDERNESS_HOL.LAB3_PRODUCTION.NIGHTLY_EVAL
-  WAREHOUSE = WILDERNESS_WH
-  SCHEDULE = 'USING CRON 0 2 * * * Australia/Sydney'
-  COMMENT = 'Wilderness workshop: evaluate the production agent every night at 2am'
-AS
-EXECUTE IMMEDIATE $$
-BEGIN
-  CALL EXECUTE_AI_EVALUATION('START',
-    OBJECT_CONSTRUCT('run_name', 'nightly_' || TO_VARCHAR(CURRENT_TIMESTAMP(), 'YYYYMMDD_HH24MI')),
-    '@WILDERNESS_HOL.LAB3_PRODUCTION.EVAL_CONFIG/nightly_eval.yaml');
-END;
-$$;
-
-ALTER TASK WILDERNESS_HOL.LAB3_PRODUCTION.NIGHTLY_EVAL RESUME;
-
--- Run it once now, so you can see a run appear in the Evaluations tab in a few minutes.
-EXECUTE TASK WILDERNESS_HOL.LAB3_PRODUCTION.NIGHTLY_EVAL;</code></pre>
-</div>
-
-<div class="info-box success">
-    <strong>You should see</strong>
-    <p>The task created and resumed, and one run started now. In about 3 to 5 minutes a run named <code>nightly_</code> with the date and time appears on the agent's <span class="path">Evaluations</span> tab, scoring <code>production</code>, with a fourth score column, <code>wilderness_dates</code>.</p>
-</div>
-
-<div class="info-box info">
-    <strong>A metric you write yourself</strong>
-    <p>The settings file, <code>evals/nightly_eval.yaml</code> in the repository, has the same three metrics plus one more: <code>wilderness_dates</code>, a judge prompt that checks every answer used Wilderness's own trading dates. Metrics you write yourself are set in this file, not in the Evaluations tab.</p>
-</div>
-
-<div class="info-box tip">
-    <strong>It costs every night</strong>
-    <p>Each run asks the eight questions and pays the judges, about what one of your runs today cost. The task uses <code>WILDERNESS_WH</code>, so it counts toward the project budget. Stop it with <code class="chip" title="Select to copy">ALTER TASK WILDERNESS_HOL.LAB3_PRODUCTION.NIGHTLY_EVAL SUSPEND;</code>, and cleanup removes it.</p>
-</div>
-    </div>
-</div>
-<div class="step-card optional" id="step-11">
-    <div class="step-header">
-        <span class="step-number">11</span>
-        <h2 class="step-title">Add web search <span class="badge-optional">Optional</span></h2>
-        <span class="step-duration">~10 min</span>
-    </div>
-    <div class="step-content">
-<p>Some questions are not in Wilderness's data: a product recall, a supplier in the news. A web search tool lets the assistant look.</p>
-
-<div class="info-box warning">
-    <strong>This is an account setting</strong>
-    <p>Turning on web search lets any agent in the account send questions to a search service on the internet. Review it with whoever owns the account before turning it on anywhere real.</p>
-</div>
-
-<ol class="ui-steps">
-    <li>Go to <span class="path">AI &amp; ML » Agents</span>, open <span class="path">Settings</span> and turn on web search for the account.</li>
-    <li>Open <code class="chip" title="Select to copy">WILDERNESS_ASSISTANT</code>, select <span class="path">Edit</span>, open <span class="path">Tools</span> and turn on <strong>Web search</strong>. Save.</li>
-    <li>In the agent's chat in Snowsight, ask the question below.</li>
-</ol>
-
-<div class="code-block prompt">
-    <div class="code-header"><span class="code-lang">cortex code</span><button class="btn-copy" type="button">Copy</button></div>
-    <pre><code>Any tent pole recalls in Australia this year?</code></pre>
-</div>
-
-<div class="info-box success">
-    <strong>You should see</strong>
-    <p>An answer with links to the pages it found. CoWork does not change: it still uses <code>production</code>, which has no web search, until you commit a version with it, evaluate it and promote it as in Step 6.</p>
-</div>
-
-<div class="info-box tip">
-    <strong>Test it again</strong>
-    <p>Question 8 expects the assistant to say it has no weather data. With web search it might look the weather up instead. If you keep the tool, change the expected answer for question 8 and run the evaluation again.</p>
-</div>
+        <label class="completion-checkbox"><input type="checkbox" data-step="11"> Mark step 11 complete</label>
     </div>
 </div>
 <div class="step-card optional" id="step-12">
@@ -2003,8 +1834,8 @@ EXECUTE TASK WILDERNESS_HOL.LAB3_PRODUCTION.NIGHTLY_EVAL;</code></pre>
 <p>On a trial account, clean up when you are finished. The automation is the one thing that keeps spending overnight.</p>
 
 <ol class="ui-steps">
-    <li>In CoWork, ask <code class="chip" title="Select to copy">Delete my sleeping-gear automation.</code> and confirm. Or open the <span class="path">Automations</span> tab and delete it there.</li>
-    <li>In <code>lab3.sql</code>, run this block. It removes the quota, the budget, the demo user and role, the assistant from CoWork, the database and everything in it, the integrations and the warehouse.</li>
+    <li>In CoWork, ask <code class="chip" title="Select to copy">Delete my stores running out of tents automation.</code> and confirm. Or open the <span class="path">Automations</span> tab and delete it there.</li>
+    <li>In <code>lab3.sql</code>, run this block. It removes the quota, the demo store manager, the budget, the assistants from CoWork, the database and everything in it, the integrations and the warehouse, and puts the notebook compute settings back.</li>
 </ol>
 
 <div class="code-block">
@@ -2062,19 +1893,29 @@ SELECT 'Wilderness workshop removed' AS STATUS;</code></pre>
     <div class="section-container">
         <h2 class="section-title">If you get stuck</h2>
 <details class="callout stuck">
-    <summary>Step 5: use a known-good version</summary>
+    <summary>Step 1: the message says MISSING</summary>
     <div>
-        <p>If Cortex Code did not finish, or changed more than the instructions, run this instead. It opens a draft from your latest version, replaces only the response and orchestration instructions with the ones the build tested, keeps everything else, including the tool descriptions, commits, and labels the new version <code>candidate</code>. Use it only if no version is labelled <code>candidate</code> yet.</p>
+        <p>It names what is missing, and nothing was frozen. Run the setup script from Lab 1 Step 1 again. It rebuilds the production copy and leaves everything else as it was. Then run the Step 1 block again.</p>
+    </div>
+</details>
+
+<details class="callout stuck">
+    <summary>Step 5: use known-good instructions</summary>
+    <div>
+        <p>If Cortex Code did not finish, or changed more than the instructions, run this instead. It replaces only the response and orchestration instructions in the agent's draft with the ones the build tested and keeps everything else, including the tool descriptions. Then carry on with Step 6.</p>
         <div class="code-block">
     <div class="code-header"><span class="code-lang">sql</span><button class="btn-copy" type="button">Copy</button></div>
-    <pre><code>-- Lab 3 Step 5, known-good version: your agent as it is, with improved instructions only.
-ALTER AGENT WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_ASSISTANT ADD LIVE VERSION FROM LAST;
-
+    <pre><code>-- Lab 3 Step 5, known-good instructions: your agent's draft as it is, with improved instructions only.
 EXECUTE IMMEDIATE $$
 DECLARE
   v_spec VARIANT;
   v_ins VARIANT;
 BEGIN
+  -- Open a draft from the latest version if there is none yet.
+  BEGIN
+    ALTER AGENT WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_ASSISTANT ADD LIVE VERSION FROM LAST;
+  EXCEPTION WHEN OTHER THEN NULL;
+  END;
   SHOW VERSIONS IN AGENT WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_ASSISTANT;
   SELECT PARSE_JSON("agent_spec") INTO :v_spec FROM TABLE(RESULT_SCAN(LAST_QUERY_ID())) WHERE "name" IS NULL;
   v_ins := COALESCE(v_spec:instructions, OBJECT_CONSTRUCT());
@@ -2085,26 +1926,9 @@ BEGIN
   v_spec := OBJECT_INSERT(v_spec, 'instructions', v_ins, TRUE);
   EXECUTE IMMEDIATE 'ALTER AGENT WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_ASSISTANT MODIFY LIVE VERSION SET SPECIFICATION = '''
                  || REPLACE(TO_JSON(v_spec), '''', '''''') || '''';
-  RETURN 'Draft updated: new response and orchestration instructions';
+  RETURN 'Draft updated: new response and orchestration instructions. Carry on with Step 6.';
 END;
-$$;
-
-ALTER AGENT WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_ASSISTANT COMMIT COMMENT = 'Candidate: known-good instructions (Lab 3 Step 5)';
-
-EXECUTE IMMEDIATE $$
-DECLARE
-  v_version VARCHAR;
-BEGIN
-  SHOW VERSIONS IN AGENT WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_ASSISTANT;
-  SELECT "name" INTO :v_version FROM TABLE(RESULT_SCAN(LAST_QUERY_ID()))
-    WHERE "name" IS NOT NULL ORDER BY "created_on" DESC LIMIT 1;
-  EXECUTE IMMEDIATE 'ALTER AGENT WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_ASSISTANT MODIFY VERSION '
-                 || :v_version || ' SET ALIAS = candidate';
-  RETURN 'Candidate is ' || :v_version;
-END;
-$$;
-
-SHOW VERSIONS IN AGENT WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_ASSISTANT;</code></pre>
+$$;</code></pre>
 </div>
     </div>
 </details>
@@ -2115,7 +1939,7 @@ SHOW VERSIONS IN AGENT WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_ASSISTANT;</cod
         <h2 class="section-title">Further reading</h2>
         <div class="resources-grid">
             <a class="resource-card" href="https://docs.snowflake.com/en/user-guide/snowflake-cortex/cortex-agents-evaluations" target="_blank" rel="noopener"><h4>Cortex Agent evaluations</h4><p>Datasets, metrics, metric versions, comparing runs and the YAML for custom metrics.</p></a>
-            <a class="resource-card" href="https://docs.snowflake.com/en/user-guide/snowflake-cortex/cortex-analyst-evaluations" target="_blank" rel="noopener"><h4>Cortex Analyst evaluations</h4><p>Test a semantic view against its own verified queries, then Improve it.</p></a>
+            <a class="resource-card" href="https://docs.snowflake.com/en/user-guide/snowflake-cortex/cortex-analyst-evaluations" target="_blank" rel="noopener"><h4>Cortex Analyst evaluations</h4><p>Test a semantic view against its own verified queries.</p></a>
             <a class="resource-card" href="https://docs.snowflake.com/en/user-guide/snowflake-cortex/cortex-agents-versioning" target="_blank" rel="noopener"><h4>Cortex Agent versioning</h4><p>Commit, aliases, the default version and how to roll back.</p></a>
             <a class="resource-card" href="https://docs.snowflake.com/en/user-guide/budgets/per-user-quotas" target="_blank" rel="noopener"><h4>Per-user quotas</h4><p>Daily, weekly and monthly AI limits per user, with blocking within minutes.</p></a>
             <a class="resource-card" href="https://docs.snowflake.com/en/user-guide/budgets/custom-budget" target="_blank" rel="noopener"><h4>Custom budgets</h4><p>A monthly credit limit for every object with a tag, with alerts and actions.</p></a>
@@ -2127,8 +1951,12 @@ SHOW VERSIONS IN AGENT WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_ASSISTANT;</cod
 <section class="completion-section" id="completionSection">
     <div class="completion-container">
 <h2>Lab 3 complete</h2>
-<p>You measured the assistant on eight questions, found the two reasons it was wrong, fixed the definitions in the semantic view and the behaviour in a new version, proved the new version better and promoted it, with the baseline one line away. Then you set a budget for the project, a daily limit for store managers and a role that hides member emails.</p>
-<p>That is the answer to Tom's three questions: it is right, and here are the runs that show it; it will cost no more than the limits you set; and store managers see stock, sales and member names, but not members' email addresses or the raw sales lines.</p>
+<p>Tom asked two questions. You can now answer both:</p>
+<ul>
+    <li><strong>Is it right?</strong> Here are the runs that show it. You froze the assistant, measured it on eight questions, found the two reasons it was wrong, fixed the definitions in the semantic view and the behaviour in the agent, proved the new version better and promoted it, with the baseline one line away.</li>
+    <li><strong>What will it cost?</strong> You know what building it cost today and what it should cost a month, in total and per store manager. A monthly budget watches the project and a daily quota caps each person.</li>
+</ul>
+<p>The assistant is ready for 72 stores, every morning until Christmas Eve.</p>
         <div class="cta-row">
             
             <a class="btn-secondary" href="index.html">Workshop index</a>
@@ -2144,7 +1972,7 @@ SHOW VERSIONS IN AGENT WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_ASSISTANT;</cod
 <script>
 /* Wilderness workshop guide: copy buttons, copy chips, step toggles, core-only progress. */
 const STORAGE_KEY = 'workshop_wilderness_lab3_progress';
-const CORE_STEPS = [1, 2, 3, 4, 5, 6, 7, 8];
+const CORE_STEPS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
 
 function flash(el, cls, label, text, ms) {
     el.classList.add(cls);

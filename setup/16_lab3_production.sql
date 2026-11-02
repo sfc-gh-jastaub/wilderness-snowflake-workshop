@@ -176,20 +176,20 @@ CREATE OR REPLACE TABLE WILDERNESS_HOL.LAB3_PRODUCTION.AGENT_EVAL_QUESTIONS (
 
 INSERT INTO WILDERNESS_HOL.LAB3_PRODUCTION.AGENT_EVAL_QUESTIONS
 SELECT $1, $2, PARSE_JSON($3) FROM VALUES
-  (1, 'Which stores will still have too many tents on Boxing Day, and which will run out?',
-      '{"ground_truth_output": "A correct answer covers both halves. Too many tents: the overstock is concentrated in Victoria and Tasmania, led by the Summit 2P Tent, where 14 stores hold more than 7.5 weeks of cover (about 1,909 units, AUD 553,164 at cost, left on Boxing Day). Counting other tent lines as well is acceptable if the answer still names Victoria and Tasmania. Run out: 11 stores, all in NSW, QLD, run out of the Summit 3P Tent before Christmas. An answer that misses either half, or puts the overstock outside Victoria and Tasmania, is wrong.", "ground_truth_invocations": [{"tool_name": "retail_analyst"}]}'),
-  (2, 'Which stores will run out of sleeping gear before Christmas, and when?',
-      '{"ground_truth_output": "31 stores will run short of sleeping gear before 24 December, 23 of them in NSW and QLD. Most run out in the week of 7 December (27 stores); the earliest week is 2026-11-30 and the latest 2026-12-14. The shortfall is about 3,837 units, AUD 435,673 of kit sales at risk.", "ground_truth_invocations": [{"tool_name": "retail_analyst"}]}'),
-  (3, 'Customers are bringing the Summit 2P back. What are they saying, and is it worse for some batches than others?',
-      '{"ground_truth_output": "Batch B26-07 is the problem: 17.2% of Summit 2P Tents sold from it have come back (702 of 4,087), against 3.5% to 4.0% for every other batch. Customers describe two faults: the pole snapping or cracking at the hub, and the seam tape lifting so the tent leaks in rain.", "ground_truth_invocations": [{"tool_name": "retail_analyst"}, {"tool_name": "customer_feedback"}]}'),
-  (4, 'What are customers saying about the Summit 2P tent?',
-      '{"ground_truth_output": "Most Summit 2P comments are about faults: seams leaking in rain and poles cracking or snapping at the hub. Some customers praise how quick it is to pitch and how it does in dry weather. The answer quotes customers word for word.", "ground_truth_invocations": [{"tool_name": "customer_feedback"}]}'),
+  (1, 'What are customers saying about our tents?',
+      '{"ground_truth_output": "Most tent comments are about the Summit Tent (853 of 1,856), and about half of those describe two faults: the pole cracking or snapping at the hub, and the seams leaking in rain, most of them from batch B26-07. Its average rating is 3.4 out of 5, against 3.9 for the other tents, which customers mostly rate well. The answer quotes customers word for word.", "ground_truth_invocations": [{"tool_name": "customer_feedback"}]}'),
+  (2, 'Where will we run out of tents before Christmas, and where will we have tents left over?',
+      '{"ground_truth_output": "33 stores, all in NSW and QLD, run out of tents before Christmas, around 18 December if the forecast holds, about 2,966 tents short. The other 39 stores, in ACT, SA, TAS, VIC, WA, will have about 5,212 tents left over after Christmas Eve. An answer that misses either half, or puts the shortfall outside NSW and QLD, is wrong.", "ground_truth_invocations": [{"tool_name": "retail_analyst"}]}'),
+  (3, 'What is the Summit Tent''s return rate, and what do customers say when they bring one back?',
+      '{"ground_truth_output": "The Summit Tent''s return rate is 5.1% across all batches. Batch B26-07 is worse: 18.1% of the Summit Tents sold from it have come back (655 of 3,620), against 3.0% to 4.1% for every other batch. Customers who bring one back describe two faults: the pole cracking or snapping at the hub, and the seams leaking in rain.", "ground_truth_invocations": [{"tool_name": "retail_analyst"}, {"tool_name": "customer_feedback"}]}'),
+  (4, 'Customers are bringing the Summit Tent back. What are they saying, and is one batch worse? Chart the return rate by batch.',
+      '{"ground_truth_output": "Customers describe two faults: the pole cracking or snapping at the hub, and the seams leaking in rain. Batch B26-07 is worse: 18.1% of the Summit Tents sold from it have come back (655 of 3,620), against 3.0% to 4.1% for every other batch. The answer includes a chart of the return rate by batch.", "ground_truth_invocations": [{"tool_name": "customer_feedback"}, {"tool_name": "retail_analyst"}, {"tool_name": "data_to_chart"}]}'),
   (5, 'What were net sales over the launch weekend last year?',
-      '{"ground_truth_output": "Over the launch weekend last year, 1 to 3 November 2025, net sales were AUD 5,955,928.", "ground_truth_invocations": [{"tool_name": "retail_analyst"}]}'),
+      '{"ground_truth_output": "Over the launch weekend last year, 1 to 3 November 2025, net sales were AUD 5,457,940.", "ground_truth_invocations": [{"tool_name": "retail_analyst"}]}'),
   (6, 'What were net sales last financial year?',
-      '{"ground_truth_output": "Net sales in the last financial year, FY26 (1 July 2025 to 30 June 2026), were AUD 378,017,732.", "ground_truth_invocations": [{"tool_name": "retail_analyst"}]}'),
+      '{"ground_truth_output": "Net sales in the last financial year, FY26 (1 July 2025 to 30 June 2026), were AUD 351,478,452.", "ground_truth_invocations": [{"tool_name": "retail_analyst"}]}'),
   (7, 'How many tents did we sell over the launch weekend last year?',
-      '{"ground_truth_output": "Wilderness sold 2,249 tents over the launch weekend last year, 1 to 3 November 2025.", "ground_truth_invocations": [{"tool_name": "retail_analyst"}]}'),
+      '{"ground_truth_output": "Wilderness sold 1,844 tents over the launch weekend last year, 1 to 3 November 2025.", "ground_truth_invocations": [{"tool_name": "retail_analyst"}]}'),
   (8, 'What''s the weather in Byron Bay on Christmas Day?',
       '{"ground_truth_output": "The agent says it has no weather data and does not guess. It offers to answer questions about Wilderness sales, stock, returns or customer feedback instead. It does not send the user to other websites or apps.", "ground_truth_invocations": []}');
 
