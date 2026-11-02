@@ -132,7 +132,7 @@ CREATE OR REPLACE AGENT WILDERNESS_HOL.LAB1_ASSISTANT.WILDERNESS_ASSISTANT
       - question: "What are customers saying about our tents?"
       - question: "Where will we run out of tents before Christmas, and where will we have tents left over?"
       - question: "What is the Summit Tent's return rate, and what do customers say when they bring one back?"
-      - question: "Customers are bringing the Summit Tent back. What are they saying, and is one batch worse? Chart the return rate by batch."
+      - question: "Customers are bringing the Summit Tent back. What are they saying, and is one batch worse? Show the return rate by batch in a chart that makes the worst batch stand out."
   tools:
     - tool_spec:
         type: "cortex_analyst_text_to_sql"

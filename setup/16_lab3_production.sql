@@ -131,7 +131,7 @@ CREATE OR REPLACE AGENT WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_ASSISTANT
       - question: "What are customers saying about our tents?"
       - question: "Where will we run out of tents before Christmas, and where will we have tents left over?"
       - question: "What is the Summit Tent's return rate, and what do customers say when they bring one back?"
-      - question: "Customers are bringing the Summit Tent back. What are they saying, and is one batch worse? Chart the return rate by batch."
+      - question: "Customers are bringing the Summit Tent back. What are they saying, and is one batch worse? Show the return rate by batch in a chart that makes the worst batch stand out."
   tools:
     - tool_spec:
         type: "cortex_analyst_text_to_sql"
@@ -182,7 +182,7 @@ SELECT $1, $2, PARSE_JSON($3) FROM VALUES
       '{"ground_truth_output": "33 stores, all in NSW and QLD, run out of tents before Christmas, around 18 December if the forecast holds, about 2,966 tents short. The other 39 stores, in ACT, SA, TAS, VIC, WA, will have about 5,212 tents left over after Christmas Eve. An answer that misses either half, or puts the shortfall outside NSW and QLD, is wrong.", "ground_truth_invocations": [{"tool_name": "retail_analyst"}]}'),
   (3, 'What is the Summit Tent''s return rate, and what do customers say when they bring one back?',
       '{"ground_truth_output": "The Summit Tent''s return rate is 5.1% across all batches. Batch B26-07 is worse: 18.1% of the Summit Tents sold from it have come back (655 of 3,620), against 3.0% to 4.1% for every other batch. Customers who bring one back describe two faults: the pole cracking or snapping at the hub, and the seams leaking in rain.", "ground_truth_invocations": [{"tool_name": "retail_analyst"}, {"tool_name": "customer_feedback"}]}'),
-  (4, 'Customers are bringing the Summit Tent back. What are they saying, and is one batch worse? Chart the return rate by batch.',
+  (4, 'Customers are bringing the Summit Tent back. What are they saying, and is one batch worse? Show the return rate by batch in a chart that makes the worst batch stand out.',
       '{"ground_truth_output": "Customers describe two faults: the pole cracking or snapping at the hub, and the seams leaking in rain. Batch B26-07 is worse: 18.1% of the Summit Tents sold from it have come back (655 of 3,620), against 3.0% to 4.1% for every other batch. The answer includes a chart of the return rate by batch.", "ground_truth_invocations": [{"tool_name": "customer_feedback"}, {"tool_name": "retail_analyst"}, {"tool_name": "data_to_chart"}]}'),
   (5, 'What were net sales over the launch weekend last year?',
       '{"ground_truth_output": "Over the launch weekend last year, 1 to 3 November 2025, net sales were AUD 5,457,940.", "ground_truth_invocations": [{"tool_name": "retail_analyst"}]}'),

@@ -1173,8 +1173,8 @@ SELECT 'https://app.snowflake.com/' || LOWER(CURRENT_ORGANIZATION_NAME()) || '/'
 
 <ol class="ui-steps">
     <li>In the same Workspace, open the <span class="path">Cortex Code</span> panel.</li>
-    <li>Paste the prompt below and send it.</li>
-    <li>The first time Cortex Code asks to run a statement, choose <span class="path">Always allow</span>, so it runs each one without asking again.</li>
+    <li>Paste the prompt below.</li>
+    <li>Before you send it, change the approvals setting at the bottom of the panel from <span class="path">Default approvals</span> to <span class="path">Bypass approvals</span>, so Cortex Code runs each statement without stopping to ask.</li>
 </ol>
 
 <p>Prompt 0:</p>
@@ -1267,7 +1267,7 @@ Give me a business overview of what is in WILDERNESS_HOL.RAW, written for a stor
 <p>Prompt 3:</p>
 <div class="code-block prompt">
     <div class="code-header"><span class="code-lang">cortex code</span><button class="btn-copy" type="button">Copy</button></div>
-    <pre><code>Improve SV_WILDERNESS_RETAIL: add a RETURN_RATE metric (units returned / units sold), synonyms for tent, Christmas range, returns and left over, and two verified queries: the return rate by batch, and the stores running out of tents. Then give me a short summary of what you changed.</code></pre>
+    <pre><code>Improve SV_WILDERNESS_RETAIL: add a RETURN_RATE metric (units returned / units sold), synonyms for tent, Christmas range, returns and left over, and two verified queries written against the semantic view's own tables, not RAW: the return rate by batch, and the stores running out of tents. Then give me a short summary of what you changed.</code></pre>
 </div>
 
 <div class="info-box success">
@@ -1297,7 +1297,7 @@ Give me a business overview of what is in WILDERNESS_HOL.RAW, written for a stor
 <p>Prompt 4:</p>
 <div class="code-block prompt">
     <div class="code-header"><span class="code-lang">cortex code</span><button class="btn-copy" type="button">Copy</button></div>
-    <pre><code>Create agent WILDERNESS_ASSISTANT, display name Wilderness Assistant, for 72 store managers, with three tools: retail_analyst (Cortex Analyst on SV_WILDERNESS_RETAIL), customer_feedback (Cortex Search on CSS_CUSTOMER_FEEDBACK) and data_to_chart. Warehouse WILDERNESS_WH. Instructions: plain Australian English, answer first, AUD, and say when the data cannot answer. Add four sample questions: one that needs only the customer comments, one that needs only the numbers, one simple one that needs both, and one harder one that needs both. Then add it to CoWork and show me it is listed.</code></pre>
+    <pre><code>Create agent WILDERNESS_ASSISTANT, display name Wilderness Assistant, for 72 store managers, with three tools: retail_analyst (Cortex Analyst on SV_WILDERNESS_RETAIL), customer_feedback (Cortex Search on CSS_CUSTOMER_FEEDBACK) and data_to_chart. Warehouse WILDERNESS_WH. Instructions: plain Australian English, answer first, AUD, and say when the data cannot answer. Add four sample questions: one that needs only the customer comments, one that needs only the numbers, one simple one that needs both, and one harder one that needs both and asks for a chart worth keeping. Then add it to CoWork and show me it is listed.</code></pre>
 </div>
 
 <div class="info-box success">
@@ -1326,7 +1326,7 @@ Give me a business overview of what is in WILDERNESS_HOL.RAW, written for a stor
 <p>CoWork shows the agent's sample questions, so a store manager does not have to start from a blank box. For each question the agent picks its tools: the numbers, the comments, or both in one answer. The thinking steps show which it used. A question that needs both, counting the returns, quoting the customers and charting the result, is the one no report or chatbot answers on its own.</p>
 
 <ol class="ui-steps">
-    <li>Open <a href="https://ai.snowflake.com" target="_blank" rel="noopener">ai.snowflake.com</a> in a new tab and sign in with the same account.</li>
+    <li>Open <a href="https://ai.snowflake.com" target="_blank" rel="noopener">ai.snowflake.com</a> in a new tab and sign in with the same account, or in Snowsight go to <span class="path">Snowflake » AI » CoWork</span>.</li>
     <li>Choose <span class="path">Wilderness Assistant</span>.</li>
     <li>Select the four sample questions Cortex Code wrote for it, one at a time, in one conversation, ending with the harder one.</li>
 </ol>
@@ -1354,7 +1354,7 @@ Give me a business overview of what is in WILDERNESS_HOL.RAW, written for a stor
 <p>Harder: both, with a chart.</p>
 <div class="code-block prompt">
     <div class="code-header"><span class="code-lang">cowork</span><button class="btn-copy" type="button">Copy</button></div>
-    <pre><code>Customers are bringing the Summit Tent back. What are they saying, and is one batch worse? Chart the return rate by batch.</code></pre>
+    <pre><code>Customers are bringing the Summit Tent back. What are they saying, and is one batch worse? Show the return rate by batch in a chart that makes the worst batch stand out.</code></pre>
 </div>
 
 <div class="info-box success">
@@ -1364,13 +1364,13 @@ Give me a business overview of what is in WILDERNESS_HOL.RAW, written for a stor
         <li><strong>Comments only</strong> (<code>customer_feedback</code>): most tent comments are happy, but one tent stands out, the Summit Tent, with poles snapping and seams leaking.</li>
         <li><strong>Numbers only</strong> (<code>retail_analyst</code>): every store in New South Wales and Queensland, 33 in all, runs out around 18 December, about 3,000 tents short; every other store, 39 in all, has tents left over, about 5,200 on Boxing Day.</li>
         <li><strong>Both, simple:</strong> the Summit Tent's return rate with customers quoted on why.</li>
-        <li><strong>Both, harder:</strong> comments quoted word for word about poles snapping at the hub and seams leaking, batch <code>B26-07</code> coming back at about 18% against 4% for the other batch, and a chart.</li>
+        <li><strong>Both, harder:</strong> comments quoted word for word about poles snapping at the hub and seams leaking, batch <code>B26-07</code> coming back at about 18% against about 4% for every other batch, and a chart of the return rate by batch with <code>B26-07</code> standing out.</li>
     </ul>
 </div>
 
 <div class="info-box info">
     <strong>Keep this conversation open</strong>
-    <p>You save a chart in Step 8 and schedule a question in Step 9.</p>
+    <p>You save the chart from the harder question in Step 8.</p>
 </div>
         <label class="completion-checkbox"><input type="checkbox" data-step="7"> Mark step 7 complete</label>
     </div>
@@ -1387,13 +1387,14 @@ Give me a business overview of what is in WILDERNESS_HOL.RAW, written for a stor
 <p>An artifact keeps it: a saved chart that reruns its query when you open it.</p>
 
 <ol class="ui-steps">
-    <li>On the return-rate chart from Step 7, select <span class="path">Save</span>. If none of your answers had a chart, ask the harder question from the list in Step 7.</li>
-    <li>Open the <span class="path">Artifacts</span> hub, then <span class="path">Saved</span>, and open the chart.</li>
+    <li>On the return-rate chart from Step 7, select <span class="path">Explore</span>. If none of your answers had a chart, ask the harder question from the list in Step 7.</li>
+    <li>Select <span class="path">Save as favourite</span>.</li>
+    <li>Go to the <span class="path">Artifacts</span> hub and open the chart.</li>
 </ol>
 
 <div class="info-box success">
     <strong>You should see</strong>
-    <p>The chart in your saved artifacts, with the date it last ran.</p>
+    <p>The chart in the <span class="path">Artifacts</span> hub, marked as a favourite, with the date it last ran.</p>
 </div>
 
 <div class="info-box tip">
@@ -1415,9 +1416,9 @@ Give me a business overview of what is in WILDERNESS_HOL.RAW, written for a stor
 <p>An automation asks a question again on a schedule and emails you the answer.</p>
 
 <ol class="ui-steps">
-    <li>In the same conversation, ask the question below.</li>
-    <li>Confirm the schedule CoWork proposes.</li>
-    <li>Open the <span class="path">Automations</span> tab to see it with its next run time.</li>
+    <li>Open the <span class="path">Automations</span> tab and select <span class="path">Create in chat</span>.</li>
+    <li>Paste the prompt below and send it.</li>
+    <li>Confirm the schedule CoWork proposes. The automation appears in the <span class="path">Automations</span> tab with its next run time.</li>
     <li>Open the automation and select <span class="path">Run now</span>, so you do not have to wait for the hour.</li>
 </ol>
 
@@ -1457,20 +1458,31 @@ Give me a business overview of what is in WILDERNESS_HOL.RAW, written for a stor
 </ol>
 <p>Read it: <a href="https://github.com/sfc-gh-jastaub/wilderness-snowflake-workshop/blob/main/skills/christmas-trading-report/SKILL.md" target="_blank" rel="noopener">SKILL.md in the repository</a>.</p>
 
-<p>Back in Cortex Code, one prompt adds the skill and the two things it needs: code execution for its script, and a tool that sends the email.</p>
+<p>Go back to Snowsight and, in the Cortex Code panel, paste this prompt. It copies the skill into a stage the agent reads from, then adds the skill and the two things it needs: code execution for its script, and a tool that sends the email.</p>
 
 <p>Prompt 5:</p>
 <div class="code-block prompt">
     <div class="code-header"><span class="code-lang">cortex code</span><button class="btn-copy" type="button">Copy</button></div>
-    <pre><code>Add the skill at @WILDERNESS_HOL.SETUP.WORKSHOP_REPO/branches/main/skills/christmas-trading-report to WILDERNESS_ASSISTANT, with the code execution tool and a custom tool send_report_email for the procedure LAB1_ASSISTANT.SEND_REPORT_EMAIL on WILDERNESS_WH. Use send_report_email only inside that skill.</code></pre>
+    <pre><code>First create stage WILDERNESS_HOL.LAB1_ASSISTANT.SKILLS with a directory table, copy
+@WILDERNESS_HOL.SETUP.WORKSHOP_REPO/branches/main/skills/christmas-trading-report/ into
+@WILDERNESS_HOL.LAB1_ASSISTANT.SKILLS/skills/christmas-trading-report/, and refresh the stage.
+
+Then update agent WILDERNESS_HOL.LAB1_ASSISTANT.WILDERNESS_ASSISTANT in place (ALTER AGENT ... MODIFY LIVE VERSION, keep every existing instruction, tool and sample question so it stays listed in CoWork). Add:
+1. Skill christmas-trading-report, source type STAGE, path @WILDERNESS_HOL.LAB1_ASSISTANT.SKILLS/skills/christmas-trading-report
+2. The code_execution tool, running without asking for approval (permission_policy always_allow), so the skill can run render_report.py.
+3. A custom (generic) tool send_report_email for WILDERNESS_HOL.LAB1_ASSISTANT.SEND_REPORT_EMAIL(SUBJECT VARCHAR, HTML_BODY VARCHAR) on WILDERNESS_WH, both arguments required.
+
+In the orchestration instructions, tell the agent to follow the christmas-trading-report skill step by step without stopping to ask the user for confirmation. Use send_report_email only in step 4 of that skill: say so in the tool description and the orchestration instructions, and refuse any other email request.
+
+Then run DESCRIBE AGENT and SHOW AGENTS IN SNOWFLAKE INTELLIGENCE SNOWFLAKE_INTELLIGENCE_OBJECT_DEFAULT to confirm.</code></pre>
 </div>
 
 <div class="info-box success">
     <strong>You should see</strong>
-    <p>The agent's tools now include <code>code_execution</code> and <code>send_report_email</code> next to the other three, and one skill, <code>christmas-trading-report</code>.</p>
+    <p>The stage <code>SKILLS</code> with the skill's files in it. Then <code>DESCRIBE AGENT</code> shows the tools <code>code_execution</code> and <code>send_report_email</code> next to the other three, one skill, <code>christmas-trading-report</code>, and the four sample questions still there. <code>SHOW AGENTS IN SNOWFLAKE INTELLIGENCE</code> still lists <code>WILDERNESS_ASSISTANT</code>.</p>
 </div>
 
-<p>In CoWork, start a new conversation with the Wilderness Assistant and ask the question below. When CoWork asks whether it may run code, allow it.</p>
+<p>In CoWork, start a new conversation with the Wilderness Assistant and ask the question below.</p>
 
 <div class="code-block prompt">
     <div class="code-header"><span class="code-lang">cowork</span><button class="btn-copy" type="button">Copy</button></div>
