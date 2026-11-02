@@ -31,6 +31,10 @@
    "title": "Hand it to the merchandising team"
   },
   {
+   "id": "step-5b",
+   "title": "Ask the assistant from inside the app"
+  },
+  {
    "id": "step-6",
    "title": "Write it up as a notebook"
   },
@@ -1002,10 +1006,10 @@ a.lab-card:hover { box-shadow: var(--shadow-md); border-color: var(--sf-blue); c
         <h1 class="hero-title">From the answer to a plan for every store</h1>
         <p class="hero-subtitle">Turn the raw data into a plan for every store: what to send back, what to move and what to reorder, kept up to date by Snowflake and handed to the merchandising team as an app. You ask Cortex Code for each piece in plain English; it writes and runs the SQL.</p>
         <div class="hero-meta">
-            <div class="meta-item"><span class="meta-label">Core</span><span class="meta-value">40 min, 5 steps</span></div>
+            <div class="meta-item"><span class="meta-label">Core</span><span class="meta-value">48 min, 6 steps</span></div>
             <div class="meta-item"><span class="meta-label">Optional</span><span class="meta-value">23 min, 2 steps</span></div>
             <div class="meta-item"><span class="meta-label">You use</span><span class="meta-value">Workspaces and Cortex Code</span></div>
-            <div class="meta-item"><span class="meta-label">Code</span><span class="meta-value">None typed. 5 prompts</span></div>
+            <div class="meta-item"><span class="meta-label">Code</span><span class="meta-value">None typed. 6 prompts</span></div>
         </div>
     </div>
 </section>
@@ -1034,6 +1038,7 @@ a.lab-card:hover { box-shadow: var(--shadow-md); border-color: var(--sf-blue); c
                     <span class="tech-tag">AI_COMPLETE</span>
                     <span class="tech-tag">Dynamic tables</span>
                     <span class="tech-tag">Streamlit in Snowflake</span>
+                    <span class="tech-tag">Cortex Agents</span>
                     <span class="tech-tag">Notebooks (optional)</span>
                     <span class="tech-tag">Snowflake App Runtime (optional)</span>
                 </div>
@@ -1054,6 +1059,7 @@ a.lab-card:hover { box-shadow: var(--shadow-md); border-color: var(--sf-blue); c
             <a class="step-nav-item" href="#step-3" data-step="3"><span class="nav-index">3</span><span class="nav-text">A sleeping-bag offer for this week's tent buyers</span><span class="nav-time">7 min</span></a>
             <a class="step-nav-item" href="#step-4" data-step="4"><span class="nav-index">4</span><span class="nav-text">The plan, as a dynamic table</span><span class="nav-time">8 min</span></a>
             <a class="step-nav-item" href="#step-5" data-step="5"><span class="nav-index">5</span><span class="nav-text">Hand it to the merchandising team</span><span class="nav-time">10 min</span></a>
+            <a class="step-nav-item" href="#step-5b" data-step="5b"><span class="nav-index">5b</span><span class="nav-text">Ask the assistant from inside the app</span><span class="nav-time">8 min</span></a>
             <a class="step-nav-item optional" href="#step-6" data-step="6"><span class="nav-index">6</span><span class="nav-text">Write it up as a notebook</span><span class="nav-time">8 min</span></a>
             <a class="step-nav-item optional" href="#step-7" data-step="7"><span class="nav-index">7</span><span class="nav-text">Rebuild the app in Next.js</span><span class="nav-time">15 min</span></a>
         </div>
@@ -1065,7 +1071,7 @@ a.lab-card:hover { box-shadow: var(--shadow-md); border-color: var(--sf-blue); c
     <p>By the end the merchandising team has one action for every store: what to send back, what to move and what to reorder by 13 November, in a plan that keeps itself up to date. And the Basecamp members who bought a tent without a sleeping bag have an offer email waiting, written for review.</p>
 </div>
 
-<p>Lab 2 works from the raw data the setup script loaded. It does not need anything you built in Lab 1. If a step does not finish, <a href="#stuck">If you get stuck</a> at the bottom of this page has a block that builds the finished lab for you.</p>
+<p>Lab 2 works from the raw data the setup script loaded. Only Step 5b uses something you built in Lab 1: the Wilderness Assistant. If a step does not finish, or you did not build the assistant, <a href="#stuck">If you get stuck</a> at the bottom of this page has a block that builds it for you.</p>
 
 <div class="step-card" id="step-1">
     <div class="step-header">
@@ -1199,7 +1205,7 @@ For each store, take its tents on hand and leave out the B26-07 ones, since thos
     <div class="step-content">
 <p>The merchandising team will not open a Workspace. Give them the plan as an app: send back, move, reorder, and where.</p>
 
-<p>Streamlit in Snowflake runs a Python app next to the data, and each person who opens it reads the data with their own rights. For a bigger build like this, Cortex Code's <strong>Plan</strong> mode first writes out what it will build and waits for you to approve it, so you can correct the plan before any code is written.</p>
+<p>Streamlit in Snowflake runs a Python app next to the data. The app runs with its owner's rights, so the people you share it with see what it shows them without needing access to the tables behind it. For a bigger build like this, Cortex Code's <strong>Plan</strong> mode first writes out what it will build and waits for you to approve it, so you can correct the plan before any code is written.</p>
 
 <ol class="ui-steps">
     <li>In the Cortex Code panel, switch the mode from <span class="path">Agent</span> to <span class="path">Plan</span>.</li>
@@ -1226,9 +1232,50 @@ Below that, add a state filter. Then put a store map next to a bar chart of the 
 
 <div class="info-box tip">
     <strong>Switch back to Agent mode</strong>
-    <p>Plan mode stays on for the next prompt. Switch back to <span class="path">Agent</span> before Step 6.</p>
+    <p>Plan mode stays on for the next prompt. Switch back to <span class="path">Agent</span> before Step 5b.</p>
 </div>
         <label class="completion-checkbox"><input type="checkbox" data-step="5"> Mark step 5 complete</label>
+    </div>
+</div>
+<div class="step-card" id="step-5b">
+    <div class="step-header">
+        <span class="step-number">5b</span>
+        <h2 class="step-title">Ask the assistant from inside the app</h2>
+        <span class="step-duration">~8 min</span>
+    </div>
+    <div class="step-content">
+<p>The app tells the merchandising team what to do in each state. Before they move a tent, they want to know why: what customers there are saying. The Wilderness Assistant you built this morning already knows, and the team should not have to leave the app for CoWork to ask it.</p>
+
+<p>An agent is not tied to CoWork. The same agent, with the same tools and instructions, can be called from SQL, from the REST API or from an app. <code>SNOWFLAKE.CORTEX.DATA_AGENT_RUN</code> sends it a question and returns its whole answer as JSON, so a Streamlit app can ask it with one query and show the text and any chart it sends back.</p>
+
+<p>In the Cortex Code panel, in <span class="path">Agent</span> mode, paste:</p>
+
+<p>Prompt 5b:</p>
+<div class="code-block prompt">
+    <div class="code-header"><span class="code-lang">cortex code</span><button class="btn-copy" type="button">Copy</button></div>
+    <pre><code>Add an "Ask the Wilderness Assistant" box to the CHRISTMAS_PLANNER app, under the state filter. Send each question to the agent WILDERNESS_HOL.LAB1_ASSISTANT.WILDERNESS_ASSISTANT with SNOWFLAKE.CORTEX.DATA_AGENT_RUN, and add the selected state to the question so the answer is about that state. Pass the question as a bind parameter, not pasted into the SQL. Show a spinner while it works, then the answer text and any chart it returns. Start the box with "What are customers in this state telling us about tents they couldn't find?". If the agent does not exist, say so in the app instead of failing.</code></pre>
+</div>
+
+<div class="info-box success">
+    <strong>You should see</strong>
+    <p>The app again, with the new box under the state filter. Pick NSW and send the starting question: after up to a minute, the answer quotes New South Wales customers who went to a store and found no tent, most of them after the Overland 3P, under tiles that show every NSW store as <code>MOVE IN</code>. Pick VIC and ask again: few or none, because Victoria has tents to spare. The wording will differ from your neighbour's.</p>
+</div>
+
+<div class="info-box info">
+    <strong>The same assistant, a different door</strong>
+    <p>The app asks the agent the store managers use in CoWork, with the same tools and instructions. Improve the agent once, as you do in Lab 3, and the app and CoWork both get the better answer. Questions from the app are billed to Cortex Agents rather than CoWork; Lab 3 counts both.</p>
+</div>
+
+<div class="info-box warning">
+    <strong>The app asks as its owner</strong>
+    <p>A Streamlit in Snowflake app runs with its owner's rights, so the assistant answers with everything the owner can see. Today that is you. Before the team uses it, give the app an owner role that sees only what the merchandising team should.</p>
+</div>
+
+<div class="info-box tip">
+    <strong>No Wilderness Assistant in your account?</strong>
+    <p>This step asks the assistant you built in Lab 1. If you did not build it, <a href="#stuck">If you get stuck</a> at the bottom of this page has a block that builds it in about a minute.</p>
+</div>
+        <label class="completion-checkbox"><input type="checkbox" data-step="5b"> Mark step 5b complete</label>
     </div>
 </div>
 <div class="step-card optional" id="step-6">
@@ -1301,7 +1348,19 @@ Below that, add a state filter. Then put a store map next to a bar chart of the 
     <pre><code>ALTER GIT REPOSITORY WILDERNESS_HOL.SETUP.WORKSHOP_REPO FETCH;
 EXECUTE IMMEDIATE FROM @WILDERNESS_HOL.SETUP.WORKSHOP_REPO/branches/main/setup/91_catch_up_lab2.sql;</code></pre>
 </div>
-        <p>Then open <span class="path">Projects » Streamlit</span> and select <code>CHRISTMAS_PLANNER</code>.</p>
+        <p>Then open <span class="path">Projects » Streamlit</span> and select <code>CHRISTMAS_PLANNER</code>. The finished app does not have the assistant box from Step 5b: run Prompt 5b to add it.</p>
+    </div>
+</details>
+
+<details class="callout stuck">
+    <summary>Step 5b: no Wilderness Assistant in your account</summary>
+    <div>
+        <p>Step 5b asks the assistant you built in Lab 1. If you did not build it, run this in your SQL file. It is the Lab 1 catch-up: it builds the feedback search, the semantic view and the Wilderness Assistant in <code>LAB1_ASSISTANT</code> and adds the assistant to CoWork. It takes about a minute, and running it again replaces what it built. Then run Prompt 5b.</p>
+        <div class="code-block">
+    <div class="code-header"><span class="code-lang">sql</span><button class="btn-copy" type="button">Copy</button></div>
+    <pre><code>ALTER GIT REPOSITORY WILDERNESS_HOL.SETUP.WORKSHOP_REPO FETCH;
+EXECUTE IMMEDIATE FROM @WILDERNESS_HOL.SETUP.WORKSHOP_REPO/branches/main/setup/90_catch_up_lab1.sql;</code></pre>
+</div>
     </div>
 </details>
 
@@ -1349,7 +1408,8 @@ $$;</code></pre>
             <a class="resource-card" href="https://docs.snowflake.com/en/sql-reference/functions/ai_classify" target="_blank" rel="noopener"><h4>AI_CLASSIFY</h4><p>Classify text into the labels you give it, on every row, in SQL.</p></a>
             <a class="resource-card" href="https://docs.snowflake.com/en/sql-reference/functions/ai_complete" target="_blank" rel="noopener"><h4>AI_COMPLETE</h4><p>Generate text with a large language model from a prompt, on every row, in SQL.</p></a>
             <a class="resource-card" href="https://docs.snowflake.com/en/user-guide/dynamic-tables/overview" target="_blank" rel="noopener"><h4>Dynamic tables</h4><p>Write a query once; Snowflake keeps its result up to date as the source data changes.</p></a>
-            <a class="resource-card" href="https://docs.snowflake.com/en/developer-guide/streamlit/about-streamlit" target="_blank" rel="noopener"><h4>Streamlit in Snowflake</h4><p>Python data apps that run next to the data and read it with your rights.</p></a>
+            <a class="resource-card" href="https://docs.snowflake.com/en/developer-guide/streamlit/about-streamlit" target="_blank" rel="noopener"><h4>Streamlit in Snowflake</h4><p>Python data apps that run next to the data, with the app owner's rights.</p></a>
+            <a class="resource-card" href="https://docs.snowflake.com/en/sql-reference/functions/data_agent_run-snowflake-cortex" target="_blank" rel="noopener"><h4>DATA_AGENT_RUN</h4><p>Run a Cortex Agent from SQL and get its whole answer back as JSON.</p></a>
             <a class="resource-card" href="https://docs.snowflake.com/en/user-guide/cortex-code/cortex-code-snowsight/changelog" target="_blank" rel="noopener"><h4>Cortex Code in Snowsight</h4><p>What is new in the Cortex Code panel, including approval modes.</p></a>
             <a class="resource-card" href="https://docs.snowflake.com/en/user-guide/ui-snowsight/notebooks-in-workspaces/notebooks-in-workspaces-overview" target="_blank" rel="noopener"><h4>Notebooks in Workspaces</h4><p>Jupyter notebooks in a Workspace, with SQL and Python cells that run next to the data.</p></a>
             <a class="resource-card" href="https://docs.snowflake.com/en/developer-guide/snowflake-app-runtime/about-snowflake-app-runtime" target="_blank" rel="noopener"><h4>Snowflake App Runtime</h4><p>Build and run Next.js web apps inside Snowflake, next to the data.</p></a>
@@ -1367,7 +1427,7 @@ $$;</code></pre>
     <li><strong>Reorder:</strong> about 2,900 tents for New South Wales and Queensland, by 13 November.</li>
 </ul>
 <p>About 700 Basecamp members who bought a tent without a sleeping bag have an offer, with the emails written for review.</p>
-<p>You built it from the raw data with five prompts and typed no code: comments read by one AI function, emails written by another, a plan that Snowflake keeps up to date, and an app the merchandising team opens.</p>
+<p>You built it from the raw data with six prompts and typed no code: comments read by one AI function, emails written by another, a plan that Snowflake keeps up to date, and an app the merchandising team opens, with this morning's assistant answering inside it.</p>
 <p>The plan exists. The question left is whether it can be trusted every morning until Christmas Eve. That is Tom Walsh's question, and the technical track answers it in Lab 3.</p>
         <div class="cta-row">
             <a class="btn-primary" href="lab3_advanced.html">Continue to Lab 3 &rarr;</a>
@@ -1384,7 +1444,7 @@ $$;</code></pre>
 <script>
 /* Wilderness workshop guide: copy buttons, copy chips, step toggles, core-only progress. */
 const STORAGE_KEY = 'workshop_wilderness_lab2_progress';
-const CORE_STEPS = [1, 2, 3, 4, 5];
+const CORE_STEPS = [1, 2, 3, 4, 5, "5b"];
 
 function flash(el, cls, label, text, ms) {
     el.classList.add(cls);
