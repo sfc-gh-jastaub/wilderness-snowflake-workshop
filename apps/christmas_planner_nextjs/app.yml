@@ -8,6 +8,9 @@ query_warehouse: WILDERNESS_WH
 label: 'Christmas Tent Planner'
 description: 'Map of every store coloured by MOVE IN / MOVE OUT, with Christmas tent KPIs and a nearest-store transfer plan.'
 icon: public/icon.svg
+# Suspend after 30 idle minutes so the sample app stops using credits; the next visit wakes it.
+auto_resume: true
+auto_suspend_secs: 1800
 
 build:
   commands:
