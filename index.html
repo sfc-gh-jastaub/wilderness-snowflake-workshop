@@ -6,7 +6,7 @@
 <meta name="snowflake-source" content="cortex-agent-authored">
 <title>Wilderness Outfitters: Christmas Trading with an AI Workforce</title>
 <script type="application/json" id="snowflake-report-metadata">{
- "generated": "2026-10-29",
+ "generated": "2026-11-02",
  "intent": "Workshop landing page",
  "producerNotes": "Built by _build/build.py from _build/src/guides/index.html."
 }</script>
@@ -985,17 +985,17 @@ a.lab-card:hover { box-shadow: var(--shadow-md); border-color: var(--sf-blue); c
 <section class="content-section alt-bg">
     <div class="section-container">
         <h2 class="section-title">The brief</h2>
-        <p>Wilderness Outfitters is a big-box Australian outdoor retailer: 72 stores across every state and the ACT, plus online, selling camping, hiking, fishing, kayaking and snow gear, with about 180,000 Basecamp loyalty members. The eight weeks from 1 November to Christmas Eve are camping season and bring in about a quarter of the year's sales.</p>
-        <p>Last Christmas Wilderness sold out of tents in the second week of December, so this year it bought 40% more tents than it sold last Christmas, for every store. Sleeping bags, mats, stoves and lights were bought as usual.</p>
+        <p>Wilderness Outfitters is a big-box Australian outdoor retailer: 72 stores across every state and the ACT, selling camping, hiking, fishing, kayaking and snow gear, with about 180,000 Basecamp loyalty members. The eight weeks from 1 November to Christmas Eve are camping season and bring in about a quarter of the year's sales.</p>
+        <p>Last Christmas Wilderness ran out of tents early in the season, so this year it bought 40% more tents for every store in every state.</p>
         <p>It is Wednesday 4 November 2026. The Christmas catalogue launched on Sunday 1 November. Wilderness calls the first three days of Christmas trading, Sunday to Tuesday, the launch weekend, and this year's was the biggest first three days of Christmas trading it has had.</p>
         <blockquote class="brief">
-            "We bet on tents. We bought 40% more than we sold last Christmas and sent them to every store. Three days into our launch weekend, the bet looks right in Sydney and Brisbane and wrong in Melbourne and Hobart. We bought sleeping gear as usual, and every family with a new tent needs somewhere to sleep. And some of the Summit 2P tents on our catalogue cover are coming back broken, and they need to go back to the supplier. Stores have to reorder by 13 November. Every morning until Christmas Eve, my store managers need to know what to move, what to reorder and what to send back."
+            "We bet on tents. We bought 40% more than we sold last Christmas and sent them to every store. Three days into our launch weekend, the bet looks right in Sydney and Brisbane and wrong everywhere else. And some of the Summit Tents on our catalogue cover are coming back broken, and they need to go back to the supplier. Stores have to reorder by 13 November. Every morning until Christmas Eve, my store managers need to know what to move, what to reorder and what to send back."
             <cite>Martha Thompson, Chief Customer Officer</cite>
         </blockquote>
 
         <div class="figure-row">
-            <div><b>72</b>stores, plus online</div>
-            <div><b>+40%</b>tents, sleeping gear as usual</div>
+            <div><b>72</b>stores, in every state and the ACT</div>
+            <div><b>+40%</b>tents, in every store</div>
             <div><b>13 Nov</b>last day for stores to reorder</div>
             <div><b>20,000</b>customer comments, unread</div>
         </div>
@@ -1003,17 +1003,17 @@ a.lab-card:hover { box-shadow: var(--shadow-md); border-color: var(--sf-blue); c
         <h3>How it works today</h3>
         <p>Each of Martha's three questions has an answer somewhere. None of them reaches a store manager by opening time.</p>
         <ul>
-            <li><strong>What to move.</strong> Sales come from the tills and the website overnight, and head office's weekly sales report reaches stores on a Monday, after the weekend it describes. Stock on hand and on order sit in the merchandising system, by store and by batch. Seeing which stores will run out of tents and which will have tents left on Boxing Day means exporting both into a spreadsheet and matching them by hand.</li>
-            <li><strong>What to reorder.</strong> Sleeping gear was bought for last year's tent sales. Working out which stores run short, and when, means the same spreadsheet again plus last Christmas's baskets, and it has to be done before the 13 November reorder deadline.</li>
+            <li><strong>What to move.</strong> Sales come from the tills overnight, and head office's weekly sales report reaches stores on a Monday, after the weekend it describes. Stock sits in the merchandising system, by store and by batch. Seeing which stores will run out of tents and which will have tents left on Boxing Day means exporting both into a spreadsheet and matching them by hand.</li>
+            <li><strong>What to reorder.</strong> Whatever the moves cannot cover has to be reordered before the 13 November deadline. Working out how many tents, store by store, means the same spreadsheet again.</li>
             <li><strong>What to send back.</strong> The supplier takes back tents that are really faulty. The returns desk codes almost every tent return "faulty", from a snapped pole to a customer who could not pitch the tent. What the customer actually said is in a free-text note nobody reads.</li>
-            <li><strong>The customers.</strong> Reviews, returns notes and post-purchase surveys add up to twenty thousand comments. They are where the broken Summit 2P tents showed up first.</li>
+            <li><strong>The customers.</strong> Reviews, returns notes and contact-centre messages add up to twenty thousand comments. They are where the broken Summit Tents showed up first.</li>
         </ul>
         <p>It takes a merchandising analyst most of a day to pull that together for one question in one state. Martha needs it for every store, every morning, until Christmas Eve.</p>
         <p>Your firm has been engaged to help. You are the team that builds it, in one day, in your own Snowflake account.</p>
         <div class="cast">
             <div><strong>Martha Thompson</strong><br>Chief Customer Officer. Owns the Christmas brief.</div>
             <div><strong>The store managers</strong><br>72 of them. They ask the assistant in CoWork, not Snowsight, and get an email every morning. Lab 1.</div>
-            <div><strong>The merchandising team</strong><br>Own the stock plan for every store, and the sleeping-gear offer to Basecamp members. Lab 2.</div>
+            <div><strong>The merchandising team</strong><br>Own the plan for every store, and the sleeping-bag offer to Basecamp members. Lab 2.</div>
             <div><strong>Tom Walsh</strong><br>Head of Data &amp; Analytics. Wants to know it is right, what it costs and who sees what. Lab 3.</div>
         </div>
     </div>
@@ -1026,15 +1026,15 @@ a.lab-card:hover { box-shadow: var(--shadow-md); border-color: var(--sf-blue); c
             <a class="lab-card" href="lab1_cowork.html">
                 <span class="lab-when">Morning · 60 min</span>
                 <h3>Lab 1: Your Christmas assistant in CoWork</h3>
-                <p>This lab answers: <strong>Where do we stand?</strong> The store managers get an assistant in CoWork that answers from the numbers and from what customers say, and an email every morning with the stores short of sleeping gear.</p>
+                <p>This lab answers: <strong>Where do we stand?</strong> The store managers get an assistant in CoWork that answers from the numbers and from what customers say, and an email every morning with the stores running out of tents.</p>
                 <p><em>Cortex Code, search, a semantic view, an agent, CoWork, artifacts and automations. No code.</em></p>
                 <span class="lab-go">Open Lab 1 &rarr;</span>
             </a>
             <a class="lab-card" href="lab2_workspaces.html">
-                <span class="lab-when">Morning · 60 min</span>
+                <span class="lab-when">Morning · 45 min</span>
                 <h3>Lab 2: From the answer to a plan for every store</h3>
-                <p>This lab answers: <strong>What do we do, store by store?</strong> The merchandising team gets one action for every store and Christmas product, real faults counted apart from first-time campers, and the members to offer sleeping gear to.</p>
-                <p><em>Workspaces, Cortex Code, an AI function, a notebook that publishes a view, an app on that view.</em></p>
+                <p>This lab answers: <strong>What do we do, store by store?</strong> The merchandising team gets one action for every store (send back, move or reorder), real faults counted apart from first-time campers, and an offer for the tent buyers who left without a sleeping bag.</p>
+                <p><em>Cortex Code, two AI functions, a dynamic table and an app. No code.</em></p>
                 <span class="lab-go">Open Lab 2 &rarr;</span>
             </a>
             <a class="lab-card" href="lab3_advanced.html">
