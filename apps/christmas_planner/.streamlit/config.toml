@@ -1,0 +1,17 @@
+# Wilderness Outfitters theme. Warehouse-runtime apps read only [theme] and [theme.sidebar].
+[theme]
+base = "light"
+font = "Inter:https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+primaryColor = "#1E5631"
+backgroundColor = "#FFFFFF"
+secondaryBackgroundColor = "#F2F6F1"
+textColor = "#1C2B22"
+linkColor = "#1E5631"
+borderColor = "#D5E0D3"
+baseRadius = "0.6rem"
+showWidgetBorder = true
+greenColor = "#2E7D46"
+redColor = "#C0392B"
+orangeColor = "#C77C1E"
+dataframeHeaderBackgroundColor = "#E6EEE4"
+chartCategoricalColors = ["#2E7D46", "#C0392B", "#C77C1E", "#3B6E8F", "#7A5C99", "#8C8C8C"]
