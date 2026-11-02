@@ -1244,21 +1244,26 @@ Below that, add a state filter. Then put a store map next to a bar chart of the 
         <span class="step-duration">~8 min</span>
     </div>
     <div class="step-content">
-<p>The app tells the merchandising team what to do in each state. Before they move a tent, they want to know why: what customers there are saying. The Wilderness Assistant you built this morning already knows, and the team should not have to leave the app for CoWork to ask it.</p>
+<p>The app tells the merchandising team what to do in each state. Before they send tents back to Kestrel, they want to know why: what customers there are saying. The Wilderness Assistant you built this morning already knows, and the team should not have to leave the app for CoWork to ask it.</p>
 
-<p>An agent is not tied to CoWork. The same agent, with the same tools and instructions, can be called from SQL, from the REST API or from an app. <code>SNOWFLAKE.CORTEX.DATA_AGENT_RUN</code> sends it a question and returns its whole answer as JSON, so a Streamlit app can ask it with one query and show the text and any chart it sends back.</p>
+<p>An agent is not tied to CoWork. The same agent, with the same tools and instructions, can be called from SQL, from the REST API or from an app. <code>SNOWFLAKE.CORTEX.DATA_AGENT_RUN</code> sends it a question and returns its whole answer as JSON, so a Streamlit app can ask it with one query and show the text, tables and charts it sends back.</p>
 
 <p>In the Cortex Code panel, in <span class="path">Agent</span> mode, paste:</p>
 
 <p>Prompt 5b:</p>
 <div class="code-block prompt">
     <div class="code-header"><span class="code-lang">cortex code</span><button class="btn-copy" type="button">Copy</button></div>
-    <pre><code>Add an "Ask the Wilderness Assistant" box to the CHRISTMAS_PLANNER app, under the state filter. Send each question to the agent WILDERNESS_HOL.LAB1_ASSISTANT.WILDERNESS_ASSISTANT with SNOWFLAKE.CORTEX.DATA_AGENT_RUN, and add the selected state to the question so the answer is about that state. Pass the question as a bind parameter, not pasted into the SQL. Show a spinner while it works, then the answer text and any chart it returns. Start the box with "What are customers in this state telling us about tents they couldn't find?". If the agent does not exist, say so in the app instead of failing.</code></pre>
+    <pre><code>Add an "Ask the Wilderness Assistant" box to the CHRISTMAS_PLANNER app, under the state filter. Send each question to the agent WILDERNESS_HOL.LAB1_ASSISTANT.WILDERNESS_ASSISTANT with SNOWFLAKE.CORTEX.DATA_AGENT_RUN, and add the selected state to the question so the answer is about that state. Build the request JSON in Python and pass it as a bind parameter, so the question never becomes part of the SQL. Show a spinner while it works, then the answer text and any tables and charts it returns. Start the box with "Why are customers in this state bringing tents back?". If the agent does not exist, say so in the app instead of failing. Then commit the change as a new version of the app, so everyone who opens it gets the box.</code></pre>
 </div>
 
 <div class="info-box success">
     <strong>You should see</strong>
-    <p>The app again, with the new box under the state filter. Pick NSW and send the starting question: after up to a minute, the answer quotes New South Wales customers who went to a store and found no tent, most of them after the Overland 3P, under tiles that show every NSW store as <code>MOVE IN</code>. Pick VIC and ask again: few or none, because Victoria has tents to spare. The wording will differ from your neighbour's.</p>
+    <p>The app again, with the new box under the state filter. Pick NSW and send the starting question. After 20 seconds to a minute, the answer splits New South Wales tent returns by reason, mostly change of mind and faults, and quotes customers on the Summit Tent: poles cracking at the hub and seams leaking. It usually names batch <code>B26-07</code> and adds a table or chart of returns by reason. Pick VIC and ask again: the same faults, because the faulty batch was sent to every state. That is why every state has tents to send back. The wording will differ from your neighbour's.</p>
+</div>
+
+<div class="info-box tip">
+    <strong>An error under the answer?</strong>
+    <p>Cortex Code writes the code that reads the answer, and it can trip on a table or chart it did not expect. Paste the error into the Cortex Code panel and ask it to fix the app. If it still fails, <a href="#stuck">If you get stuck</a> has a block that deploys a tested version of the app with the box in it.</p>
 </div>
 
 <div class="info-box info">
@@ -1348,7 +1353,7 @@ Below that, add a state filter. Then put a store map next to a bar chart of the 
     <pre><code>ALTER GIT REPOSITORY WILDERNESS_HOL.SETUP.WORKSHOP_REPO FETCH;
 EXECUTE IMMEDIATE FROM @WILDERNESS_HOL.SETUP.WORKSHOP_REPO/branches/main/setup/91_catch_up_lab2.sql;</code></pre>
 </div>
-        <p>Then open <span class="path">Projects » Streamlit</span> and select <code>CHRISTMAS_PLANNER</code>. The finished app does not have the assistant box from Step 5b: run Prompt 5b to add it.</p>
+        <p>Then open <span class="path">Projects » Streamlit</span> and select <code>CHRISTMAS_PLANNER</code>. The finished app includes the assistant box from Step 5b, which needs the Wilderness Assistant from Lab 1.</p>
     </div>
 </details>
 
@@ -1361,6 +1366,25 @@ EXECUTE IMMEDIATE FROM @WILDERNESS_HOL.SETUP.WORKSHOP_REPO/branches/main/setup/9
     <pre><code>ALTER GIT REPOSITORY WILDERNESS_HOL.SETUP.WORKSHOP_REPO FETCH;
 EXECUTE IMMEDIATE FROM @WILDERNESS_HOL.SETUP.WORKSHOP_REPO/branches/main/setup/90_catch_up_lab1.sql;</code></pre>
 </div>
+    </div>
+</details>
+
+<details class="callout stuck">
+    <summary>Step 5b: deploy the tested app with the assistant box</summary>
+    <div>
+        <p>If Prompt 5b did not finish, or the box shows an error you cannot fix, run this in your SQL file. It replaces <code>CHRISTMAS_PLANNER</code> with the finished app from the workshop repository: the same tiles and table, with the assistant box under the state filter. It reads <code>CHRISTMAS_PLAN</code> as the first block on this page builds it, so if you built your plan with Cortex Code and the app shows an error about a column, run that block first.</p>
+        <div class="code-block">
+    <div class="code-header"><span class="code-lang">sql</span><button class="btn-copy" type="button">Copy</button></div>
+    <pre><code>ALTER GIT REPOSITORY WILDERNESS_HOL.SETUP.WORKSHOP_REPO FETCH;
+CREATE OR REPLACE STREAMLIT WILDERNESS_HOL.LAB2_ANALYTICS.CHRISTMAS_PLANNER
+  FROM '@WILDERNESS_HOL.SETUP.WORKSHOP_REPO/branches/main/apps/christmas_planner/'
+  MAIN_FILE = 'streamlit_app.py'
+  QUERY_WAREHOUSE = WILDERNESS_WH
+  RUNTIME_NAME = 'SYSTEM$WAREHOUSE_RUNTIME'
+  TITLE = 'Christmas planner';
+ALTER STREAMLIT WILDERNESS_HOL.LAB2_ANALYTICS.CHRISTMAS_PLANNER ADD LIVE VERSION FROM LAST;</code></pre>
+</div>
+        <p>Then open <span class="path">Projects » Streamlit</span> and select <code>CHRISTMAS_PLANNER</code>.</p>
     </div>
 </details>
 

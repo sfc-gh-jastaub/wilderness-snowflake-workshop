@@ -1,8 +1,11 @@
+import json
+
 import pandas as pd
 import streamlit as st
 from snowflake.snowpark.context import get_active_session
 
 PLAN = "WILDERNESS_HOL.LAB2_ANALYTICS.CHRISTMAS_PLAN"
+AGENT = "WILDERNESS_HOL.LAB1_ASSISTANT.WILDERNESS_ASSISTANT"
 NUMERIC = ["LATITUDE", "LONGITUDE", "TENTS_ON_HAND", "TENTS_TO_SEND_BACK", "FORECAST_TO_XMAS", "GAP"]
 
 session = get_active_session()
@@ -32,6 +35,50 @@ plan["REORDER_UNITS"] = (-plan["GAP"] * (1 - covered)).where(plan["GAP"] < 0, 0)
 states = ["All states"] + sorted(plan["STATE"].unique())
 state = st.selectbox("State", states)
 view = plan if state == "All states" else plan[plan["STATE"] == state]
+
+
+def ask_agent(question):
+    # The request is built in Python and bound as one parameter, so the question never becomes SQL text.
+    body = json.dumps({"messages": [{"role": "user", "content": [{"type": "text", "text": question}]}]})
+    raw = session.sql(f"SELECT SNOWFLAKE.CORTEX.DATA_AGENT_RUN('{AGENT}', ?)", params=[body]).collect()[0][0]
+    return json.loads(raw)
+
+
+def show_table(result_set):
+    cols = [c["name"] for c in result_set["resultSetMetaData"]["rowType"]]
+    df = pd.DataFrame(result_set["data"], columns=cols)
+    for col in df.columns:
+        # The result set sends every value as text; make a column numeric only if all of it converts.
+        num = pd.to_numeric(df[col], errors="coerce")
+        if num.notna().sum() == df[col].notna().sum():
+            df[col] = num
+    st.dataframe(df, hide_index=True)
+
+
+st.subheader("Ask the Wilderness Assistant")
+with st.form("ask_assistant"):
+    question = st.text_area("Question", "Why are customers in this state bringing tents back?")
+    asked = st.form_submit_button("Ask")
+if asked and question.strip():
+    scope = "all states" if state == "All states" else f"the state of {state}"
+    with st.spinner("The Wilderness Assistant is working on it..."):
+        try:
+            answer = ask_agent(f"{question.strip()} Answer for {scope}.")
+        except Exception as e:
+            answer = {"message": str(e)}
+    if "content" not in answer:
+        # A missing agent comes back as an error object (code 399513), not as an exception.
+        if answer.get("code") == "399513":
+            st.warning(f"There is no Wilderness Assistant at {AGENT} yet. Build it in Lab 1, or run the Lab 1 catch-up.")
+        else:
+            st.error(f"The assistant could not answer: {answer.get('message', answer)}")
+    for item in answer.get("content", []):
+        if item.get("type") == "text" and item["text"].strip():
+            st.markdown(item["text"])
+        elif item.get("type") == "table":
+            show_table(item["table"]["result_set"])
+        elif item.get("type") == "chart":
+            st.vega_lite_chart(json.loads(item["chart"]["chart_spec"]), use_container_width=True)
 
 moving_out = view.loc[view["GAP"] > 0, "MOVE_UNITS"].sum()
 moving_in = view.loc[view["GAP"] < 0, "MOVE_UNITS"].sum()
