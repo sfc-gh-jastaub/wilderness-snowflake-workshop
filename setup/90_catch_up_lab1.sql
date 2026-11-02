@@ -3,7 +3,7 @@
 -- The Lab 1 assistant, built by SQL, for anyone whose prompts did not finish:
 --   Step 3  the customer feedback search service
 --   Step 5  the semantic view with RETURN_RATE, synonyms and two verified queries
---   Step 6  the Wilderness Assistant, its three tools and four sample questions, added to CoWork
+--   Step 6  the Wilderness Assistant, its four tools and four sample questions, added to CoWork
 -- Everything goes into WILDERNESS_HOL.LAB1_ASSISTANT. Running it again replaces what it built.
 -- =====================================================================================
 USE ROLE ACCOUNTADMIN;
@@ -111,7 +111,7 @@ CREATE OR REPLACE SEMANTIC VIEW WILDERNESS_HOL.LAB1_ASSISTANT.SV_WILDERNESS_RETA
   )
   WITH TAG (WILDERNESS_HOL.SETUP.PROJECT = 'wilderness_christmas');
 
--- The Wilderness Assistant and its three tools
+-- The Wilderness Assistant and its tools
 CREATE OR REPLACE AGENT WILDERNESS_HOL.LAB1_ASSISTANT.WILDERNESS_ASSISTANT
   COMMENT = 'Wilderness Outfitters Christmas trading assistant for store managers and merchandisers'
   PROFILE = '{"display_name": "Wilderness Assistant"}'
@@ -154,6 +154,9 @@ CREATE OR REPLACE AGENT WILDERNESS_HOL.LAB1_ASSISTANT.WILDERNESS_ASSISTANT
         type: "data_to_chart"
         name: "data_to_chart"
         description: "Charts the results of retail_analyst"
+    - tool_spec:
+        type: "code_execution"
+        name: "code_execution"
   tool_resources:
     retail_analyst:
       semantic_view: "WILDERNESS_HOL.LAB1_ASSISTANT.SV_WILDERNESS_RETAIL"

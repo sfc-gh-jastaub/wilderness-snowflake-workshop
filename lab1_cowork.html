@@ -6,7 +6,7 @@
 <meta name="snowflake-source" content="cortex-agent-authored">
 <title>Lab 1: Your Christmas assistant in CoWork</title>
 <script type="application/json" id="snowflake-report-metadata">{
- "generated": "2026-11-02",
+ "generated": "2026-11-03",
  "intent": "Lab 1: Your Christmas assistant in CoWork",
  "producerNotes": "Built by _build/build.py from _build/src/guides. Figures were measured on the build account; screenshots are captured at the dry run.",
  "sections": [
@@ -1018,7 +1018,7 @@ a.lab-card:hover { box-shadow: var(--shadow-md); border-color: var(--sf-blue); c
         <h1 class="hero-title">Your Christmas assistant in CoWork</h1>
         <p class="hero-subtitle">Build an assistant that tells Wilderness's store managers where they stand this Christmas, from the numbers and from what customers say, and emails them every morning. You ask Cortex Code for each piece in plain English; it writes and runs the SQL.</p>
         <div class="hero-meta">
-            <div class="meta-item"><span class="meta-label">Core</span><span class="meta-value">50 min, 9 steps</span></div>
+            <div class="meta-item"><span class="meta-label">Core</span><span class="meta-value">52 min, 9 steps</span></div>
             <div class="meta-item"><span class="meta-label">Optional</span><span class="meta-value">10 min, 1 step</span></div>
             <div class="meta-item"><span class="meta-label">You use</span><span class="meta-value">Cortex Code in Snowsight, and CoWork</span></div>
             <div class="meta-item"><span class="meta-label">Code</span><span class="meta-value">None. One paste, then prompts</span></div>
@@ -1055,7 +1055,7 @@ a.lab-card:hover { box-shadow: var(--shadow-md); border-color: var(--sf-blue); c
                     <li>Ask Cortex Code what the data holds, in business terms.</li>
                     <li>Make 20,000 customer comments searchable with Cortex Search.</li>
                     <li>Find out what the semantic view knows, then teach it Wilderness's words.</li>
-                    <li>Create the Wilderness Assistant with three tools (the numbers, the customer comments and charts) and put it in CoWork.</li>
+                    <li>Create the Wilderness Assistant with four tools (the numbers, the customer comments, charts and code) and put it in CoWork.</li>
                     <li>Ask it where you stand, from the numbers, from what customers say and from both, then save the answer and have it emailed every morning.</li>
                 </ul>
             </div>
@@ -1078,7 +1078,7 @@ a.lab-card:hover { box-shadow: var(--shadow-md); border-color: var(--sf-blue); c
             <a class="step-nav-item" href="#step-5" data-step="5"><span class="nav-index">5</span><span class="nav-text">Teach the semantic view Wilderness's words</span><span class="nav-time">8 min</span></a>
             <a class="step-nav-item" href="#step-6" data-step="6"><span class="nav-index">6</span><span class="nav-text">Create the agent and put it in CoWork</span><span class="nav-time">8 min</span></a>
             <a class="step-nav-item" href="#step-7" data-step="7"><span class="nav-index">7</span><span class="nav-text">Use it in CoWork</span><span class="nav-time">8 min</span></a>
-            <a class="step-nav-item" href="#step-8" data-step="8"><span class="nav-index">8</span><span class="nav-text">Keep the answer: artifacts</span><span class="nav-time">4 min</span></a>
+            <a class="step-nav-item" href="#step-8" data-step="8"><span class="nav-index">8</span><span class="nav-text">Keep the answer: artifacts</span><span class="nav-time">6 min</span></a>
             <a class="step-nav-item" href="#step-9" data-step="9"><span class="nav-index">9</span><span class="nav-text">Schedule it: automations</span><span class="nav-time">5 min</span></a>
             <a class="step-nav-item optional" href="#step-10" data-step="10"><span class="nav-index">10</span><span class="nav-text">Brief Martha: a skill that emails a report</span><span class="nav-time">10 min</span></a>
             <a class="step-nav-item optional" href="#step-11" data-step="11"><span class="nav-index">11</span><span class="nav-text">Continue to Lab 2</span><span class="nav-time">1 min</span></a>
@@ -1286,23 +1286,24 @@ Give me a business overview of what is in WILDERNESS_HOL.RAW, written for a stor
     <div class="step-content">
 <p>You now have the comments and the numbers ready to be asked. The store managers need one place to ask both, and they will not open Snowsight. They use CoWork, the chat app at ai.snowflake.com.</p>
 
-<p>An agent answers a question by choosing tools and putting the results together. This one gets three:</p>
+<p>An agent answers a question by choosing tools and putting the results together. This one gets four:</p>
 <ul>
     <li><strong>Cortex Analyst</strong>, for numbers, through the semantic view.</li>
     <li><strong>Cortex Search</strong>, for what customers said.</li>
     <li><strong>Data to Chart</strong>, which turns a result into a chart.</li>
+    <li><strong>Code execution</strong>, which writes and runs Python. In Step 8 it builds an HTML page from your answers.</li>
 </ul>
 <p>Its instructions tell it who it is talking to and how to answer. CoWork lists only the agents an administrator adds to it, so the same prompt adds this one.</p>
 
 <p>Prompt 4:</p>
 <div class="code-block prompt">
     <div class="code-header"><span class="code-lang">cortex code</span><button class="btn-copy" type="button">Copy</button></div>
-    <pre><code>Create agent WILDERNESS_ASSISTANT, display name Wilderness Assistant, for 72 store managers, with three tools: retail_analyst (Cortex Analyst on SV_WILDERNESS_RETAIL), customer_feedback (Cortex Search on CSS_CUSTOMER_FEEDBACK) and data_to_chart. Warehouse WILDERNESS_WH. Instructions: plain Australian English, answer first, AUD, and say when the data cannot answer. Add four sample questions: one that needs only the customer comments, one that needs only the numbers, one simple one that needs both, and one harder one that needs both and asks for a chart worth keeping. Then add it to CoWork and show me it is listed.</code></pre>
+    <pre><code>Create agent WILDERNESS_ASSISTANT, display name Wilderness Assistant, for 72 store managers, with four tools: retail_analyst (Cortex Analyst on SV_WILDERNESS_RETAIL), customer_feedback (Cortex Search on CSS_CUSTOMER_FEEDBACK), data_to_chart and code_execution. Warehouse WILDERNESS_WH. Instructions: plain Australian English, answer first, AUD, and say when the data cannot answer. Add four sample questions: one that needs only the customer comments, one that needs only the numbers, one simple one that needs both, and one harder one that needs both and asks for a chart worth keeping. Then add it to CoWork and show me it is listed.</code></pre>
 </div>
 
 <div class="info-box success">
     <strong>You should see</strong>
-    <p>The agent created with three tools, <code>retail_analyst</code>, <code>customer_feedback</code> and <code>data_to_chart</code>, the instructions and four sample questions Cortex Code wrote for it, and a list that includes <code>WILDERNESS_ASSISTANT</code> in CoWork.</p>
+    <p>The agent created with four tools, <code>retail_analyst</code>, <code>customer_feedback</code>, <code>data_to_chart</code> and <code>code_execution</code>, the instructions and four sample questions Cortex Code wrote for it, and a list that includes <code>WILDERNESS_ASSISTANT</code> in CoWork.</p>
 </div>
 
 <details class="callout">
@@ -1379,7 +1380,7 @@ Give me a business overview of what is in WILDERNESS_HOL.RAW, written for a stor
     <div class="step-header">
         <span class="step-number">8</span>
         <h2 class="step-title">Keep the answer: artifacts</h2>
-        <span class="step-duration">~4 min</span>
+        <span class="step-duration">~6 min</span>
     </div>
     <div class="step-content">
 <p>The return-rate chart from the harder question is worth keeping. Tomorrow, with a new day of returns, someone will want it again, and a chat answer disappears into the history.</p>
@@ -1400,6 +1401,24 @@ Give me a business overview of what is in WILDERNESS_HOL.RAW, written for a stor
 <div class="info-box tip">
     <strong>It reruns its query</strong>
     <p>The chart reruns its SQL when you refresh it, with your own access rights. A question like "last 30 days" moves forward each time; fixed dates stay fixed. A shared conversation is different: it is a snapshot and never reruns.</p>
+</div>
+
+<p>CoWork can also turn the conversation into a file: a PDF, Word, PowerPoint or HTML page. It writes the file with the agent's code execution tool, the fourth tool you gave it in Step 6.</p>
+
+<p>Go back to the Step 7 conversation and ask:</p>
+<div class="code-block prompt">
+    <div class="code-header"><span class="code-lang">cowork</span><button class="btn-copy" type="button">Copy</button></div>
+    <pre><code>Generate an interesting HTML diagram for this.</code></pre>
+</div>
+
+<div class="info-box success">
+    <strong>You should see</strong>
+    <p>A code step in the thinking steps, then an HTML page shown in the chat, built from the conversation: batch <code>B26-07</code> coming back at about 18% against about 4% for the other batches, with what customers said about the poles and seams. If CoWork asks before it runs code, allow it. The design is CoWork's choice, so yours will differ from your neighbour's.</p>
+</div>
+
+<div class="info-box info">
+    <strong>A snapshot, not a rerun</strong>
+    <p>Unlike the saved chart, the HTML page does not rerun anything. It shows the numbers as they were when CoWork made it. HTML generation in CoWork is in preview.</p>
 </div>
         <label class="completion-checkbox"><input type="checkbox" data-step="8"> Mark step 8 complete</label>
     </div>
@@ -1458,7 +1477,7 @@ Give me a business overview of what is in WILDERNESS_HOL.RAW, written for a stor
 </ol>
 <p>Read it: <a href="https://github.com/sfc-gh-jastaub/wilderness-snowflake-workshop/blob/main/skills/christmas-trading-report/SKILL.md" target="_blank" rel="noopener">SKILL.md in the repository</a>.</p>
 
-<p>Go back to Snowsight and, in the Cortex Code panel, paste this prompt. It copies the skill into a stage the agent reads from, then adds the skill and the two things it needs: code execution for its script, and a tool that sends the email.</p>
+<p>Go back to Snowsight and, in the Cortex Code panel, paste this prompt. It copies the skill into a stage the agent reads from, then adds the skill and a tool that sends the email, and lets code execution, which the agent has had since Step 6, run the skill's script without asking.</p>
 
 <p>Prompt 5:</p>
 <div class="code-block prompt">
@@ -1469,7 +1488,7 @@ Give me a business overview of what is in WILDERNESS_HOL.RAW, written for a stor
 
 Then update agent WILDERNESS_HOL.LAB1_ASSISTANT.WILDERNESS_ASSISTANT in place (ALTER AGENT ... MODIFY LIVE VERSION, keep every existing instruction, tool and sample question so it stays listed in CoWork). Add:
 1. Skill christmas-trading-report, source type STAGE, path @WILDERNESS_HOL.LAB1_ASSISTANT.SKILLS/skills/christmas-trading-report
-2. The code_execution tool, running without asking for approval (permission_policy always_allow), so the skill can run render_report.py.
+2. Set the existing code_execution tool to run without asking for approval (permission_policy always_allow), so the skill can run render_report.py.
 3. A custom (generic) tool send_report_email for WILDERNESS_HOL.LAB1_ASSISTANT.SEND_REPORT_EMAIL(SUBJECT VARCHAR, HTML_BODY VARCHAR) on WILDERNESS_WH, both arguments required.
 
 In the orchestration instructions, tell the agent to follow the christmas-trading-report skill step by step without stopping to ask the user for confirmation. Use send_report_email only in step 4 of that skill: say so in the tool description and the orchestration instructions, and refuse any other email request.
@@ -1479,7 +1498,7 @@ Then run DESCRIBE AGENT and SHOW AGENTS IN SNOWFLAKE INTELLIGENCE SNOWFLAKE_INTE
 
 <div class="info-box success">
     <strong>You should see</strong>
-    <p>The stage <code>SKILLS</code> with the skill's files in it. Then <code>DESCRIBE AGENT</code> shows the tools <code>code_execution</code> and <code>send_report_email</code> next to the other three, one skill, <code>christmas-trading-report</code>, and the four sample questions still there. <code>SHOW AGENTS IN SNOWFLAKE INTELLIGENCE</code> still lists <code>WILDERNESS_ASSISTANT</code>.</p>
+    <p>The stage <code>SKILLS</code> with the skill's files in it. Then <code>DESCRIBE AGENT</code> shows the tool <code>send_report_email</code> next to the other four, one skill, <code>christmas-trading-report</code>, and the four sample questions still there. <code>SHOW AGENTS IN SNOWFLAKE INTELLIGENCE</code> still lists <code>WILDERNESS_ASSISTANT</code>.</p>
 </div>
 
 <p>In CoWork, start a new conversation with the Wilderness Assistant and ask the question below.</p>
@@ -1553,7 +1572,7 @@ EXECUTE IMMEDIATE FROM @WILDERNESS_HOL.SETUP.WORKSHOP_REPO/branches/main/setup/9
     <div class="completion-container">
 <h2>Lab 1 complete</h2>
 <p>The store managers now know where they stand. Tents run out in New South Wales and Queensland and are left over everywhere else. Customers are bringing back one batch of the Summit Tent. The stores running out of tents arrive in their inbox every morning.</p>
-<p>In an hour, and in plain English, you made 20,000 comments searchable, taught a semantic view Wilderness's words, built an assistant with three tools, put it in front of the store managers, kept a chart and scheduled a report. Cortex Code wrote and ran every statement; you read what it did.</p>
+<p>In an hour, and in plain English, you made 20,000 comments searchable, taught a semantic view Wilderness's words, built an assistant with four tools, put it in front of the store managers, kept a chart and scheduled a report. Cortex Code wrote and ran every statement; you read what it did.</p>
 <p>Next, an analyst goes past the assistant and turns the raw data into a plan for every store.</p>
         <div class="cta-row">
             <a class="btn-primary" href="lab2_workspaces.html">Continue to Lab 2 &rarr;</a>

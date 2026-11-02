@@ -110,7 +110,7 @@ CREATE OR REPLACE SEMANTIC VIEW WILDERNESS_HOL.LAB3_PRODUCTION.SV_WILDERNESS_RET
   )
   WITH TAG (WILDERNESS_HOL.SETUP.PROJECT = 'wilderness_christmas');
 
--- The Wilderness Assistant and its three tools
+-- The Wilderness Assistant and its tools
 CREATE OR REPLACE AGENT WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_ASSISTANT
   COMMENT = 'Wilderness Outfitters Christmas trading assistant for store managers and merchandisers'
   PROFILE = '{"display_name": "Wilderness Assistant (production)"}'
