@@ -6,45 +6,41 @@
 <meta name="snowflake-source" content="cortex-agent-authored">
 <title>Lab 2: From the answer to a plan for every store</title>
 <script type="application/json" id="snowflake-report-metadata">{
- "generated": "2026-10-29",
+ "generated": "2026-11-02",
  "intent": "Lab 2: From the answer to a plan for every store",
  "producerNotes": "Built by _build/build.py from _build/src/guides. Figures were measured on the build account; screenshots are captured at the dry run.",
  "sections": [
   {
    "id": "step-1",
-   "title": "Open a Workspace and brief Cortex Code"
+   "title": "Start a notebook and ask what is in the data"
   },
   {
    "id": "step-2",
-   "title": "Check the assistant before you build on it"
+   "title": "Where the tents are, and where the buyers are"
   },
   {
    "id": "step-3",
-   "title": "Build the stock plan in a notebook, with an AI function"
+   "title": "Which tents are broken"
   },
   {
    "id": "step-4",
-   "title": "The other half of the sleeping-gear problem"
+   "title": "The plan, as a dynamic table"
   },
   {
    "id": "step-5",
-   "title": "Ship it as an app"
+   "title": "A sleeping-bag offer for this week's tent buyers"
   },
   {
    "id": "step-6",
-   "title": "Martha's answer"
+   "title": "Hand it to the merchandising team"
   },
   {
    "id": "step-7",
-   "title": "Ask Cortex Code to explain the logic"
+   "title": "Run the morning's work every day with Pipeline Builder"
   },
   {
    "id": "step-8",
-   "title": "Add a state filter and a map"
-  },
-  {
-   "id": "step-9",
-   "title": "Document the notebook"
+   "title": "Rebuild the app in Next.js"
   }
  ]
 }</script>
@@ -1008,12 +1004,12 @@ a.lab-card:hover { box-shadow: var(--shadow-md); border-color: var(--sf-blue); c
     <div class="hero-container">
         <span class="hero-badge">Lab 2 of 3 · Morning</span>
         <h1 class="hero-title">From the answer to a plan for every store</h1>
-        <p class="hero-subtitle">Check the morning's answer against the raw data, sort customer comments with an AI function, build the Christmas stock plan in a notebook, find the Basecamp members to offer sleeping gear to, and ship it all as an app that writes their emails. You write prompts, not code.</p>
+        <p class="hero-subtitle">Turn the raw data into a plan for every store: what to send back, what to move and what to reorder, kept up to date by Snowflake and handed to the merchandising team as an app. You ask Cortex Code for each piece in plain English; it writes and runs the SQL.</p>
         <div class="hero-meta">
-            <div class="meta-item"><span class="meta-label">Core</span><span class="meta-value">60 min, 6 steps</span></div>
-            <div class="meta-item"><span class="meta-label">Optional</span><span class="meta-value">20 min, 3 steps</span></div>
+            <div class="meta-item"><span class="meta-label">Core</span><span class="meta-value">42 min, 6 steps</span></div>
+            <div class="meta-item"><span class="meta-label">Optional</span><span class="meta-value">25 min, 2 steps</span></div>
             <div class="meta-item"><span class="meta-label">You use</span><span class="meta-value">Workspaces and Cortex Code</span></div>
-            <div class="meta-item"><span class="meta-label">Code</span><span class="meta-value">None typed. 12 prompts</span></div>
+            <div class="meta-item"><span class="meta-label">Code</span><span class="meta-value">None typed. 6 prompts</span></div>
         </div>
     </div>
 </section>
@@ -1023,33 +1019,28 @@ a.lab-card:hover { box-shadow: var(--shadow-md); border-color: var(--sf-blue); c
 <section id="overview" class="content-section alt-bg">
     <div class="section-container">
         <h2 class="section-title">Overview</h2>
-        <div class="overview-grid">
-            <div class="overview-card">
-                <h3>What you will build</h3>
-                <ul class="learning-list">
-                    <li>Open a Workspace and brief Cortex Code: the raw data, where to build, and the rules for the session.</li>
-                    <li>Check the assistant against the raw data: where tent demand is, where the tents are, and the sleeping gear that goes with them.</li>
-                    <li>Sort every Summit 2P return comment with AI_CLASSIFY, so real faults are counted apart from first-time campers.</li>
-                    <li>Build the Christmas stock plan in a notebook and publish it as the view V_CHRISTMAS_STOCK_RISK.</li>
-                    <li>Find the Basecamp members who bought a tent without sleeping gear, and offer it only where the store has it.</li>
-                    <li>Ship it as a Streamlit app that narrows every tent sold down to those members, and writes any member's offer email with AI_COMPLETE, for review, not sent.</li>
-                    <li>Answer Martha: what to move, what to reorder and what to send back.</li>
+        <div class="overview-card highlight">
+                <h3>The situation</h3>
+                <p>Wilderness bought 40% more tents for every store, but the extra buyers turned up only in New South Wales and Queensland. Those stores will run out before Christmas; every other store will have tents left over. And one batch of the Summit Tent, the tent on the catalogue cover, is coming back broken.</p>
+                <p>In Lab 1 the store managers found out where they stand. Now the merchandising team has to act, store by store: which broken tents to send back to the supplier, which tents to move between stores, and how many to reorder by 13 November. In this lab you build that plan from the raw data, plus an offer for this week's tent buyers who left without a sleeping bag.</p>
+                <h3 style="margin-top:var(--space-xl);">Why not just ask CoWork?</h3>
+                <p>CoWork is built for questions: one answer at a time, in a conversation. That is what a store manager needs to find out where they stand. A plan is different. It has to be complete, the same for everyone, and ready for other people to use.</p>
+                <ul>
+                    <li><strong>Complete.</strong> To answer a question, CoWork reads a handful of comments. <code>AI_CLASSIFY</code> labels every Summit Tent return comment, so the real faults can be counted. <code>AI_COMPLETE</code> writes an email for each member, not just an example.</li>
+                    <li><strong>The same for everyone.</strong> The plan is a table that Snowflake keeps up to date, so everyone sees the same numbers every morning. A chat answer is written fresh each time and stays in one person's chat.</li>
+                    <li><strong>Ready to use.</strong> The merchandising team opens the plan in an app, marketing can pick up the offer list, and in Lab 3 the technical team tests and controls it all. An answer in a chat goes no further.</li>
                 </ul>
-            </div>
-            <div class="overview-card highlight">
-                <h3>What you use</h3>
+                <h3 style="margin-top:var(--space-xl);">What you will use</h3>
                 <div class="tech-tags">
                     <span class="tech-tag">Workspaces</span>
                     <span class="tech-tag">Cortex Code</span>
                     <span class="tech-tag">AI_CLASSIFY</span>
+                    <span class="tech-tag">Dynamic tables</span>
                     <span class="tech-tag">AI_COMPLETE</span>
-                    <span class="tech-tag">Notebooks</span>
-                    <span class="tech-tag">Views</span>
                     <span class="tech-tag">Streamlit in Snowflake</span>
+                    <span class="tech-tag">Pipeline Builder (optional)</span>
+                    <span class="tech-tag">Snowflake App Runtime (optional)</span>
                 </div>
-                <h3 style="margin-top:var(--space-xl);">The situation</h3>
-                <p>The assistant told the store managers where they stand. Now the merchandising team needs one action for every store and every Christmas product: what to move, what to reorder by 13 November and what to send back to the supplier.</p>
-            </div>
         </div>
     </div>
 </section>
@@ -1062,63 +1053,56 @@ a.lab-card:hover { box-shadow: var(--shadow-md); border-color: var(--sf-blue); c
         </div>
         <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
         <div class="steps-nav" id="stepsNav">
-            <a class="step-nav-item" href="#step-1" data-step="1"><span class="nav-index">1</span><span class="nav-text">Open a Workspace and brief Cortex Code</span><span class="nav-time">5 min</span></a>
-            <a class="step-nav-item" href="#step-2" data-step="2"><span class="nav-index">2</span><span class="nav-text">Check the assistant before you build on it</span><span class="nav-time">12 min</span></a>
-            <a class="step-nav-item" href="#step-3" data-step="3"><span class="nav-index">3</span><span class="nav-text">Build the stock plan in a notebook, with an AI function</span><span class="nav-time">20 min</span></a>
-            <a class="step-nav-item" href="#step-4" data-step="4"><span class="nav-index">4</span><span class="nav-text">The other half of the sleeping-gear problem</span><span class="nav-time">10 min</span></a>
-            <a class="step-nav-item" href="#step-5" data-step="5"><span class="nav-index">5</span><span class="nav-text">Ship it as an app</span><span class="nav-time">10 min</span></a>
-            <a class="step-nav-item" href="#step-6" data-step="6"><span class="nav-index">6</span><span class="nav-text">Martha's answer</span><span class="nav-time">3 min</span></a>
-            <a class="step-nav-item optional" href="#step-7" data-step="7"><span class="nav-index">7</span><span class="nav-text">Ask Cortex Code to explain the logic</span><span class="nav-time">5 min</span></a>
-            <a class="step-nav-item optional" href="#step-8" data-step="8"><span class="nav-index">8</span><span class="nav-text">Add a state filter and a map</span><span class="nav-time">8 min</span></a>
-            <a class="step-nav-item optional" href="#step-9" data-step="9"><span class="nav-index">9</span><span class="nav-text">Document the notebook</span><span class="nav-time">7 min</span></a>
+            <a class="step-nav-item" href="#step-1" data-step="1"><span class="nav-index">1</span><span class="nav-text">Start a notebook and ask what is in the data</span><span class="nav-time">6 min</span></a>
+            <a class="step-nav-item" href="#step-2" data-step="2"><span class="nav-index">2</span><span class="nav-text">Where the tents are, and where the buyers are</span><span class="nav-time">6 min</span></a>
+            <a class="step-nav-item" href="#step-3" data-step="3"><span class="nav-index">3</span><span class="nav-text">Which tents are broken</span><span class="nav-time">7 min</span></a>
+            <a class="step-nav-item" href="#step-4" data-step="4"><span class="nav-index">4</span><span class="nav-text">The plan, as a dynamic table</span><span class="nav-time">8 min</span></a>
+            <a class="step-nav-item" href="#step-5" data-step="5"><span class="nav-index">5</span><span class="nav-text">A sleeping-bag offer for this week's tent buyers</span><span class="nav-time">7 min</span></a>
+            <a class="step-nav-item" href="#step-6" data-step="6"><span class="nav-index">6</span><span class="nav-text">Hand it to the merchandising team</span><span class="nav-time">8 min</span></a>
+            <a class="step-nav-item optional" href="#step-7" data-step="7"><span class="nav-index">7</span><span class="nav-text">Run the morning's work every day with Pipeline Builder</span><span class="nav-time">10 min</span></a>
+            <a class="step-nav-item optional" href="#step-8" data-step="8"><span class="nav-index">8</span><span class="nav-text">Rebuild the app in Next.js</span><span class="nav-time">15 min</span></a>
         </div>
     </nav>
 
     <main class="steps-container" id="steps">
 <div class="info-box info">
     <strong>This lab answers: What do we do, store by store?</strong>
-    <p>By the end the merchandising team has a plan for every store and Christmas product: what to move, what to reorder by 13 November and what to send back to the supplier. Real faults are counted apart from first-time campers, and the Basecamp members who need sleeping gear get an offer only where the store has it.</p>
+    <p>By the end the merchandising team has one action for every store: what to send back, what to move and what to reorder by 13 November, in a plan that keeps itself up to date. And the Basecamp members who bought a tent without a sleeping bag have an offer email waiting, written for review.</p>
 </div>
 
-<div class="info-box warning">
-    <strong>Synthetic data</strong>
-    <p>Wilderness Outfitters is a fictional company. All stores, products, people, sales and feedback in this workshop are synthetic and generated for training. Any resemblance to a real business is coincidental.</p>
-</div>
-
-<p>Lab 2 works from the raw data the setup script loaded. It does not need anything you built in Lab 1.</p>
+<p>Lab 2 works from the raw data the setup script loaded. It does not need anything you built in Lab 1. If a step does not finish, <a href="#stuck">If you get stuck</a> at the bottom of this page has a block that builds the finished lab for you.</p>
 
 <div class="step-card" id="step-1">
     <div class="step-header">
         <span class="step-number">1</span>
-        <h2 class="step-title">Open a Workspace and brief Cortex Code</h2>
-        <span class="step-duration">~5 min</span>
+        <h2 class="step-title">Start a notebook and ask what is in the data</h2>
+        <span class="step-duration">~6 min</span>
     </div>
     <div class="step-content">
-<p>Open the same Cortex Code panel as this morning. The first prompt sets the rules for the whole session.</p>
+<p>The merchandising team needs a plan it can act on, built from the raw data rather than from the assistant's answers, and a record of how it was built that anyone can follow. Start where an analyst would: what is in the data.</p>
+
+<p>You use the same Cortex Code panel as this morning, in a Workspace. This time it builds everything in its own schema, <code>LAB2_ANALYTICS</code>, and keeps its working in a notebook: for each prompt, it answers in the chat and adds a section to the notebook with a short note on what was asked and found, and the SQL under it. Anyone can follow the analysis or run it again tomorrow.</p>
 
 <ol class="ui-steps">
     <li>Go to <span class="path">Projects » Workspaces</span> and open the workspace with your SQL file from Lab 1.</li>
+    <li>Select <span class="path">+ Add new » Notebook</span>, name it <code class="chip" title="Select to copy">christmas_plan_analysis</code> and leave it open.</li>
     <li>Open the <span class="path">Cortex Code</span> panel.</li>
-    <li>Paste prompt 0 and send it.</li>
-    <li>The first time Cortex Code asks to run a command, choose <span class="path">Always allow</span>. It then runs each statement without asking again.</li>
+    <li>Paste the prompt below and send it.</li>
+    <li>The first time Cortex Code asks to run a statement, choose <span class="path">Always allow</span>, so it runs each one without asking again.</li>
 </ol>
-
-<figure class="shot-slot"><figcaption>Screenshot to come: The Cortex Code panel in a Workspace<br><code>images/lab2_step1_cortex_code.png</code></figcaption></figure>
 
 <p>Prompt 0:</p>
 <div class="code-block prompt">
     <div class="code-header"><span class="code-lang">cortex code</span><button class="btn-copy" type="button">Copy</button></div>
-    <pre><code>I'm working in Snowflake database WILDERNESS_HOL, warehouse WILDERNESS_WH, for Wilderness Outfitters, an Australian outdoor retailer. The data is in schema RAW. Create everything I ask for in schema LAB2_ANALYTICS. For this whole session: execute every statement rather than drafting it, use fully qualified three-part names, and after you create any object run a query that proves it exists and show me the result.</code></pre>
+    <pre><code>Use database WILDERNESS_HOL and warehouse WILDERNESS_WH. The data is in schema RAW. Build everything in schema LAB2_ANALYTICS. Run every statement, don't just draft it.
+From now on, answer in the chat and also add a section to the notebook christmas_plan_analysis: a short note on what we asked and found, then the SQL. Keep it easy to follow.
+Give me a business overview of what is in WILDERNESS_HOL.RAW, written for a merchandising manager.</code></pre>
 </div>
 
 <div class="info-box success">
     <strong>You should see</strong>
-    <p>Cortex Code confirms the database and warehouse, and may run a quick query to check it can see <code>WILDERNESS_HOL</code>.</p>
-</div>
-
-<div class="info-box tip">
-    <strong>Why the brief is so short</strong>
-    <p>You do not tell Cortex Code which tables exist, how they join or what dates the data covers. It reads the account and works that out. Prompt 0 only sets the rules for the session.</p>
+    <p>In the chat, a short overview in plain business terms: 72 stores across the states and territories, products with the Christmas catalogue flagged, Basecamp members, sales from July 2024 to 3 November 2026, returns linked to the sale they came from, stock by store at 3 November, and customer comments.</p>
+    <p>In the notebook, a first section: a short note with that overview, and the SQL under it.</p>
 </div>
         <label class="completion-checkbox"><input type="checkbox" data-step="1"> Mark step 1 complete</label>
     </div>
@@ -1126,54 +1110,29 @@ a.lab-card:hover { box-shadow: var(--shadow-md); border-color: var(--sf-blue); c
 <div class="step-card" id="step-2">
     <div class="step-header">
         <span class="step-number">2</span>
-        <h2 class="step-title">Check the assistant before you build on it</h2>
-        <span class="step-duration">~12 min</span>
+        <h2 class="step-title">Where the tents are, and where the buyers are</h2>
+        <span class="step-duration">~6 min</span>
     </div>
     <div class="step-content">
-<p>Before anyone acts on this morning's answer, an analyst checks it against the raw data. These three prompts rebuild the picture the Wilderness Assistant gave in Lab 1, from the raw tables, and check that Martha's brief holds up.</p>
+<p>Wilderness bet on tents everywhere. Before anyone moves a tent, check the bet against the raw data, state by state: how much stock each state holds against last Christmas, and how much more it is selling.</p>
+
+<p>Cortex Code turns a business question into SQL across several tables, runs it and charts the result. You check its work by reading the numbers, not the SQL.</p>
 
 <p>Prompt 1:</p>
 <div class="code-block prompt">
     <div class="code-header"><span class="code-lang">cortex code</span><button class="btn-copy" type="button">Copy</button></div>
-    <pre><code>Give me a business overview of what is in WILDERNESS_HOL.RAW, written for a merchandising manager: what each table tells us about Wilderness's stores, products, customers, sales, returns, stock and customer feedback, what period the sales cover, and how it all connects. Keep it to one short table.</code></pre>
+    <pre><code>By state, compare tents on hand at 3 Nov 2026 with tents sold 4 Nov-24 Dec 2025, and tent sales 1-3 Nov 2026 with 1-3 Nov 2025. Chart the sales growth.</code></pre>
 </div>
 
 <div class="info-box success">
     <strong>You should see</strong>
-    <p>One table in plain business terms: stores in every state plus online, products with the Christmas catalogue flagged, Basecamp loyalty members, sales from July 2024 to 3 November 2026, returns linked to the sale they came from, stock by store and batch at 3 November, and customer comments. Cortex Code found the dates and the links itself.</p>
-</div>
-
-<p>Wilderness holds about 40% more tents than it sold last Christmas, in every state. That is only a problem if customers are not buying them where they are, so the next prompt checks where tent sales are growing this year.</p>
-
-<p>Prompt 2:</p>
-<div class="code-block prompt">
-    <div class="code-header"><span class="code-lang">cortex code</span><button class="btn-copy" type="button">Copy</button></div>
-    <pre><code>Compare tent units sold from 1 to 3 November 2026 with 1 to 3 November 2025, by state. Run it and chart it.</code></pre>
-</div>
-
-<div class="info-box success">
-    <strong>You should see</strong>
-    <p>Tent sales up about 45% in New South Wales and Queensland, and only about 10% across Victoria, Tasmania and South Australia. The stock went everywhere; the extra demand did not.</p>
-</div>
-
-<p>Wilderness sent 40% more tents to every state, but demand is up about 45% in New South Wales and Queensland and only about 10% across Victoria, Tasmania and South Australia. So the north runs out before Christmas Eve, and the south is left with tents on Boxing Day.</p>
-
-<p>Then the rest of the basket. A family that buys a tent also needs somewhere to sleep, and Wilderness bought sleeping gear as usual. Where tents sell faster, sleeping gear runs out first.</p>
-
-<p>Prompt 3:</p>
-<div class="code-block prompt">
-    <div class="code-header"><span class="code-lang">cortex code</span><button class="btn-copy" type="button">Copy</button></div>
-    <pre><code>Last Christmas, which at Wilderness ran from 1 November to 24 December 2025, what share of orders that contained a tent also contained an item with KIT_GROUP SLEEP, COOK or LIGHT? Then find the ten stores that are shortest of sleeping gear for the tents they still have to sell before Christmas Eve. Check whether WILDERNESS_HOL.RAW already has a view for this before you build anything. Run both.</code></pre>
-</div>
-
-<div class="info-box success">
-    <strong>You should see</strong>
-    <p>About 61% of tent orders also had sleeping gear, 34% cooking gear and 28% a light. Cortex Code finds the view <code>V_KIT_COVER</code> and lists ten stores, mostly in New South Wales and Queensland, that run out of sleeping gear in early December.</p>
-</div>
-
-<div class="info-box tip">
-    <strong>What V_KIT_COVER is, and why it already exists</strong>
-    <p>For each store it works out how many sleeping bags, mats, stoves and lights the tents still to sell will need, using last Christmas's basket mix, and compares that with the stock held. Setup built it because the Wilderness Assistant answered the sleeping-gear question from it in Lab 1. Reusing it here means the plan and the assistant give the same numbers.</p>
+    <p>In the chat, a table by state and a bar chart.</p>
+    <ul>
+        <li><strong>Stock: 1.4 in every state.</strong> Each state holds 40% more tents than it sold over the same weeks last year. Wilderness really did send the extra tents everywhere.</li>
+        <li><strong>Sales: two groups.</strong> New South Wales and Queensland are up 60%; every other state is up about 10%.</li>
+    </ul>
+    <p>So New South Wales and Queensland, with 1.4 times the stock against 1.6 times the demand, run out about a week before Christmas Eve. Everywhere else, 1.4 times the stock against 1.1 times the demand, has tents left over on Boxing Day.</p>
+    <p>The notebook gains a section with those two findings.</p>
 </div>
         <label class="completion-checkbox"><input type="checkbox" data-step="2"> Mark step 2 complete</label>
     </div>
@@ -1181,299 +1140,209 @@ a.lab-card:hover { box-shadow: var(--shadow-md); border-color: var(--sf-blue); c
 <div class="step-card" id="step-3">
     <div class="step-header">
         <span class="step-number">3</span>
-        <h2 class="step-title">Build the stock plan in a notebook, with an AI function</h2>
-        <span class="step-duration">~20 min</span>
+        <h2 class="step-title">Which tents are broken</h2>
+        <span class="step-duration">~7 min</span>
     </div>
     <div class="step-content">
-<p>You now know the shape of the problem: too many tents in the south, too few in the north, and not enough sleeping gear to go with them. What nobody can tell Martha yet is what to do about it in each store: what to move, what to reorder in time for Christmas and what to send back to the supplier.</p>
+<p>Some Summit Tents are coming back broken. Wilderness's supplier, Kestrel, takes back faulty stock. The returns desk codes nearly every return as "faulty", so the codes cannot say which returns are real faults. The customer's comment can.</p>
 
-<p>That answer needs three things the data does not hold today:</p>
-<ul>
-    <li><strong>A forecast for every store to Christmas Eve</strong>, so you can see who runs out and who has stock left on Boxing Day.</li>
-    <li><strong>Which returns are real faults.</strong> The supplier takes back broken tents, not tents a first-time camper could not pitch, and the returns desk codes nearly all of them simply as "faulty".</li>
-    <li><strong>A rule that turns each store's numbers into one action:</strong> move it, reorder it, send it back or, failing those, mark it down on Boxing Day.</li>
-</ul>
+<p><code>AI_CLASSIFY</code> reads each comment and gives it one of the labels you choose. It is SQL: the model runs where the data is, on every row, and the result is a table you can join like any other.</p>
 
-<p>The four prompts build these in a notebook the team can rerun and check, then publish the result as a view.</p>
-
-<h3>Prompt 4: stock and forecast</h3>
+<p>Prompt 2:</p>
 <div class="code-block prompt">
     <div class="code-header"><span class="code-lang">cortex code</span><button class="btn-copy" type="button">Copy</button></div>
-    <pre><code>Create a notebook called christmas_stock_plan in this Workspace. In the first cells, load inventory at 3 November 2026 for Christmas catalogue products by store and batch, and forecast units to sell from 4 November to 24 December as last year's average weekly Christmas units times 51/7 times the state and category sales index since 1 November. Run every cell.</code></pre>
+    <pre><code>Show the Summit Tent return rate by batch. Then use AI_CLASSIFY to label its return comments as POLE_FAULT, SEAM_FAULT, COULD_NOT_PITCH, CHANGE_OF_MIND or OTHER. Save as TENT_RETURN_REASONS and count by batch and label.</code></pre>
 </div>
 
 <div class="info-box success">
     <strong>You should see</strong>
-    <p>A new notebook with its cells run. Most products have one batch; the Summit 2P has two, <code>B26-02</code> and <code>B26-07</code>.</p>
-</div>
-
-<h3>Prompt 5: sort the return comments with an AI function</h3>
-<p>Stores give every return a coarse reason code. The comment says more: a snapped pole is a fault, a customer who could not pitch the tent is not. Wilderness's supplier contract pays out only on faults.</p>
-<div class="code-block prompt">
-    <div class="code-header"><span class="code-lang">cortex code</span><button class="btn-copy" type="button">Copy</button></div>
-    <pre><code>Add a cell that uses AI_CLASSIFY to label every comment in WILDERNESS_HOL.RAW.CUSTOMER_FEEDBACK with FEEDBACK_SOURCE 'RETURN_COMMENT' for product SKU-TNT-0102 since 1 July 2026 as one of POLE_OR_FRAME_FAULT, SEAM_OR_WATERPROOFING_FAULT, COULD_NOT_PITCH, CHANGE_OF_MIND or OTHER. Save the result as WILDERNESS_HOL.LAB2_ANALYTICS.TENT_RETURN_REASONS with columns FEEDBACK_ID, PRODUCT_ID, BATCH_CODE, FEEDBACK_DATE, REASON. Run it, then show the count by BATCH_CODE and REASON.</code></pre>
-</div>
-
-<div class="info-box success">
-    <strong>You should see</strong>
-    <p>About 500 comments classified in a minute or two. Most comments on the faulty batch, <code>B26-07</code>, are pole or seam faults.</p>
+    <p>Batch <code>B26-07</code> returned at <strong>about 18%</strong>, against 4% for the other batch, <code>B26-02</code>. About 450 comments labelled in a minute or so. Seven in ten <code>B26-07</code> comments are a snapped pole or a leaking seam; the other batch's are mostly change of mind. The notebook gains a section on the return labels.</p>
 </div>
 
 <div class="info-box info">
-    <strong>One in seven returns are first-time campers, not faults.</strong>
-    <p>They are the <code>COULD_NOT_PITCH</code> rows: people who could not put the tent up. The returns desk coded them "faulty" with the rest, and the supplier pays out only on real faults. This is why the AI function matters.</p>
+    <strong>About one in six returns from the faulty batch are first-time campers, not faults</strong>
+    <p>They are the <code>COULD_NOT_PITCH</code> rows: people who could not put the tent up. The returns desk coded them "faulty" with the rest. The AI function tells them apart.</p>
 </div>
-
-<div class="info-box tip">
-    <strong>An AI function is SQL</strong>
-    <p>The model runs where the data is, on every row, and the result is a table you can join like any other.</p>
-</div>
-
-<h3>Prompt 6: what is at risk</h3>
-<div class="code-block prompt">
-    <div class="code-header"><span class="code-lang">cortex code</span><button class="btn-copy" type="button">Copy</button></div>
-    <pre><code>Add a cell that calculates an estimated defect return rate per batch as the batch return rate times the share of its comments that are faults, then classifies each store and product as STOCKOUT (less than 6.5 weeks of forecast cover), OVERSTOCK (more than 7.5 weeks of cover) or OK, calculates stock at risk in AUD at cost, and charts it by state. Run it.</code></pre>
-</div>
-
-<div class="info-box success">
-    <strong>You should see</strong>
-    <p>An estimated defect rate of about 12% for <code>B26-07</code>, above the 8% the contract allows, and about 1% for <code>B26-02</code>. The chart puts most of the stock at risk in Victoria.</p>
-</div>
-
-<h3>Prompt 7: publish the plan as a view</h3>
-<div class="code-block prompt">
-    <div class="code-header"><span class="code-lang">cortex code</span><button class="btn-copy" type="button">Copy</button></div>
-    <pre><code>Add a final cell that creates the view WILDERNESS_HOL.LAB2_ANALYTICS.V_CHRISTMAS_STOCK_RISK, one row per store and Christmas catalogue product, with columns STORE_ID, STORE_NAME, STATE, LATITUDE, LONGITUDE, PRODUCT_ID, PRODUCT_NAME, KIT_GROUP, UNIT_COST, ON_HAND_UNITS, ON_ORDER_UNITS, RETURNABLE_UNITS (on-hand units in batches whose estimated defect rate is above 8%), FORECAST_UNITS_TO_XMAS, WEEKS_OF_COVER, EST_DEFECT_RETURN_RATE, RISK, EXCESS_UNITS, SHORTFALL_UNITS, STOCK_AT_RISK_AUD (excess units times UNIT_COST) and SUGGESTED_ACTION. SUGGESTED_ACTION has one value per row: for OVERSTOCK, RETURN TO SUPPLIER if RETURNABLE_UNITS is above 0, else TRANSFER OUT if another store has a STOCKOUT row for the same product, else MARK DOWN BOXING DAY; for STOCKOUT, TRANSFER IN if any store has an OVERSTOCK row for the product, else REORDER BY 13 NOV; otherwise NONE. Run it, then SELECT the top 10 rows by STOCK_AT_RISK_AUD.</code></pre>
-</div>
-
-<div class="info-box success">
-    <strong>You should see</strong>
-    <p>Summit 2P rows in Victorian and Tasmanian stores at the top, with Ringwood first, marked <code>RETURN TO SUPPLIER</code> against the <code>B26-07</code> units.</p>
-</div>
-
-<p>The broken Summit 2P tents are marked to go back to the supplier, Kestrel, and Ringwood has the most.</p>
-
-<details class="callout stuck">
-    <summary>Stuck? Use the finished notebook</summary>
-    <div>
-        <p>The workshop repository has the finished notebook, with the same objects and columns.</p>
-        <ol>
-            <li>Find the <code>OPEN_WORKSHOP_REPO</code> link in the last result of your Lab 1 Step 1 SQL file and open it. The form to create a workspace from the workshop repository opens filled in. Select <span class="path">Create</span>.</li>
-            <li>Open <code>notebooks/lab2_christmas_stock_plan.ipynb</code> and select <span class="path">Run all</span>.</li>
-        </ol>
-        <p>If the link is not to hand, select <span class="path">Projects » Workspaces » From Git repository</span> and use the repository URL <code class="chip" title="Select to copy">https://github.com/sfc-gh-jastaub/wilderness-snowflake-workshop</code>, the API integration <code class="chip" title="Select to copy">WILDERNESS_GIT_API</code> and <span class="path">Public repository</span>.</p>
-    </div>
-</details>
         <label class="completion-checkbox"><input type="checkbox" data-step="3"> Mark step 3 complete</label>
     </div>
 </div>
 <div class="step-card" id="step-4">
     <div class="step-header">
         <span class="step-number">4</span>
-        <h2 class="step-title">The other half of the sleeping-gear problem</h2>
-        <span class="step-duration">~10 min</span>
+        <h2 class="step-title">The plan, as a dynamic table</h2>
+        <span class="step-duration">~8 min</span>
     </div>
     <div class="step-content">
-<p>Sleeping gear is a problem with two sides. Where a store is short, it reorders by 13 November, and the plan you just built says which stores. Where a store has the gear, the people who bought a tent without it can be offered it.</p>
+<p>The faulty batch is real, so every unsold <code>B26-07</code> Summit Tent goes back to Kestrel. Now put it all together, store by store: the good tents each store has, what it will sell by Christmas Eve, and whether it has tents to spare or needs more.</p>
 
-<p>Six in ten tent orders last Christmas also had sleeping gear. Some of this week's tent buyers left without it, and the ones who are Basecamp members can be sent an offer. The catch: an offer from a store that is already short brings customers in for stock that is not there, and makes the shortage worse. So the offer goes only where the store has the gear. That is the step a planner working from a spreadsheet would miss.</p>
+<p>A dynamic table is a query whose result Snowflake keeps up to date. You write the query once; when tomorrow's sales land, the plan refreshes within the hour, with no job to schedule, and when nothing has changed the refresh is skipped.</p>
 
-<p>Prompt 8:</p>
+<p>Prompt 3:</p>
 <div class="code-block prompt">
     <div class="code-header"><span class="code-lang">cortex code</span><button class="btn-copy" type="button">Copy</button></div>
-    <pre><code>Find the Basecamp members who bought a tent from 1 to 3 November 2026 but no item with KIT_GROUP SLEEP in the same order. For online orders use the member's home store. Flag whether that store is short of sleeping gear in WILDERNESS_HOL.RAW.V_KIT_COVER, and send an offer only where it is not. Save one row per member as WILDERNESS_HOL.LAB2_ANALYTICS.KIT_OFFER_AUDIENCE with columns MEMBER_ID, FIRST_NAME, TIER, TENT_NAME, STORE_ID, STORE_NAME, STATE, STORE_SHORT_OF_SLEEP, SEND_OFFER. Then show how many members get an offer, how many are held back, and the sales opportunity in AUD if each one spends on sleeping gear what last Christmas's tent orders with sleeping gear spent on it.</code></pre>
+    <pre><code>Create dynamic table CHRISTMAS_PLAN with a 1 hour target lag, one row per store: tents on hand, B26-07 tents to send back, forecast to 24 Dec (last year's 4 Nov-24 Dec sales x the state's growth), and the gap between the good tents and the forecast. ACTION is MOVE OUT if the gap is positive, MOVE IN if negative.</code></pre>
 </div>
 
 <div class="info-box success">
     <strong>You should see</strong>
-    <p>About 750 members who bought a tent without sleeping gear. About 400 get an offer and about 350 are held back, most of them in New South Wales and Queensland where sleeping gear is short. At about AUD 113 of sleeping gear per tent order, the offer is worth about AUD 46,000, from three days of sales.</p>
-</div>
-
-<p>Prompt 9:</p>
-<div class="code-block prompt">
-    <div class="code-header"><span class="code-lang">cortex code</span><button class="btn-copy" type="button">Copy</button></div>
-    <pre><code>Add a cell that uses AI_COMPLETE with the model claude-sonnet-4-6 to write the offer email for one member in KIT_OFFER_AUDIENCE who gets an offer. Thank them by name for the tent they bought at their store, and offer 15% off a sleeping bag or mat in store before 24 December. Plain Australian English, under 80 words, no exclamation marks. Run it and show me the email.</code></pre>
-</div>
-
-<div class="info-box success">
-    <strong>You should see</strong>
-    <p>One email in a few seconds, with the member's name, their tent and their store, for example "Thanks for picking up the Summit 2P Tent at Wilderness Ringwood this week". The wording changes from run to run. The email is written and shown on screen, ready for review, not sent: nothing in this lab sends anything to a member. In Step 5 the app writes this email for any member you pick.</p>
-</div>
-
-<div class="info-box tip">
-    <strong>Why one</strong>
-    <p><code>AI_COMPLETE</code> runs once per row and is charged by the amount of text. Check the wording on one member before anyone writes four hundred.</p>
+    <p>72 rows. <strong>Every</strong> store outside New South Wales and Queensland is <code>MOVE OUT</code>; <strong>every</strong> store in New South Wales and Queensland is <code>MOVE IN</code>. In total, about 5,100 tents to send back, about 2,400 spare and about 5,300 short. The spare does not cover the shortfall, so about 2,900 tents must be <strong>reordered by 13 November</strong>. The notebook gains a section on the plan.</p>
 </div>
 
 <div class="info-box info">
-    <strong>Why the assistant could not do this</strong>
-    <p>Member names are not in the semantic view, by design: store managers ask about stock and sales, not about individual customers. An analyst with the right role can work with them. In Lab 3 you control who sees what.</p>
+    <strong>Why these numbers differ from Lab 1</strong>
+    <p>This morning's assistant counted every tent on the shelf, so it saw about 5,200 tents left over and about 3,000 short. The plan takes the 5,100 broken tents off first. That leaves fewer to spare, about 2,400, and more short, about 5,300.</p>
 </div>
-
-<details class="callout stuck">
-    <summary>Stuck? Use the finished notebook</summary>
-    <div>
-        <p>Section 6 of the finished notebook, <code>notebooks/lab2_christmas_stock_plan.ipynb</code>, creates <code>KIT_OFFER_AUDIENCE</code> with the same columns and writes one email. If you opened it in Step 3, run the cells in section 6.</p>
-    </div>
-</details>
         <label class="completion-checkbox"><input type="checkbox" data-step="4"> Mark step 4 complete</label>
     </div>
 </div>
 <div class="step-card" id="step-5">
     <div class="step-header">
         <span class="step-number">5</span>
-        <h2 class="step-title">Ship it as an app</h2>
-        <span class="step-duration">~10 min</span>
+        <h2 class="step-title">A sleeping-bag offer for this week's tent buyers</h2>
+        <span class="step-duration">~7 min</span>
     </div>
     <div class="step-content">
-<p>The merchandising team will not open a notebook. Give them one app with both halves of the plan: on the first tab, every tent sold this week narrowed down to the members worth a sleeping-gear offer, then one member's email written while they watch; on the second, the stock plan.</p>
+<p>Every family with a new tent needs somewhere to sleep, and some of this week's tent buyers left without a sleeping bag. The Basecamp members among them can be sent an offer.</p>
 
-<p>Prompt 10:</p>
+<p><code>AI_COMPLETE</code> writes text, in SQL. You give it a prompt for each row, with that row's name, tent and store, and it returns the email in a column.</p>
+
+<p>Prompt 4:</p>
 <div class="code-block prompt">
     <div class="code-header"><span class="code-lang">cortex code</span><button class="btn-copy" type="button">Copy</button></div>
-    <pre><code>Create a Streamlit in Snowflake app called WILDERNESS_HOL.LAB2_ANALYTICS.CHRISTMAS_STOCK_PLANNER on the warehouse runtime, with two tabs. The first tab, Sleeping-gear offer, shows a funnel as four KPI tiles: tent orders from 1 to 3 November 2026 in WILDERNESS_HOL.RAW.FCT_SALES_LINE, the Basecamp members who placed them, the members in WILDERNESS_HOL.LAB2_ANALYTICS.KIT_OFFER_AUDIENCE, and the members with SEND_OFFER true. Under the tiles, a bar chart of offers and held-back members by state, then the table of members who get an offer with a state filter. The second tab, Stock plan, reads WILDERNESS_HOL.LAB2_ANALYTICS.V_CHRISTMAS_STOCK_RISK and shows KPI tiles for stock at risk, units returnable to suppliers and number of stockout stores, a bar chart of stock at risk by state, and a table of suggested actions. Use three-part names. Deploy it, run it and give me the link.</code></pre>
+    <pre><code>Find Basecamp members who bought a tent 1-3 Nov 2026 with no sleeping bag or mat in the same order. Save as SLEEPING_BAG_OFFER with first name, store and tent, and tell me how many. Then use AI_COMPLETE to write an offer email for five of them: thank them for their tent and offer 15% off a sleeping bag or mat before Christmas, under 80 words. Save and show them.</code></pre>
 </div>
 
 <div class="info-box success">
     <strong>You should see</strong>
-    <p>A link to the app. The Sleeping-gear offer tab narrows about 2,800 tent orders to about 2,000 Basecamp members, about 750 without sleeping gear and about 400 whose store has the gear. The chart shows New South Wales and Queensland holding back the most members. The Stock plan tab shows about AUD 900,000 of stock at risk across all Christmas products, almost all of it tents, and about 40 stores that will run out of something.</p>
+    <p><strong>About 700 members</strong> saved in <code>SLEEPING_BAG_OFFER</code>, then five emails in a few seconds, each with the member's name, their tent and their store, for example "Thanks for picking up the Overland 3P Tent at our Torquay store this week". The wording changes from run to run. The notebook gains a section on the offer.</p>
 </div>
 
-<p>Prompt 11:</p>
-<div class="code-block prompt">
-    <div class="code-header"><span class="code-lang">cortex code</span><button class="btn-copy" type="button">Copy</button></div>
-    <pre><code>On the Sleeping-gear offer tab, under the member table, let me pick one member and add a Write the email button. When I press it, call AI_COMPLETE with claude-sonnet-4-6 to write that member's offer email with the same prompt as the notebook, and show the email on screen. Do not send it anywhere. Redeploy the app and run it.</code></pre>
+<div class="info-box info">
+    <strong>Five, for review, not sent</strong>
+    <p><code>AI_COMPLETE</code> runs once per row and is charged by the amount of text, so check the wording on a few before anyone writes 700. The emails are saved in the table and shown on screen; nothing in this lab sends anything to a member.</p>
 </div>
-
-<div class="info-box success">
-    <strong>You should see</strong>
-    <p>Pick a member, press <strong>Write the email</strong>, and a few seconds later their email appears: their name, their tent, their store and the 15% offer. Pick another member and the next email is written for them. Each one is written for review and not sent.</p>
-</div>
-
-<figure class="shot-slot"><figcaption>Screenshot to come: The Sleeping-gear offer tab, with one member's email written<br><code>images/lab2_step5_app.png</code></figcaption></figure>
-
-<details class="callout stuck">
-    <summary>Stuck? Deploy the finished app</summary>
-    <div>
-        <p>Run this in your SQL file. It creates <code>TENT_RETURN_REASONS</code>, <code>V_CHRISTMAS_STOCK_RISK</code> and <code>KIT_OFFER_AUDIENCE</code> with the same SQL as the finished notebook, then deploys the finished app from the workshop repository. It takes a minute or two.</p>
-        <div class="code-block">
-    <div class="code-header"><span class="code-lang">sql</span><button class="btn-copy" type="button">Copy</button></div>
-    <pre><code>ALTER GIT REPOSITORY WILDERNESS_HOL.SETUP.WORKSHOP_REPO FETCH;
-EXECUTE IMMEDIATE FROM @WILDERNESS_HOL.SETUP.WORKSHOP_REPO/branches/main/setup/91_catch_up_lab2.sql;</code></pre>
-</div>
-        <p>Then open <span class="path">Projects » Streamlit</span> and select <code>CHRISTMAS_STOCK_PLANNER</code>.</p>
-    </div>
-</details>
         <label class="completion-checkbox"><input type="checkbox" data-step="5"> Mark step 5 complete</label>
     </div>
 </div>
 <div class="step-card" id="step-6">
     <div class="step-header">
         <span class="step-number">6</span>
-        <h2 class="step-title">Martha's answer</h2>
-        <span class="step-duration">~3 min</span>
+        <h2 class="step-title">Hand it to the merchandising team</h2>
+        <span class="step-duration">~8 min</span>
     </div>
     <div class="step-content">
-<p>Martha asked three questions. The plan now answers each of them, store by store.</p>
+<p>The merchandising team will not open a Workspace. Give them the plan as an app.</p>
 
-<h3>What to move</h3>
-<p>Nearly AUD 900,000 of tents will still be on shelves on Boxing Day, over 80% of it in Victoria and Tasmania, while 11 stores in New South Wales and Queensland run out of tents before Christmas Eve. The south's spare tents are not the tent the north is running out of, so they cannot simply be moved. Instead, the plan moves sleeping gear from stores with spare to stores that are short, and marks the spare tents that cannot go back down on Boxing Day.</p>
+<p>Streamlit in Snowflake runs a Python app next to the data, and each person who opens it reads the data with their own rights. Cortex Code writes the app and deploys it.</p>
 
-<h3>What to reorder</h3>
-<p>Sleeping gear for 31 stores, 27 of which run out in the week of 7 December, and tents for the 11 northern stores. All of it by 13 November.</p>
-
-<h3>What to send back</h3>
-<p>About AUD 220,000 of broken Summit 2P tents from the faulty batch go back to the supplier, Kestrel. Ringwood has the most. The tents first-time campers could not pitch are not counted as faults.</p>
-
-<p>And the other half of the sleeping-gear problem: about 400 Basecamp members who bought a tent without sleeping gear get an offer, worth about AUD 46,000, only from stores that have the gear. The emails are written, ready for review, not sent.</p>
-
-<h3>What is in your account</h3>
-<div class="table-wrapper">
-<table>
-    <thead><tr><th>Object</th><th>What it is</th></tr></thead>
-    <tbody>
-        <tr><td><code>christmas_stock_plan</code></td><td>The notebook: the steps, the numbers behind each one, and the plan, rerunnable by anyone on the team.</td></tr>
-        <tr><td><code>LAB2_ANALYTICS.TENT_RETURN_REASONS</code></td><td>The output of an AI function, now an ordinary table.</td></tr>
-        <tr><td><code>LAB2_ANALYTICS.V_CHRISTMAS_STOCK_RISK</code></td><td>The plan as a view: one row per store and Christmas product, with what to do.</td></tr>
-        <tr><td><code>LAB2_ANALYTICS.KIT_OFFER_AUDIENCE</code></td><td>Who gets a sleeping-gear offer and who is held back, one row per Basecamp member.</td></tr>
-        <tr><td><code>LAB2_ANALYTICS.CHRISTMAS_STOCK_PLANNER</code></td><td>The app: from every tent sold to one member's email on the Sleeping-gear offer tab, and the stock plan on the second.</td></tr>
-    </tbody>
-</table>
+<p>Prompt 5:</p>
+<div class="code-block prompt">
+    <div class="code-header"><span class="code-lang">cortex code</span><button class="btn-copy" type="button">Copy</button></div>
+    <pre><code>Build a Streamlit app CHRISTMAS_PLANNER on CHRISTMAS_PLAN: tiles for tents to send back, to move, and to reorder by 13 Nov (short minus spare), a state filter and the table.</code></pre>
 </div>
 
-<p>You typed no code. The view now outlives the notebook: the app reads it, and the assistant could use it next.</p>
-
-<p>The Wilderness Assistant answers from the curated layer: the semantic view built for store managers. In this lab you went past it: you sorted every comment with an AI function, built new business rules, worked with customer data the assistant is not given, and published the results for others to use.</p>
+<div class="info-box success">
+    <strong>You should see</strong>
+    <p>A link to the app with three tiles: about 5,100 tents to send back, about 2,400 to move and about 2,900 to reorder. Pick NSW and every store shows <code>MOVE IN</code>; pick VIC and every store shows <code>MOVE OUT</code>. The notebook's last section names the app and what it shows.</p>
+</div>
         <label class="completion-checkbox"><input type="checkbox" data-step="6"> Mark step 6 complete</label>
     </div>
 </div>
 <div class="step-card optional" id="step-7">
     <div class="step-header">
         <span class="step-number">7</span>
-        <h2 class="step-title">Ask Cortex Code to explain the logic <span class="badge-optional">Optional</span></h2>
-        <span class="step-duration">~5 min</span>
+        <h2 class="step-title">Run the morning's work every day with Pipeline Builder <span class="badge-optional">Optional</span></h2>
+        <span class="step-duration">~10 min</span>
     </div>
     <div class="step-content">
-<p>Before you hand the plan to a merchandiser, check you can explain it.</p>
+<p>The plan refreshes itself, but the return labels and the offer do not. Someone would have to run them again every morning until Christmas Eve.</p>
+
+<p>Pipeline Builder chains steps into one task graph that runs on a schedule. You draw it on a canvas, or have Cortex draft it from a sentence, then deploy it.</p>
+
+<ol class="ui-steps">
+    <li>In your Workspace, on the <span class="path">Home</span> tab, select <span class="path">Pipeline Builder</span>.</li>
+    <li>Name it <code class="chip" title="Select to copy">morning_run</code> and choose the database <code>WILDERNESS_HOL</code> and schema <code>LAB2_ANALYTICS</code>.</li>
+    <li>Select <span class="path">Generate with Cortex</span>, paste the prompt below into <span class="path">Prompt</span> and select <span class="path">Generate</span>.</li>
+</ol>
+
 <div class="code-block prompt">
-    <div class="code-header"><span class="code-lang">cortex code</span><button class="btn-copy" type="button">Copy</button></div>
-    <pre><code>Explain, in plain English for a store manager, how V_CHRISTMAS_STOCK_RISK decides RISK and SUGGESTED_ACTION for one row. Use the Summit 2P row for Wilderness Ringwood as the example, with its real numbers.</code></pre>
+    <div class="code-header"><span class="code-lang">pipeline builder</span><button class="btn-copy" type="button">Copy</button></div>
+    <pre><code>Every day at 6am: refresh TENT_RETURN_REASONS with AI_CLASSIFY on new Summit Tent return comments, then rebuild SLEEPING_BAG_OFFER, then write emails for five new members with AI_COMPLETE.</code></pre>
 </div>
+
+<ol class="ui-steps" start="4" style="counter-reset: ui 3;">
+    <li>Check the canvas: three cards, joined in that order.</li>
+    <li>Select <span class="path">Objects » Task graphs</span>, open the graph, and leave <span class="path">Desired state</span> as <span class="path">Suspended</span>.</li>
+    <li>Select <span class="path">Deploy</span>, review the planned changes and select <span class="path">Deploy</span> again.</li>
+    <li>Select <span class="path">Deployed Project</span>, open the task graph, go to its <span class="path">Graph</span> tab and select <span class="path">Run Task Graph</span>.</li>
+</ol>
 
 <div class="info-box success">
     <strong>You should see</strong>
-    <p>A short walk-through of Ringwood's Summit 2P row: its stock, its forecast, its weeks of cover, why it is <code>OVERSTOCK</code>, and why the action is <code>RETURN TO SUPPLIER</code>.</p>
+    <p>A graph of three tasks on the canvas, a deploy plan listing what it creates, and one successful run in the run history.</p>
+</div>
+
+<div class="info-box warning">
+    <strong>Leave it suspended</strong>
+    <p>A resumed graph runs every morning and writes new emails each time. Keep it suspended after the workshop.</p>
 </div>
     </div>
 </div>
 <div class="step-card optional" id="step-8">
     <div class="step-header">
         <span class="step-number">8</span>
-        <h2 class="step-title">Add a state filter and a map <span class="badge-optional">Optional</span></h2>
-        <span class="step-duration">~8 min</span>
+        <h2 class="step-title">Rebuild the app in Next.js <span class="badge-optional">Optional</span></h2>
+        <span class="step-duration">~15 min</span>
     </div>
     <div class="step-content">
+<p>The team will open this app every morning until Christmas. A map would show the whole country at a glance: which stores send tents out and which need them.</p>
+
+<p>Snowflake App Runtime builds and runs a Next.js web app inside Snowflake, next to the data, with full control of the look and feel. You build it from Cortex Code Desktop or the Cortex Code CLI, not the panel in Snowsight, so you need Cortex Code Desktop (or the CLI), the Snowflake CLI and Node.js 22 or later on your laptop, connected to your trial account.</p>
+
+<p>In Cortex Code Desktop, type <code>/</code>, select <span class="path">snowflake-apps</span>, and send:</p>
+
 <div class="code-block prompt">
     <div class="code-header"><span class="code-lang">cortex code</span><button class="btn-copy" type="button">Copy</button></div>
-    <pre><code>On the Stock plan tab, add a state filter next to the product selector, and a map of the stores with stock at risk using LATITUDE and LONGITUDE from the view. Redeploy the app and run it.</code></pre>
+    <pre><code>Rebuild CHRISTMAS_PLANNER as a Next.js app on WILDERNESS_HOL.LAB2_ANALYTICS.CHRISTMAS_PLAN: a map of Australia with each store coloured by ACTION, the three tiles and a state filter. Make it look great. Run it locally, then deploy it.</code></pre>
 </div>
 
 <div class="info-box success">
     <strong>You should see</strong>
-    <p>A state filter and a map of Australia with the at-risk stores marked. Choose <code>VIC</code> and the map and tiles follow.</p>
-</div>
-    </div>
-</div>
-<div class="step-card optional" id="step-9">
-    <div class="step-header">
-        <span class="step-number">9</span>
-        <h2 class="step-title">Document the notebook <span class="badge-optional">Optional</span></h2>
-        <span class="step-duration">~7 min</span>
-    </div>
-    <div class="step-content">
-<div class="code-block prompt">
-    <div class="code-header"><span class="code-lang">cortex code</span><button class="btn-copy" type="button">Copy</button></div>
-    <pre><code>Add a short markdown cell above each code cell in christmas_stock_plan that says what the cell does and why, in plain English for a merchandiser. Keep each one to two sentences.</code></pre>
-</div>
-
-<div class="info-box success">
-    <strong>You should see</strong>
-    <p>The notebook reads top to bottom as a short report: stock, forecast, comments, defect rate, plan.</p>
+    <p>A live preview while Cortex Code builds, then a Snowflake URL. Each store sits on the map in its <code>MOVE IN</code> or <code>MOVE OUT</code> colour, with the same three tiles as the Streamlit app.</p>
 </div>
     </div>
 </div>
     </main>
 </div>
 
+<section id="stuck" class="content-section">
+    <div class="section-container">
+        <h2 class="section-title">If you get stuck</h2>
+<details class="callout stuck">
+    <summary>Any step: build the finished Lab 2</summary>
+    <div>
+        <p>Run this in your SQL file. It creates <code>TENT_RETURN_REASONS</code>, <code>CHRISTMAS_PLAN</code> and <code>SLEEPING_BAG_OFFER</code> with the same SQL as the finished notebook, writes five offer emails, and deploys the finished app. It takes a minute or two, and running it again replaces what it built.</p>
+        <div class="code-block">
+    <div class="code-header"><span class="code-lang">sql</span><button class="btn-copy" type="button">Copy</button></div>
+    <pre><code>ALTER GIT REPOSITORY WILDERNESS_HOL.SETUP.WORKSHOP_REPO FETCH;
+EXECUTE IMMEDIATE FROM @WILDERNESS_HOL.SETUP.WORKSHOP_REPO/branches/main/setup/91_catch_up_lab2.sql;</code></pre>
+</div>
+        <p>Then open <span class="path">Projects » Streamlit</span> and select <code>CHRISTMAS_PLANNER</code>.</p>
+    </div>
+</details>
+    </div>
+</section>
 <section id="resources" class="content-section alt-bg">
     <div class="section-container">
         <h2 class="section-title">Further reading</h2>
         <div class="resources-grid">
-            <a class="resource-card" href="https://docs.snowflake.com/en/user-guide/ui-snowsight/workspaces-git" target="_blank" rel="noopener"><h4>Workspaces and Git</h4><p>Create a workspace from a Git repository, including from a pre-filled link.</p></a>
             <a class="resource-card" href="https://docs.snowflake.com/en/sql-reference/functions/ai_classify" target="_blank" rel="noopener"><h4>AI_CLASSIFY</h4><p>Classify text into the labels you give it, on every row, in SQL.</p></a>
+            <a class="resource-card" href="https://docs.snowflake.com/en/user-guide/dynamic-tables/overview" target="_blank" rel="noopener"><h4>Dynamic tables</h4><p>Write a query once; Snowflake keeps its result up to date as the source data changes.</p></a>
             <a class="resource-card" href="https://docs.snowflake.com/en/sql-reference/functions/ai_complete" target="_blank" rel="noopener"><h4>AI_COMPLETE</h4><p>Generate text with a large language model from a prompt, on every row, in SQL.</p></a>
             <a class="resource-card" href="https://docs.snowflake.com/en/developer-guide/streamlit/about-streamlit" target="_blank" rel="noopener"><h4>Streamlit in Snowflake</h4><p>Python data apps that run next to the data and read it with your rights.</p></a>
             <a class="resource-card" href="https://docs.snowflake.com/en/user-guide/cortex-code/cortex-code-snowsight/changelog" target="_blank" rel="noopener"><h4>Cortex Code in Snowsight</h4><p>What is new in the Cortex Code panel, including approval modes.</p></a>
+            <a class="resource-card" href="https://docs.snowflake.com/en/user-guide/pipeline-builder/pipeline-builder-overview" target="_blank" rel="noopener"><h4>Pipeline Builder</h4><p>A visual designer in Workspaces that chains SQL, notebooks and Python into a scheduled task graph.</p></a>
+            <a class="resource-card" href="https://docs.snowflake.com/en/developer-guide/snowflake-app-runtime/about-snowflake-app-runtime" target="_blank" rel="noopener"><h4>Snowflake App Runtime</h4><p>Build and run Next.js web apps inside Snowflake, next to the data.</p></a>
         </div>
     </div>
 </section>
@@ -1481,9 +1350,15 @@ EXECUTE IMMEDIATE FROM @WILDERNESS_HOL.SETUP.WORKSHOP_REPO/branches/main/setup/9
 <section class="completion-section" id="completionSection">
     <div class="completion-container">
 <h2>Lab 2 complete</h2>
-<p>Martha has her answer. Every store knows what to move, what to reorder by 13 November and what to send back to Kestrel, and the merchandising team knows which Basecamp members to offer sleeping gear to, and from which stores.</p>
-<p>You built it from the raw data: comments sorted by an AI function, a plan for every store and every Christmas product in a notebook the team can rerun, a view the plan lives in, the offer emails written for review, and an app the merchandising team opens.</p>
-<p>The plan exists. The question left is whether it can be trusted every morning until Christmas Eve: is the assistant right, what will it cost, and who can see what. That is Tom Walsh's question, and the technical track answers it in Lab 3.</p>
+<p>Martha asked what to move, what to reorder and what to send back. The plan now answers each one, store by store, and updates itself as sales come in:</p>
+<ul>
+    <li><strong>Send back:</strong> about 5,100 broken Summit Tents from the faulty batch, to Kestrel. Parramatta has the most.</li>
+    <li><strong>Move:</strong> about 2,400 spare tents from the other states to New South Wales and Queensland.</li>
+    <li><strong>Reorder:</strong> about 2,900 tents for New South Wales and Queensland, by 13 November.</li>
+</ul>
+<p>About 700 Basecamp members who bought a tent without a sleeping bag have an offer, with the emails written for review.</p>
+<p>You built it from the raw data with six prompts and typed no code: comments read by one AI function, emails written by another, a plan that Snowflake keeps up to date, and an app the merchandising team opens.</p>
+<p>The plan exists. The question left is whether it can be trusted every morning until Christmas Eve. That is Tom Walsh's question, and the technical track answers it in Lab 3.</p>
         <div class="cta-row">
             <a class="btn-primary" href="lab3_advanced.html">Continue to Lab 3 &rarr;</a>
             <a class="btn-secondary" href="index.html">Workshop index</a>
