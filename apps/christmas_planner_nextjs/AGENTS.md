@@ -16,10 +16,10 @@ This project deploys as an Application Service on Snowflake via `snow app deploy
 
 ## Key CLI Commands
 
-- `snow app deploy` — Deploy or update the application service
-- `snow app events` — Stream deployment events and logs
-- `snow app open` — Open the deployed app in your browser
-- `snow app teardown --force` — Remove the deployed service
+- `snow app deploy`: Deploy or update the application service
+- `snow app events`: Stream deployment events and logs
+- `snow app open`: Open the deployed app in your browser
+- `snow app teardown --force`: Remove the deployed service
 
 ## Project Structure
 

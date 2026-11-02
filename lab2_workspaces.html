@@ -1279,6 +1279,11 @@ Below that, add a state filter. Then put a store map next to a bar chart of the 
     <strong>You should see</strong>
     <p>A Snowflake URL for the app. Each store sits on the map in its <code>MOVE IN</code> or <code>MOVE OUT</code> colour, with the same headline numbers as the Streamlit app, a state filter, and one feature Cortex Code chose itself. Yours will differ from your neighbour's.</p>
 </div>
+
+<div class="info-box tip">
+    <strong>If your app will not build, deploy the sample</strong>
+    <p>The workshop repository has a finished version of this app. <a href="#stuck">If you get stuck</a> at the bottom of this page copies it into a workspace and deploys it.</p>
+</div>
     </div>
 </div>
     </main>
@@ -1297,6 +1302,42 @@ Below that, add a state filter. Then put a store map next to a bar chart of the 
 EXECUTE IMMEDIATE FROM @WILDERNESS_HOL.SETUP.WORKSHOP_REPO/branches/main/setup/91_catch_up_lab2.sql;</code></pre>
 </div>
         <p>Then open <span class="path">Projects » Streamlit</span> and select <code>CHRISTMAS_PLANNER</code>.</p>
+    </div>
+</details>
+
+<details class="callout stuck">
+    <summary>Step 7: deploy the sample Next.js app</summary>
+    <div>
+        <p>The finished app is in the workshop repository at <a href="https://github.com/sfc-gh-jastaub/wilderness-snowflake-workshop/blob/main/apps/christmas_planner_nextjs" target="_blank" rel="noopener"><code>apps/christmas_planner_nextjs</code></a>. It reads <code>CHRISTMAS_PLAN</code> as the block above builds it, so if you built your plan with Cortex Code, run that block first.</p>
+        <ol class="ui-steps">
+            <li>Run this in your SQL file. It copies the app into a new workspace, <code>CHRISTMAS_PLANNER</code>. Running it again copies it over the top.</li>
+        </ol>
+        <div class="code-block">
+    <div class="code-header"><span class="code-lang">sql</span><button class="btn-copy" type="button">Copy</button></div>
+    <pre><code>EXECUTE IMMEDIATE $$
+BEGIN
+  ALTER GIT REPOSITORY WILDERNESS_HOL.SETUP.WORKSHOP_REPO FETCH;
+  CREATE WORKSPACE IF NOT EXISTS USER$.PUBLIC.CHRISTMAS_PLANNER;
+  BEGIN
+    ALTER WORKSPACE USER$.PUBLIC.CHRISTMAS_PLANNER ADD LIVE VERSION FROM LAST;
+  EXCEPTION WHEN OTHER THEN NULL;  -- it already has one
+  END;
+  COPY FILES INTO 'snow://workspace/USER$.PUBLIC.CHRISTMAS_PLANNER/versions/live/'
+    FROM @WILDERNESS_HOL.SETUP.WORKSHOP_REPO/branches/main/apps/christmas_planner_nextjs/;
+  RETURN 'Sample app copied into the workspace CHRISTMAS_PLANNER';
+END;
+$$;</code></pre>
+</div>
+        <ol class="ui-steps" start="2" style="counter-reset: ui 1;">
+            <li>In the Cortex Code panel, type <code>@</code>, select the <span class="path">snowflake-apps</span> skill, then paste:</li>
+        </ol>
+        <div class="code-block prompt">
+    <div class="code-header"><span class="code-lang">cortex code</span><button class="btn-copy" type="button">Copy</button></div>
+    <pre><code>Deploy the Snowflake app in the workspace CHRISTMAS_PLANNER as it is, to WILDERNESS_HOL.LAB2_ANALYTICS on WILDERNESS_WH. Do not change any files.</code></pre>
+</div>
+        <ol class="ui-steps" start="3" style="counter-reset: ui 2;">
+            <li>After 3 to 5 minutes you get a URL ending in <code>snowflakecomputing.app</code>. Open it and sign in with your workshop account: 5,141 tents to send back, 2,431 to move, 2,895 to reorder, and a map with the transfer routes. It suspends itself after 30 minutes idle and wakes on the next visit.</li>
+        </ol>
     </div>
 </details>
     </div>
