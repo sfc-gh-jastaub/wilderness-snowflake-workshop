@@ -1167,9 +1167,9 @@ a.lab-card:hover { box-shadow: var(--shadow-md); border-color: var(--sf-blue); c
         <span class="step-duration">~8 min</span>
     </div>
     <div class="step-content">
-<p>The faulty batch is real, so every unsold <code>B26-07</code> Summit Tent goes back to Kestrel. Now put it all together, store by store: the good tents each store has, what it will sell by Christmas Eve, and whether it has tents to spare or needs more.</p>
+<p>Step 2 showed the faulty batch is real, so every unsold <code>B26-07</code> Summit Tent goes back to Kestrel. Now put it all together, store by store: the good tents each store has, what it will sell by Christmas Eve, and whether it has tents to spare or needs more.</p>
 
-<p>A dynamic table is a query whose result Snowflake keeps up to date. You write the query once; when tomorrow's sales land, the plan refreshes within the hour, with no job to schedule, and when nothing has changed the refresh is skipped.</p>
+<p>A dynamic table is a query whose result Snowflake keeps up to date. You write the query once; when tomorrow's stock count lands, the plan refreshes within the hour, with no job to schedule, and when nothing has changed the refresh is skipped.</p>
 
 <p>Prompt 4:</p>
 <div class="code-block prompt">
@@ -1185,7 +1185,7 @@ For each store, take its tents on hand and leave out the B26-07 ones, since thos
 
 <div class="info-box info">
     <strong>Why these numbers differ from Lab 1</strong>
-    <p>This morning's assistant counted every tent on the shelf, so it saw about 5,200 tents left over and about 3,000 short. The plan takes the 5,100 broken tents off first. That leaves fewer to spare, about 2,400, and more short, about 5,300.</p>
+    <p>This morning's assistant counted every tent on the shelf: about 5,200 left over and about 3,000 short. The plan takes the 5,100 broken tents off first, and they are in both kinds of store. About 2,800 were in stores with spare, so the spare falls to about 2,400. About 2,300 were in stores that are short, so the shortfall grows to about 5,300.</p>
 </div>
         <label class="completion-checkbox"><input type="checkbox" data-step="4"> Mark step 4 complete</label>
     </div>
