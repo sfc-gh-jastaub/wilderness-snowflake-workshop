@@ -1,0 +1,22 @@
+version: 2
+runtime: node
+
+name: CHRISTMAS_PLANNER
+database: WILDERNESS_HOL
+schema: LAB2_ANALYTICS
+query_warehouse: WILDERNESS_WH
+label: 'Christmas Tent Planner'
+description: 'Map of every store coloured by MOVE IN / MOVE OUT, with Christmas tent KPIs and a nearest-store transfer plan.'
+icon: public/icon.svg
+
+build:
+  commands:
+    - ['npm', 'run', 'build']
+    # For standalone mode
+    - ['cp', '-r', '.next/static', '.next/standalone/.next']
+    - ['cp', '-r', 'public', '.next/standalone']
+    # Avoid packaging extra node_modules since standalone includes its own
+    - ['rm', '-rf', 'node_modules']
+
+run:
+  command: ['node', '.next/standalone/server.js']

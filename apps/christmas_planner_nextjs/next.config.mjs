@@ -1,0 +1,1 @@
+import o from"node:path";import{fileURLToPath as t}from"node:url";let r=o.dirname(t(import.meta.url));export default{output:"standalone",outputFileTracingRoot:r,turbopack:{root:r},typescript:{ignoreBuildErrors:!0},images:{unoptimized:!0}};
