@@ -1,10 +1,9 @@
 -- =====================================================================================
 -- 90_catch_up_lab1.sql  ·  Wilderness Outfitters workshop
 -- The Lab 1 assistant, built by SQL, for anyone whose prompts did not finish:
---   Step 2  the customer feedback search service
---   Step 3  the semantic view with RETURN_RATE, synonyms and two verified queries
---   Step 4  the Wilderness Assistant and its three tools
---   Step 6  the assistant added to CoWork
+--   Step 3  the customer feedback search service
+--   Step 5  the semantic view with RETURN_RATE, synonyms and two verified queries
+--   Step 6  the Wilderness Assistant, its three tools and four sample questions, added to CoWork
 -- Everything goes into WILDERNESS_HOL.LAB1_ASSISTANT. Running it again replaces what it built.
 -- =====================================================================================
 USE ROLE ACCOUNTADMIN;
@@ -13,10 +12,10 @@ USE WAREHOUSE WILDERNESS_WH;
 -- The customer feedback search (about a minute to index 20,000 comments)
 CREATE OR REPLACE CORTEX SEARCH SERVICE WILDERNESS_HOL.LAB1_ASSISTANT.CSS_CUSTOMER_FEEDBACK
   ON FEEDBACK_TEXT
-  ATTRIBUTES PRODUCT_NAME, CATEGORY, FEEDBACK_SOURCE, STATE, RATING
+  ATTRIBUTES PRODUCT_NAME, CATEGORY, BATCH_CODE, STORE_ID, STATE, RATING, FEEDBACK_SOURCE
   WAREHOUSE = WILDERNESS_WH
   TARGET_LAG = '1 day'
-  COMMENT = 'Wilderness customer reviews, returns comments and survey answers'
+  COMMENT = 'Wilderness product reviews, returns desk comments and contact-centre messages'
 AS
 SELECT FEEDBACK_ID, FEEDBACK_DATE, FEEDBACK_SOURCE, PRODUCT_ID, PRODUCT_NAME, CATEGORY, BATCH_CODE,
        STORE_ID, STATE, RATING, FEEDBACK_TITLE, FEEDBACK_TEXT
@@ -31,14 +30,12 @@ CREATE OR REPLACE SEMANTIC VIEW WILDERNESS_HOL.LAB1_ASSISTANT.SV_WILDERNESS_RETA
       COMMENT = 'Customer returns, each linked to the sales line it came from',
     inventory AS WILDERNESS_HOL.RAW.V_INVENTORY PRIMARY KEY (INVENTORY_KEY)
       COMMENT = 'Stock on hand and on order at 3 Nov 2026, by store, product and batch',
-    kit_cover AS WILDERNESS_HOL.RAW.V_KIT_COVER PRIMARY KEY (KIT_COVER_KEY)
-      COMMENT = 'Sleeping, cooking and lighting kit needed for the tents still to sell before 24 Dec, by store',
-    stock_cover AS WILDERNESS_HOL.RAW.V_STOCK_COVER PRIMARY KEY (STOCK_COVER_KEY)
-      COMMENT = 'Christmas stock cover per store and product: stock plus orders at 3 Nov against the forecast to 24 Dec (last Christmas weekly rate x the trend since 1 Nov in that state and category). Use for overstock and stockout questions',
+    tent_cover AS WILDERNESS_HOL.RAW.V_TENT_COVER PRIMARY KEY (STORE_ID)
+      COMMENT = 'Tent cover per store at 3 Nov 2026: every tent on hand against the forecast to 24 Dec (last year''s 4 Nov-24 Dec tent sales x the state''s tent growth since 1 Nov). Use for where tents run out and where they are left over',
     products AS WILDERNESS_HOL.RAW.DIM_PRODUCT PRIMARY KEY (PRODUCT_ID)
       COMMENT = 'Product catalogue',
     stores AS WILDERNESS_HOL.RAW.DIM_STORE PRIMARY KEY (STORE_ID)
-      COMMENT = '72 stores and the online store'
+      COMMENT = '72 stores'
   )
   RELATIONSHIPS (
     sales_to_products AS sales (PRODUCT_ID) REFERENCES products,
@@ -46,9 +43,7 @@ CREATE OR REPLACE SEMANTIC VIEW WILDERNESS_HOL.LAB1_ASSISTANT.SV_WILDERNESS_RETA
     returns_to_sales AS returns (SALE_LINE_ID) REFERENCES sales,
     inventory_to_products AS inventory (PRODUCT_ID) REFERENCES products,
     inventory_to_stores AS inventory (STORE_ID) REFERENCES stores,
-    kit_cover_to_stores AS kit_cover (STORE_ID) REFERENCES stores,
-    stock_cover_to_products AS stock_cover (PRODUCT_ID) REFERENCES products,
-    stock_cover_to_stores AS stock_cover (STORE_ID) REFERENCES stores
+    tent_cover_to_stores AS tent_cover (STORE_ID) REFERENCES stores
   )
   FACTS (
     sales.net_sales AS NET_SALES_AMOUNT,
@@ -57,25 +52,23 @@ CREATE OR REPLACE SEMANTIC VIEW WILDERNESS_HOL.LAB1_ASSISTANT.SV_WILDERNESS_RETA
     returns.refund AS REFUND_AMOUNT,
     returns.units_returned AS RETURN_QUANTITY,
     inventory.weeks_of_cover AS WEEKS_OF_COVER,
-    kit_cover.shortfall_units AS KIT_SHORTFALL_UNITS,
-    kit_cover.basket_at_risk AS BASKET_SALES_AT_RISK_AUD,
-    stock_cover.stock_units AS STOCK_UNITS,
-    stock_cover.forecast_units_to_xmas AS FORECAST_UNITS_TO_XMAS,
-    stock_cover.forecast_weeks_of_cover AS FORECAST_WEEKS_OF_COVER,
-    stock_cover.excess_units AS EXCESS_UNITS_AT_XMAS,
-    stock_cover.shortfall_units_to_xmas AS SHORTFALL_UNITS_TO_XMAS,
-    stock_cover.excess_cost AS EXCESS_COST_AUD
+    tent_cover.tents_on_hand AS TENTS_ON_HAND,
+    tent_cover.faulty_tents_on_hand AS FAULTY_TENTS_ON_HAND COMMENT = 'Tents on hand from the faulty Summit Tent batch B26-07',
+    tent_cover.forecast_to_xmas AS FORECAST_TO_XMAS COMMENT = 'Tents the store is forecast to sell from 4 Nov to 24 Dec',
+    tent_cover.tents_left_over AS TENTS_LEFT_OVER COMMENT = 'Tents still on hand after Christmas Eve',
+    tent_cover.tents_short AS TENTS_SHORT COMMENT = 'Tents short of the forecast to 24 Dec',
+    tent_cover.left_over_cost AS LEFT_OVER_COST_AUD
   )
   DIMENSIONS (
     products.product_id AS PRODUCT_ID COMMENT = 'Product code, for example SKU-TNT-0102',
     products.product_name AS PRODUCT_NAME COMMENT = 'Product name',
-    products.category AS CATEGORY WITH SYNONYMS = ('tent') COMMENT = 'Product category, for example Tents & Shelters',
-    products.kit_group AS KIT_GROUP WITH SYNONYMS = ('sleeping gear') COMMENT = 'SHELTER, SLEEP, COOK, LIGHT or FURNITURE; null for other products',
+    products.category AS CATEGORY WITH SYNONYMS = ('tent', 'tents') COMMENT = 'Product category, for example Tents & Shelters',
+    products.kit_group AS KIT_GROUP COMMENT = 'SHELTER, SLEEP, COOK, LIGHT or FURNITURE; null for other products',
     products.brand AS BRAND,
     products.in_christmas_catalogue AS IN_CHRISTMAS_CATALOGUE WITH SYNONYMS = ('Christmas range') COMMENT = 'TRUE for products in the Christmas catalogue',
     stores.store_id AS STORE_ID COMMENT = 'Store code',
     stores.store_name AS STORE_NAME,
-    stores.state AS STATE COMMENT = 'Australian state or territory; null for the online store',
+    stores.state AS STATE COMMENT = 'Australian state or territory',
     stores.region_type AS REGION_TYPE COMMENT = 'COASTAL, METRO, REGIONAL or ALPINE',
     sales.sale_line_id AS SALE_LINE_ID COMMENT = 'Sales line identifier',
     sales.sale_product_id AS PRODUCT_ID COMMENT = 'Product code on the sales line',
@@ -86,41 +79,34 @@ CREATE OR REPLACE SEMANTIC VIEW WILDERNESS_HOL.LAB1_ASSISTANT.SV_WILDERNESS_RETA
     returns.return_reason AS RETURN_REASON_CODE COMMENT = 'Reason code recorded by the store',
     returns.return_batch_code AS BATCH_CODE COMMENT = 'Tent production batch of the returned item',
     inventory.stock_batch_code AS BATCH_CODE COMMENT = 'Tent production batch held in stock',
-    kit_cover.kit_cover_store_id AS STORE_ID COMMENT = 'Store code',
-    kit_cover.kit_cover_group AS KIT_GROUP WITH SYNONYMS = ('sleeping gear') COMMENT = 'SLEEP, COOK or LIGHT',
-    kit_cover.run_out_week AS RUN_OUT_WEEK COMMENT = 'Monday of the week the store runs out of this kit group',
-    stock_cover.christmas_stock_status AS CHRISTMAS_STOCK_STATUS
-      COMMENT = 'STOCKOUT: under 6.5 weeks of forecast cover, runs out before about 16 Dec. OVERSTOCK: over 7.5 weeks, stock left after Christmas Eve. OK otherwise'
+    tent_cover.tent_cover_store_id AS STORE_ID COMMENT = 'Store code',
+    tent_cover.status AS STATUS COMMENT = 'RUNS OUT: fewer tents on hand than the forecast to 24 Dec. LEFT OVER: tents still on hand after Christmas Eve',
+    tent_cover.run_out_date AS RUN_OUT_DATE COMMENT = 'Day the store runs out of tents at the forecast rate; null if it has tents left over'
   )
   METRICS (
     sales.total_net_sales AS SUM(sales.net_sales) COMMENT = 'Net sales in AUD after discounts',
     sales.total_units_sold AS SUM(sales.units_sold),
     sales.gross_margin AS SUM(sales.net_sales) - SUM(sales.cost) COMMENT = 'Net sales less cost, AUD',
     returns.total_refunds AS SUM(returns.refund) COMMENT = 'Refunds paid, AUD',
-    returns.total_units_returned AS SUM(returns.units_returned) WITH SYNONYMS = ('returns'),
-    inventory.avg_weeks_of_cover AS AVG(inventory.weeks_of_cover) WITH SYNONYMS = ('stock cover')
+    returns.total_units_returned AS SUM(returns.units_returned) WITH SYNONYMS = ('returns', 'tents returned'),
+    inventory.avg_weeks_of_cover AS AVG(inventory.weeks_of_cover)
       COMMENT = 'Average weeks of cover at last Christmas weekly sales rate',
-    kit_cover.total_kit_shortfall_units AS SUM(kit_cover.shortfall_units)
-      COMMENT = 'Kit units short of what the tents still to sell will need',
-    kit_cover.basket_sales_at_risk AS SUM(kit_cover.basket_at_risk) COMMENT = 'Kit sales at risk from the shortfall, AUD',
-    stock_cover.total_excess_units_at_xmas AS SUM(stock_cover.excess_units)
-      COMMENT = 'Units still on hand after Christmas Eve on overstocked rows',
-    stock_cover.total_excess_cost_aud AS SUM(stock_cover.excess_cost)
-      COMMENT = 'Cost of stock still on hand after Christmas Eve, AUD',
-    stock_cover.total_shortfall_units_to_xmas AS SUM(stock_cover.shortfall_units_to_xmas)
-      COMMENT = 'Units short of the Christmas forecast on stockout rows',
+    tent_cover.total_tents_left_over AS SUM(tent_cover.tents_left_over) WITH SYNONYMS = ('left over', 'tents left over')
+      COMMENT = 'Tents still on hand after Christmas Eve',
+    tent_cover.total_tents_short AS SUM(tent_cover.tents_short) COMMENT = 'Tents short of the forecast to 24 Dec',
+    tent_cover.total_left_over_cost AS SUM(tent_cover.left_over_cost) COMMENT = 'Cost of the tents still on hand after Christmas Eve, AUD',
     return_rate AS DIV0(returns.total_units_returned, sales.total_units_sold)
       COMMENT = 'Units returned divided by units sold'
   )
-  COMMENT = 'Wilderness Outfitters retail: sales, returns, stock and kit cover'
+  COMMENT = 'Wilderness Outfitters retail: sales, returns, stock and tent cover by store'
   AI_VERIFIED_QUERIES (
-    return_rate_by_category AS (
-      QUESTION 'What is the return rate by category?'
-      SQL 'WITH sold AS (SELECT p.category, SUM(s.units_sold) AS units_sold FROM __sales AS s JOIN __products AS p ON s.sale_product_id = p.product_id GROUP BY p.category), back AS (SELECT p.category, SUM(r.units_returned) AS units_returned FROM __returns AS r JOIN __sales AS s ON r.return_sale_line_id = s.sale_line_id JOIN __products AS p ON s.sale_product_id = p.product_id GROUP BY p.category) SELECT sold.category, sold.units_sold, COALESCE(back.units_returned, 0) AS units_returned, ROUND(COALESCE(back.units_returned, 0) / NULLIF(sold.units_sold, 0), 4) AS return_rate FROM sold LEFT JOIN back ON back.category = sold.category ORDER BY return_rate DESC NULLS LAST'
+    summit_tent_return_rate_by_batch AS (
+      QUESTION 'What is the Summit Tent return rate by batch?'
+      SQL 'WITH sold AS (SELECT s.sale_batch_code AS batch_code, SUM(s.units_sold) AS units_sold FROM __sales AS s JOIN __products AS p ON s.sale_product_id = p.product_id WHERE p.product_name = ''Summit Tent'' AND s.sale_batch_code IS NOT NULL GROUP BY s.sale_batch_code), back AS (SELECT s.sale_batch_code AS batch_code, SUM(r.units_returned) AS units_returned FROM __returns AS r JOIN __sales AS s ON r.return_sale_line_id = s.sale_line_id JOIN __products AS p ON s.sale_product_id = p.product_id WHERE p.product_name = ''Summit Tent'' GROUP BY s.sale_batch_code) SELECT sold.batch_code, sold.units_sold, COALESCE(back.units_returned, 0) AS units_returned, ROUND(COALESCE(back.units_returned, 0) / NULLIF(sold.units_sold, 0), 4) AS return_rate FROM sold LEFT JOIN back ON back.batch_code = sold.batch_code ORDER BY return_rate DESC NULLS LAST'
     ),
-    sleeping_gear_shortfall_by_state AS (
-      QUESTION 'Which states are short of sleeping gear, and by how much?'
-      SQL 'SELECT st.state, COUNT(DISTINCT k.kit_cover_store_id) AS stores_short, SUM(k.shortfall_units) AS shortfall_units, SUM(k.basket_at_risk) AS basket_sales_at_risk_aud, MIN(k.run_out_week) AS earliest_run_out_week FROM __kit_cover AS k JOIN __stores AS st ON k.kit_cover_store_id = st.store_id WHERE k.kit_cover_group = ''SLEEP'' AND k.shortfall_units > 0 GROUP BY st.state ORDER BY shortfall_units DESC NULLS LAST'
+    stores_running_out_of_tents AS (
+      QUESTION 'Which stores will run out of tents before Christmas?'
+      SQL 'SELECT st.store_name, st.state, t.tents_on_hand, t.forecast_to_xmas, t.tents_short, t.run_out_date FROM __tent_cover AS t JOIN __stores AS st ON t.tent_cover_store_id = st.store_id WHERE t.status = ''RUNS OUT'' ORDER BY t.tents_short DESC NULLS LAST'
     )
   )
   WITH TAG (WILDERNESS_HOL.SETUP.PROJECT = 'wilderness_christmas');
@@ -143,24 +129,25 @@ CREATE OR REPLACE AGENT WILDERNESS_HOL.LAB1_ASSISTANT.WILDERNESS_ASSISTANT
       Use retail_analyst for any number. Use customer_feedback for what customers said.
       For 'why' and 'what can we do' questions use more than one. Chart comparisons and trends.
     sample_questions:
-      - question: "Tents are our big Christmas bet. Where will we still be holding tents on Boxing Day, where will we run out, and have we got the sleeping gear to go with them?"
-      - question: "Customers are bringing the Summit 2P back. What are they saying, and is it worse for some batches than others?"
+      - question: "What are customers saying about our tents?"
+      - question: "Where will we run out of tents before Christmas, and where will we have tents left over?"
+      - question: "What is the Summit Tent's return rate, and what do customers say when they bring one back?"
+      - question: "Customers are bringing the Summit Tent back. What are they saying, and is one batch worse? Chart the return rate by batch."
   tools:
     - tool_spec:
         type: "cortex_analyst_text_to_sql"
         name: "retail_analyst"
         description: >-
           Wilderness sales, returns and stock numbers. Sales lines from 1 Jul 2024 to 3 Nov 2026 with product,
-          store, state and tent batch; returns linked to the sale they came from; stock on hand and on order at
-          3 Nov 2026 by store, product and batch; Christmas stock cover per store and product against the
-          forecast to 24 Dec, with overstock and stockout status; and the sleeping, cooking and lighting kit
-          each store needs for the tents it still has to sell before 24 Dec. Use it for any count, total, rate,
-          trend or comparison.
+          store, state and tent batch; returns linked to the sale they came from; stock on hand at 3 Nov 2026
+          by store, product and batch; and tent cover per store against the forecast to 24 Dec: which stores
+          run out of tents and when, and which have tents left over. Use it for any count, total, rate, trend
+          or comparison.
     - tool_spec:
         type: "cortex_search"
         name: "customer_feedback"
         description: >-
-          20,000 customer comments from product reviews, returns desk notes and surveys, with the product,
+          20,000 customer comments from product reviews, returns desk notes and contact-centre messages, with the product,
           category, tent batch, store, state, rating and date. Use it to find and quote what customers said
           about a product, a fault or a request.
     - tool_spec:

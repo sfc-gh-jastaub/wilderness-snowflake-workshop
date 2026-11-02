@@ -6,7 +6,7 @@
 <meta name="snowflake-source" content="cortex-agent-authored">
 <title>Lab 3: Ready for Christmas: evaluate, tune, govern</title>
 <script type="application/json" id="snowflake-report-metadata">{
- "generated": "2026-10-29",
+ "generated": "2026-11-02",
  "intent": "Lab 3: Ready for Christmas: evaluate, tune, govern",
  "producerNotes": "Built by _build/build.py from _build/src/guides. Figures were measured on the build account; screenshots are captured at the dry run.",
  "sections": [
@@ -1036,6 +1036,21 @@ a.lab-card:hover { box-shadow: var(--shadow-md); border-color: var(--sf-blue); c
     <div class="section-container">
         <h2 class="section-title">Overview</h2>
         <div class="overview-grid">
+            <div class="overview-card highlight">
+                <h3>The situation</h3>
+                <p>Technical track. Over lunch, Tom Walsh's team set the morning's assistant up as the production copy the stores will use. Tom, Head of Data &amp; Analytics, wants proof before 72 stores lean on it every morning to Christmas Eve: is it right, what will it cost, and who can see what.</p>
+                <h3 style="margin-top:var(--space-xl);">What you will use</h3>
+                <div class="tech-tags">
+                    <span class="tech-tag">Agent evaluations</span>
+                    <span class="tech-tag">Semantic view evaluations</span>
+                    <span class="tech-tag">Custom instructions</span>
+                    <span class="tech-tag">Agent versions</span>
+                    <span class="tech-tag">Cortex Code agent-studio</span>
+                    <span class="tech-tag">Budgets</span>
+                    <span class="tech-tag">Per-user quotas</span>
+                    <span class="tech-tag">Masking policies</span>
+                </div>
+            </div>
             <div class="overview-card">
                 <h3>What you will build</h3>
                 <ul class="learning-list">
@@ -1047,21 +1062,6 @@ a.lab-card:hover { box-shadow: var(--shadow-md); border-color: var(--sf-blue); c
                     <li>Set a monthly budget for the project and a daily AI limit for store managers.</li>
                     <li>Give store managers their own role, hide member emails from them, and prove it.</li>
                 </ul>
-            </div>
-            <div class="overview-card highlight">
-                <h3>What you use</h3>
-                <div class="tech-tags">
-                    <span class="tech-tag">Agent evaluations</span>
-                    <span class="tech-tag">Semantic view evaluations</span>
-                    <span class="tech-tag">Custom instructions</span>
-                    <span class="tech-tag">Agent versions</span>
-                    <span class="tech-tag">Cortex Code agent-studio</span>
-                    <span class="tech-tag">Budgets</span>
-                    <span class="tech-tag">Per-user quotas</span>
-                    <span class="tech-tag">Masking policies</span>
-                </div>
-                <h3 style="margin-top:var(--space-xl);">The situation</h3>
-                <p>Technical track. Over lunch, Tom Walsh's team set the morning's assistant up as the production copy the stores will use. Tom, Head of Data &amp; Analytics, wants proof before 72 stores lean on it every morning to Christmas Eve: is it right, what will it cost, and who can see what.</p>
             </div>
         </div>
     </div>
@@ -1102,6 +1102,8 @@ a.lab-card:hover { box-shadow: var(--shadow-md); border-color: var(--sf-blue); c
 </div>
 
 <p>You run this lab's SQL in one SQL file. In Snowsight, go to <span class="path">Projects » Workspaces</span>, select <span class="path">+ Add new » SQL File</span>, name it <code class="chip" title="Select to copy">lab3.sql</code>, and keep it open all afternoon. Paste each block into it and select <span class="path">Run all</span>, unless a step says otherwise. The evaluations, the semantic view and Cortex Code are in other Snowsight pages; each step says where.</p>
+
+<p>If a step does not finish, <a href="#stuck">If you get stuck</a> at the bottom of this page has a block that gets you to the same place.</p>
 
 <div class="step-card" id="step-1">
     <div class="step-header">
@@ -1241,7 +1243,6 @@ SHOW VERSIONS IN AGENT WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_ASSISTANT;</cod
     <li>Select <span class="path">Create</span>.</li>
 </ol>
 
-<figure class="shot-slot"><figcaption>Screenshot to come: Creating baseline_run on the baseline version<br><code>images/lab3_step2_create_run.png</code></figcaption></figure>
 
 <div class="info-box success">
     <strong>You should see</strong>
@@ -1306,7 +1307,6 @@ ORDER BY QUESTION_ID;</code></pre>
     <li>Select the <code>retail_analyst</code> step and read the SQL it ran.</li>
 </ol>
 
-<figure class="shot-slot"><figcaption>Screenshot to come: A low-scoring record: scores, the agent's steps and the SQL<br><code>images/lab3_step3_record.png</code></figcaption></figure>
 
 <div class="info-box success">
     <strong>You should see</strong>
@@ -1391,7 +1391,6 @@ WHERE s.order_date BETWEEN '2025-12-18' AND '2025-12-24'</code></pre>
     <p>After 2 to 3 minutes, <strong>0 of 2</strong> correct. Open a result: Cortex Analyst did not answer, and asked what "Peak Week" or "launch weekend" means.</p>
 </div>
 
-<figure class="shot-slot"><figcaption>Screenshot to come: before_fix: 0 of 2<br><code>images/lab3_step4_before.png</code></figcaption></figure>
 
 <div class="info-box tip">
     <strong>Why only these two</strong>
@@ -1414,7 +1413,6 @@ WHERE s.order_date BETWEEN '2025-12-18' AND '2025-12-24'</code></pre>
     <pre><code>Wilderness uses these trading terms. The launch weekend is the first three days of Christmas trading, 1 to 3 November. Peak Week is the seven days to Christmas Eve, 18 to 24 December. The Christmas trading period runs from 1 November to 24 December, never calendar December. 'Last year' and 'last Christmas' mean 2025. The financial year runs from 1 July to 30 June, and 'last financial year' means FY26, 1 July 2025 to 30 June 2026. Always say which dates you used.</code></pre>
 </div>
 
-<figure class="shot-slot"><figcaption>Screenshot to come: The two custom instructions on the semantic view<br><code>images/lab3_step4_instructions.png</code></figcaption></figure>
 
 <div class="info-box info">
     <strong>Both are needed</strong>
@@ -1466,54 +1464,6 @@ WHERE s.order_date BETWEEN '2025-12-18' AND '2025-12-24'</code></pre>
     <strong>Why the prompt says no dates</strong>
     <p>In an early try, Cortex Code copied "launch weekend = 1 to 3 November" into the agent's instructions, and warned itself that this was fitting the test. It would pass the eight questions, but only this agent would know the term, and the definition would live in two places. Definitions go in the semantic view; instructions say how this agent behaves.</p>
 </div>
-
-<details class="callout stuck">
-    <summary>Prefer a known-good version?</summary>
-    <div>
-        <p>If Cortex Code did not finish, or changed more than the instructions, run this instead. It opens a draft from your latest version, replaces only the response and orchestration instructions with the ones the build tested, keeps everything else, including the tool descriptions, commits, and labels the new version <code>candidate</code>. Use it only if no version is labelled <code>candidate</code> yet.</p>
-        <div class="code-block">
-    <div class="code-header"><span class="code-lang">sql</span><button class="btn-copy" type="button">Copy</button></div>
-    <pre><code>-- Lab 3 Step 5, known-good version: your agent as it is, with improved instructions only.
-ALTER AGENT WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_ASSISTANT ADD LIVE VERSION FROM LAST;
-
-EXECUTE IMMEDIATE $$
-DECLARE
-  v_spec VARIANT;
-  v_ins VARIANT;
-BEGIN
-  SHOW VERSIONS IN AGENT WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_ASSISTANT;
-  SELECT PARSE_JSON("agent_spec") INTO :v_spec FROM TABLE(RESULT_SCAN(LAST_QUERY_ID())) WHERE "name" IS NULL;
-  v_ins := COALESCE(v_spec:instructions, OBJECT_CONSTRUCT());
-  v_ins := OBJECT_INSERT(v_ins, 'response',
-    'You help Wilderness Outfitters store managers and merchandisers through Christmas trading. Use plain Australian English and short sentences. Give the answer first, then the numbers behind it, and say which dates you used. Show money as AUD, for example AUD 1,234, never a bare $ sign. Quote customers word for word and name the source. Do not use emoji or marketing language. If a question is outside Wilderness sales, stock, returns and customer feedback, say so in one sentence and offer what you can answer instead. Do not send people to other websites or apps.', TRUE);
-  v_ins := OBJECT_INSERT(v_ins, 'orchestration',
-    'Use retail_analyst for any number and customer_feedback for what customers said. Call each tool once per question, and call it again only if the first result was empty or failed. For ''why'' and ''what can we do'' questions use both tools, retail_analyst first. Wilderness trading terms such as the launch weekend, Peak Week and the Christmas trading period are defined in the semantic view: pass the user''s words to retail_analyst rather than guessing dates or asking the user what they mean. Chart comparisons and trends.', TRUE);
-  v_spec := OBJECT_INSERT(v_spec, 'instructions', v_ins, TRUE);
-  EXECUTE IMMEDIATE 'ALTER AGENT WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_ASSISTANT MODIFY LIVE VERSION SET SPECIFICATION = '''
-                 || REPLACE(TO_JSON(v_spec), '''', '''''') || '''';
-  RETURN 'Draft updated: new response and orchestration instructions';
-END;
-$$;
-
-ALTER AGENT WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_ASSISTANT COMMIT COMMENT = 'Candidate: known-good instructions (Lab 3 Step 5)';
-
-EXECUTE IMMEDIATE $$
-DECLARE
-  v_version VARCHAR;
-BEGIN
-  SHOW VERSIONS IN AGENT WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_ASSISTANT;
-  SELECT "name" INTO :v_version FROM TABLE(RESULT_SCAN(LAST_QUERY_ID()))
-    WHERE "name" IS NOT NULL ORDER BY "created_on" DESC LIMIT 1;
-  EXECUTE IMMEDIATE 'ALTER AGENT WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_ASSISTANT MODIFY VERSION '
-                 || :v_version || ' SET ALIAS = candidate';
-  RETURN 'Candidate is ' || :v_version;
-END;
-$$;
-
-SHOW VERSIONS IN AGENT WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_ASSISTANT;</code></pre>
-</div>
-    </div>
-</details>
         <label class="completion-checkbox"><input type="checkbox" data-step="5"> Mark step 5 complete</label>
     </div>
 </div>
@@ -1560,7 +1510,6 @@ SHOW VERSIONS IN AGENT WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_ASSISTANT;</cod
     <li>Select <span class="path">Compare</span>, then <span class="path">Hide unchanged metrics</span>.</li>
 </ol>
 
-<figure class="shot-slot"><figcaption>Screenshot to come: baseline_run and candidate_run compared<br><code>images/lab3_step6_compare.png</code></figcaption></figure>
 
 <div class="info-box success">
     <strong>You should see</strong>
@@ -1796,7 +1745,6 @@ CALL WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_STORE_QUOTA!GET_CONFIG();</code><
     <li>Open <code>WILDERNESS_PROJECT_BUDGET</code>, then go back and open <code>WILDERNESS_STORE_QUOTA</code>.</li>
 </ol>
 
-<figure class="shot-slot"><figcaption>Screenshot to come: The project budget and the store-manager quota in Budgets<br><code>images/lab3_step7_budgets.png</code></figcaption></figure>
 
 <h3>5. Make the morning email cost less</h3>
 
@@ -1883,8 +1831,8 @@ SELECT FIRST_NAME, EMAIL FROM WILDERNESS_HOL.RAW.DIM_MEMBER ORDER BY MEMBER_ID L
 USE ROLE WILDERNESS_STORE_MANAGER;
 USE SECONDARY ROLES NONE;
 SELECT FIRST_NAME, EMAIL FROM WILDERNESS_HOL.RAW.DIM_MEMBER ORDER BY MEMBER_ID LIMIT 3;
-SELECT CHRISTMAS_STOCK_STATUS, COUNT(*) AS STORE_PRODUCT_ROWS FROM WILDERNESS_HOL.RAW.V_STOCK_COVER
-  GROUP BY CHRISTMAS_STOCK_STATUS ORDER BY CHRISTMAS_STOCK_STATUS;
+SELECT STATUS, COUNT(*) AS STORES FROM WILDERNESS_HOL.RAW.V_TENT_COVER
+  GROUP BY STATUS ORDER BY STATUS;
 
 -- This one should fail: store managers cannot read raw sales lines.
 SELECT COUNT(*) FROM WILDERNESS_HOL.RAW.FCT_SALES_LINE;</code></pre>
@@ -1892,7 +1840,7 @@ SELECT COUNT(*) FROM WILDERNESS_HOL.RAW.FCT_SALES_LINE;</code></pre>
 
 <div class="info-box success">
     <strong>You should see</strong>
-    <p>As ACCOUNTADMIN, three members with full email addresses. As <code>WILDERNESS_STORE_MANAGER</code>, the same three with the part before the @ hidden, for example <code>*****@example.com</code>, and the stock cover rows by status. The last query fails with an error that the table does not exist or is not authorised. That error is the proof: the role cannot read raw sales.</p>
+    <p>As ACCOUNTADMIN, three members with full email addresses. As <code>WILDERNESS_STORE_MANAGER</code>, the same three with the part before the @ hidden, for example <code>*****@example.com</code>, and the stores by tent status. The last query fails with an error that the table does not exist or is not authorised. That error is the proof: the role cannot read raw sales.</p>
 </div>
 
 <p>Your session is now in the store-manager role. Run the next block to see why the <code>USE SECONDARY ROLES NONE</code> line is there, and to return to ACCOUNTADMIN.</p>
@@ -2095,6 +2043,8 @@ DROP INTEGRATION IF EXISTS WILDERNESS_EMAIL;
 DROP INTEGRATION IF EXISTS WILDERNESS_GIT_API;
 DROP WAREHOUSE IF EXISTS WILDERNESS_WH;
 ALTER ACCOUNT UNSET TIMEZONE;
+ALTER COMPUTE POOL IF EXISTS SYSTEM_COMPUTE_POOL_CPU SET AUTO_SUSPEND_SECS = 300;
+ALTER ACCOUNT UNSET NOTEBOOK_VNEXT_IDLE_TIMEOUT_OPTIONS_MINUTES;
 
 SELECT 'Wilderness workshop removed' AS STATUS;</code></pre>
 </div>
@@ -2108,6 +2058,58 @@ SELECT 'Wilderness workshop removed' AS STATUS;</code></pre>
     </main>
 </div>
 
+<section id="stuck" class="content-section">
+    <div class="section-container">
+        <h2 class="section-title">If you get stuck</h2>
+<details class="callout stuck">
+    <summary>Step 5: use a known-good version</summary>
+    <div>
+        <p>If Cortex Code did not finish, or changed more than the instructions, run this instead. It opens a draft from your latest version, replaces only the response and orchestration instructions with the ones the build tested, keeps everything else, including the tool descriptions, commits, and labels the new version <code>candidate</code>. Use it only if no version is labelled <code>candidate</code> yet.</p>
+        <div class="code-block">
+    <div class="code-header"><span class="code-lang">sql</span><button class="btn-copy" type="button">Copy</button></div>
+    <pre><code>-- Lab 3 Step 5, known-good version: your agent as it is, with improved instructions only.
+ALTER AGENT WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_ASSISTANT ADD LIVE VERSION FROM LAST;
+
+EXECUTE IMMEDIATE $$
+DECLARE
+  v_spec VARIANT;
+  v_ins VARIANT;
+BEGIN
+  SHOW VERSIONS IN AGENT WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_ASSISTANT;
+  SELECT PARSE_JSON("agent_spec") INTO :v_spec FROM TABLE(RESULT_SCAN(LAST_QUERY_ID())) WHERE "name" IS NULL;
+  v_ins := COALESCE(v_spec:instructions, OBJECT_CONSTRUCT());
+  v_ins := OBJECT_INSERT(v_ins, 'response',
+    'You help Wilderness Outfitters store managers and merchandisers through Christmas trading. Use plain Australian English and short sentences. Give the answer first, then the numbers behind it, and say which dates you used. Show money as AUD, for example AUD 1,234, never a bare $ sign. Quote customers word for word and name the source. Do not use emoji or marketing language. If a question is outside Wilderness sales, stock, returns and customer feedback, say so in one sentence and offer what you can answer instead. Do not send people to other websites or apps.', TRUE);
+  v_ins := OBJECT_INSERT(v_ins, 'orchestration',
+    'Use retail_analyst for any number and customer_feedback for what customers said. Call each tool once per question, and call it again only if the first result was empty or failed. For ''why'' and ''what can we do'' questions use both tools, retail_analyst first. Wilderness trading terms such as the launch weekend, Peak Week and the Christmas trading period are defined in the semantic view: pass the user''s words to retail_analyst rather than guessing dates or asking the user what they mean. Chart comparisons and trends.', TRUE);
+  v_spec := OBJECT_INSERT(v_spec, 'instructions', v_ins, TRUE);
+  EXECUTE IMMEDIATE 'ALTER AGENT WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_ASSISTANT MODIFY LIVE VERSION SET SPECIFICATION = '''
+                 || REPLACE(TO_JSON(v_spec), '''', '''''') || '''';
+  RETURN 'Draft updated: new response and orchestration instructions';
+END;
+$$;
+
+ALTER AGENT WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_ASSISTANT COMMIT COMMENT = 'Candidate: known-good instructions (Lab 3 Step 5)';
+
+EXECUTE IMMEDIATE $$
+DECLARE
+  v_version VARCHAR;
+BEGIN
+  SHOW VERSIONS IN AGENT WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_ASSISTANT;
+  SELECT "name" INTO :v_version FROM TABLE(RESULT_SCAN(LAST_QUERY_ID()))
+    WHERE "name" IS NOT NULL ORDER BY "created_on" DESC LIMIT 1;
+  EXECUTE IMMEDIATE 'ALTER AGENT WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_ASSISTANT MODIFY VERSION '
+                 || :v_version || ' SET ALIAS = candidate';
+  RETURN 'Candidate is ' || :v_version;
+END;
+$$;
+
+SHOW VERSIONS IN AGENT WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_ASSISTANT;</code></pre>
+</div>
+    </div>
+</details>
+    </div>
+</section>
 <section id="resources" class="content-section alt-bg">
     <div class="section-container">
         <h2 class="section-title">Further reading</h2>

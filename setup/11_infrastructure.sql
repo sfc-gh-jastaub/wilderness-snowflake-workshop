@@ -59,3 +59,27 @@ END;
 $$;
 
 CALL WILDERNESS_HOL.SETUP.LOG_STEP('INFRASTRUCTURE', 'OK', NULL);
+
+-- Lab 2's notebook runs on the account's CPU compute pool. Starting it now, and keeping it up for
+-- three hours, means the notebook connects quickly in Lab 2 instead of waiting for the pool to start.
+-- A new notebook service then defaults to a 4-hour idle timeout rather than 24 hours, so a notebook
+-- left open after the workshop stops on its own. Teardown puts both back.
+-- @ACCOUNT_LEVEL
+EXECUTE IMMEDIATE $$
+BEGIN
+  BEGIN
+    ALTER ACCOUNT SET NOTEBOOK_VNEXT_IDLE_TIMEOUT_OPTIONS_MINUTES = '240,120,480,1440';
+  EXCEPTION WHEN OTHER THEN NULL;  -- parameter not available in this account
+  END;
+  ALTER COMPUTE POOL SYSTEM_COMPUTE_POOL_CPU SET AUTO_SUSPEND_SECS = 10800;
+  BEGIN
+    ALTER COMPUTE POOL SYSTEM_COMPUTE_POOL_CPU RESUME;
+  EXCEPTION WHEN OTHER THEN NULL;  -- already running
+  END;
+  CALL WILDERNESS_HOL.SETUP.LOG_STEP('NOTEBOOK_COMPUTE', 'OK', NULL);
+  RETURN 'Notebook compute pool started';
+EXCEPTION WHEN OTHER THEN
+  CALL WILDERNESS_HOL.SETUP.LOG_STEP('NOTEBOOK_COMPUTE', 'NO_CPU_POOL', NULL);
+  RETURN 'No SYSTEM_COMPUTE_POOL_CPU in this account';
+END;
+$$;

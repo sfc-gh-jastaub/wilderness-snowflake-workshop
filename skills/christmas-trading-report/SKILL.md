@@ -13,12 +13,11 @@ number taken from this run's tool results.
 Use the agent's own tools, one question each. Sales data runs to 3 November 2026.
 
 1. `retail_analyst`: "Tent units and net sales from 1 to 3 November 2026, and from 1 to 3 November 2025."
-2. `retail_analyst`: "For products in the category Tents & Shelters only, the excess units and excess at cost in
-   AUD at 24 December: the total, the same by state, and the ten stores with the largest excess."
-3. `retail_analyst`: "Which stores will run out of a tent before 24 December, which tent, and when?"
-4. `retail_analyst`: "Which stores will run short of sleeping gear before 24 December, and from which week?"
-5. `retail_analyst`: "Summit 2P Tent return rate by batch."
-6. `customer_feedback`: "Summit 2P Tent pole or seam faults". Pick three comments and copy them word for word,
+2. `retail_analyst`: "Which stores will run out of tents before 24 December, how many tents short, and on what day?"
+3. `retail_analyst`: "Which stores will have tents left over after 24 December, how many, and at what cost? The total, and
+   the ten stores with the most."
+4. `retail_analyst`: "Summit Tent return rate by batch."
+5. `customer_feedback`: "Summit Tent pole or seam faults". Pick three comments and copy them word for word,
    with their date.
 
 ## 2. Build one JSON object
@@ -28,17 +27,16 @@ Keys, exactly as `render_report.py` expects:
 - `report_date`: "4 Nov 2026"
 - `headline`: one plain sentence on the biggest risk, from the numbers above. Name a state only for the
   figure that belongs to it.
-- `kpis`: `tent_stock_at_risk_aud` (total excess at cost, all states, from question 2), `b2607_return_rate_pct`
-  (the B26-07 rate from question 5), `sleep_stores_short` (count of stores from question 4).
+- `kpis`: `tents_left_over` (total tents left over, all stores, from question 3), `b2607_return_rate_pct`
+  (the B26-07 rate from question 4), `stores_running_out` (count of stores from question 2).
 - `tent_sales`: `period` "1 to 3 November", `this_year_units`, `last_year_units`, `this_year_aud`,
   `last_year_aud`.
-- `overstock`: rows of `store`, `state`, `excess_units`, `aud`, largest first (the ten from question 2).
-- `stockout`: rows of `store`, `state`, `product`, `out_by`.
-- `sleep_short`: rows of `store`, `state`, `short_from`.
+- `running_out`: rows of `store`, `state`, `tents_short`, `out_by`, most short first.
+- `left_over`: rows of `store`, `state`, `tents_left_over`, `aud`, largest first (the ten from question 3).
 - `return_rates`: rows of `batch`, `rate_pct`.
 - `quotes`: three rows of `text`, `date`, `product`.
-- `actions`: three short lines: send the B26-07 tents back to the supplier, move tents from the overstocked
-  stores to the stores running out, reorder sleeping gear for the stores that are short. Name the states.
+- `actions`: three short lines: send the broken B26-07 Summit Tents back to the supplier, move the spare tents
+  to the stores running out, and reorder the rest by 13 November. Name the states.
 
 ## 3. Render it
 
