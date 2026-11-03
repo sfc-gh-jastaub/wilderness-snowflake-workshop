@@ -6,7 +6,7 @@
 <meta name="snowflake-source" content="cortex-agent-authored">
 <title>Lab 3: Ready for Christmas: evaluate, tune, control the cost</title>
 <script type="application/json" id="snowflake-report-metadata">{
- "generated": "2026-11-02",
+ "generated": "2026-11-04",
  "intent": "Lab 3: Ready for Christmas: evaluate, tune, control the cost",
  "producerNotes": "Built by _build/build.py from _build/src/guides. Figures were measured on the build account; screenshots are captured at the dry run.",
  "sections": [
@@ -1222,8 +1222,14 @@ SHOW VERSIONS IN AGENT WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_ASSISTANT;</cod
     <li>Go to <span class="path">AI &amp; ML » Agents</span> and open <code class="chip" title="Select to copy">WILDERNESS_ASSISTANT</code>.</li>
     <li>Open the <span class="path">Evaluations</span> tab and select <span class="path">Create evaluation run » Run an evaluation manually</span>.</li>
     <li>Run name <code class="chip" title="Select to copy">baseline_run</code>. Agent version <code class="chip" title="Select to copy">baseline</code>.</li>
-    <li>Dataset: select the existing dataset <code class="chip" title="Select to copy">CHRISTMAS_EVAL_SET</code>.</li>
-    <li>Metrics: <strong>Answer correctness</strong>, <strong>Logical consistency</strong> and <strong>Tool selection accuracy</strong>, each on version <strong>v3</strong>.</li>
+    <li>Dataset: select the existing dataset <code class="chip" title="Select to copy">CHRISTMAS_EVAL_SET</code>. Input query <code class="chip" title="Select to copy">QUERY_TEXT</code>.</li>
+    <li>Metrics: <strong>Answer correctness</strong>, <strong>Logical consistency</strong> and <strong>Tool selection accuracy</strong>, each on version <strong>v3</strong>. Set the expected columns by hand, because the form can fill them in the wrong way round:
+        <ul>
+            <li>Answer correctness, expected answer: <code class="chip" title="Select to copy">EXPECTED_TOOLS</code>.</li>
+            <li>Tool selection accuracy, expected tool invocation: <code class="chip" title="Select to copy">EXPECTED_TOOLS</code>.</li>
+            <li>Logical consistency needs no expected column.</li>
+        </ul>
+        <code>QUERY_TEXT</code> holds the questions. <code>EXPECTED_TOOLS</code> holds both the expected answer and the expected tool calls, so both metrics read it.</li>
     <li>Select <span class="path">Create</span>.</li>
     <li>While it runs, run this in <code>lab3.sql</code> to see each question, what a right answer contains, and the tools it should use.</li>
 </ol>
@@ -1482,7 +1488,7 @@ SHOW VERSIONS IN AGENT WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_ASSISTANT;</cod
 
 <ol class="ui-steps" start="2" style="counter-reset: ui 1;">
     <li>Back on the agent's <span class="path">Evaluations</span> tab, select <span class="path">Create evaluation run » Run an evaluation manually</span>.</li>
-    <li>Run name <code class="chip" title="Select to copy">candidate_run</code>. Agent version <code class="chip" title="Select to copy">candidate</code>. The same dataset, <code class="chip" title="Select to copy">CHRISTMAS_EVAL_SET</code>, and the same three metrics on <strong>v3</strong>. Select <span class="path">Create</span>. It takes about 4 to 5 minutes.</li>
+    <li>Run name <code class="chip" title="Select to copy">candidate_run</code>. Agent version <code class="chip" title="Select to copy">candidate</code>. The same dataset, <code class="chip" title="Select to copy">CHRISTMAS_EVAL_SET</code>, with input query <code class="chip" title="Select to copy">QUERY_TEXT</code>, and the same three metrics on <strong>v3</strong>, with <code class="chip" title="Select to copy">EXPECTED_TOOLS</code> as the expected column for Answer correctness and Tool selection accuracy. Select <span class="path">Create</span>. It takes about 4 to 5 minutes.</li>
     <li>When it shows <strong>Completed</strong>, select <code>baseline_run</code> and <code>candidate_run</code> in the list, then <span class="path">Compare</span>, then <span class="path">Hide unchanged metrics</span>.</li>
 </ol>
 
