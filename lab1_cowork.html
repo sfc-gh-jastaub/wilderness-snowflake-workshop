@@ -1136,19 +1136,12 @@ CREATE OR REPLACE GIT REPOSITORY WILDERNESS_HOL.SETUP.WORKSHOP_REPO
 -- Core setup, about 2 minutes: infrastructure, data, feedback, semantic view, Lab 3 assets
 EXECUTE IMMEDIATE FROM @WILDERNESS_HOL.SETUP.WORKSHOP_REPO/branches/main/setup/10_setup_core.sql;
 
-SELECT STEP, STATUS, ROWS_AFFECTED, LOGGED_AT FROM WILDERNESS_HOL.SETUP.SETUP_LOG ORDER BY LOGGED_AT;
-
--- Your link to open the workshop repo as a workspace, with the form already filled in
-SELECT 'https://app.snowflake.com/' || LOWER(CURRENT_ORGANIZATION_NAME()) || '/' || LOWER(CURRENT_ACCOUNT_NAME())
-    || '/#/workspaces?action=create_workspace_from_git_repo'
-    || '&amp;remoteUrl=https%3A%2F%2Fgithub.com%2Fsfc-gh-jastaub%2Fwilderness-snowflake-workshop'
-    || '&amp;workspaceName=wilderness-snowflake-workshop&amp;apiIntegration=WILDERNESS_GIT_API&amp;authType=NONE'
-    AS OPEN_WORKSHOP_REPO;</code></pre>
+SELECT STEP, STATUS, ROWS_AFFECTED, LOGGED_AT FROM WILDERNESS_HOL.SETUP.SETUP_LOG ORDER BY LOGGED_AT;</code></pre>
 </div>
 
 <div class="info-box success">
     <strong>You should see</strong>
-    <p>The setup log, with every step <code>OK</code>. The last result has one link, <code>OPEN_WORKSHOP_REPO</code>; you do not need it today.</p>
+    <p>The setup log, with every step <code>OK</code>.</p>
 </div>
 
 <details class="callout">
@@ -1548,6 +1541,21 @@ Then run DESCRIBE AGENT and SHOW AGENTS IN SNOWFLAKE INTELLIGENCE SNOWFLAKE_INTE
     <div class="code-header"><span class="code-lang">sql</span><button class="btn-copy" type="button">Copy</button></div>
     <pre><code>ALTER GIT REPOSITORY WILDERNESS_HOL.SETUP.WORKSHOP_REPO FETCH;
 EXECUTE IMMEDIATE FROM @WILDERNESS_HOL.SETUP.WORKSHOP_REPO/branches/main/setup/90_catch_up_lab1.sql;</code></pre>
+</div>
+    </div>
+</details>
+
+<details class="callout stuck">
+    <summary>Browse the workshop files in a workspace</summary>
+    <div>
+        <p>You don't need this for any step. To read the setup scripts, catch-ups and skill in Snowsight, run this in your SQL file and open the link it returns. It opens <span class="path">Projects » Workspaces</span> with the form to create a workspace from the workshop's Git repository already filled in.</p>
+        <div class="code-block">
+    <div class="code-header"><span class="code-lang">sql</span><button class="btn-copy" type="button">Copy</button></div>
+    <pre><code>SELECT 'https://app.snowflake.com/' || LOWER(CURRENT_ORGANIZATION_NAME()) || '/' || LOWER(CURRENT_ACCOUNT_NAME())
+    || '/#/workspaces?action=create_workspace_from_git_repo'
+    || '&amp;remoteUrl=https%3A%2F%2Fgithub.com%2Fsfc-gh-jastaub%2Fwilderness-snowflake-workshop'
+    || '&amp;workspaceName=wilderness-snowflake-workshop&amp;apiIntegration=WILDERNESS_GIT_API&amp;authType=NONE'
+    AS OPEN_WORKSHOP_REPO;</code></pre>
 </div>
     </div>
 </details>
