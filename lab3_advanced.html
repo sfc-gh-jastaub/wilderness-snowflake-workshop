@@ -1330,8 +1330,8 @@ ORDER BY QUESTION_ID;</code></pre>
 <p>You add two verified queries, show that the view gets them wrong, add the definitions, and show that it now gets them right.</p>
 
 <ol class="ui-steps">
-    <li>Go to <span class="path">AI &amp; ML » Cortex Analyst</span>, open <code class="chip" title="Select to copy">SV_WILDERNESS_RETAIL</code> in <code>LAB3_PRODUCTION</code> (not the one in <code>LAB1_ASSISTANT</code>) and select <span class="path">Edit</span>.</li>
-    <li>Add each verified query below with its question and its SQL, then select <span class="path">Save</span>. Each returns one total for a fixed range of days, so a wrong range gives a plainly wrong number.</li>
+    <li>Go to <span class="path">AI &amp; ML » Cortex Analyst</span>, open <code class="chip" title="Select to copy">SV_WILDERNESS_RETAIL</code> in <code>LAB3_PRODUCTION</code> (not the one in <code>LAB1_ASSISTANT</code>) and select <span class="path">Edit</span>. It opens in the Workspaces editor.</li>
+    <li>Add each verified query below with its question and its SQL. Each returns one total for a fixed range of days, so a wrong range gives a plainly wrong number.</li>
 </ol>
 
 <p>Question: <code class="chip" title="Select to copy">What were net sales over the launch weekend last year?</code></p>
@@ -1351,6 +1351,7 @@ WHERE s.order_date BETWEEN '2025-12-18' AND '2025-12-24'</code></pre>
 </div>
 
 <ol class="ui-steps" start="3" style="counter-reset: ui 2;">
+    <li>Select <span class="path">Deploy changes</span> and wait until the dot on the button goes. The editor shows your draft; the evaluation runs against the deployed view.</li>
     <li>Open the semantic view's <span class="path">Evaluations</span> tab and select <span class="path">Create evaluation run</span>. Run name <code class="chip" title="Select to copy">before_fix</code>, metric <strong>SQL correctness</strong> on <strong>v3</strong>. Select only the two queries you just added, then <span class="path">Run evaluation</span>.</li>
 </ol>
 
@@ -1359,8 +1360,8 @@ WHERE s.order_date BETWEEN '2025-12-18' AND '2025-12-24'</code></pre>
     <p>After 2 to 3 minutes, <strong>0 of 2</strong> correct. Open a result: Cortex Analyst did not answer, and asked what "Peak Week" or "launch weekend" means.</p>
 </div>
 
-<ol class="ui-steps" start="4" style="counter-reset: ui 3;">
-    <li>In the editor, switch from <span class="path">Visual</span> to <span class="path">YAML</span>. Go to the last line of the file, paste the block below on a new line, starting at the left edge with no spaces before <code>module_custom_instructions</code>, and select <span class="path">Deploy</span>.</li>
+<ol class="ui-steps" start="5" style="counter-reset: ui 4;">
+    <li>In the editor, switch from <span class="path">Visual</span> to <span class="path">YAML</span>. Go to the last line of the file and paste the block below on a new line, starting at the left edge with no spaces before <code>module_custom_instructions</code>.</li>
 </ol>
 
 <div class="code-block">
@@ -1377,11 +1378,12 @@ WHERE s.order_date BETWEEN '2025-12-18' AND '2025-12-24'</code></pre>
 <details class="callout">
     <summary>If you see "Custom Instructions set through multiple fields"</summary>
     <div>
-        <p>Typing into the Custom instructions boxes in the Visual view writes the SQL generation text twice: once under <code>module_custom_instructions</code> and again under the older <code>custom_instructions</code> key, and Snowflake rejects a view with both. In the YAML view, delete the whole line that starts with <code>custom_instructions:</code>, keep the <code>module_custom_instructions</code> block, and select <span class="path">Deploy</span>.</p>
+        <p>Typing into the Custom instructions boxes in the Visual view writes the SQL generation text twice: once under <code>module_custom_instructions</code> and again under the older <code>custom_instructions</code> key, and Snowflake rejects a view with both. In the YAML view, delete the whole line that starts with <code>custom_instructions:</code> and keep the <code>module_custom_instructions</code> block.</p>
     </div>
 </details>
 
-<ol class="ui-steps" start="5" style="counter-reset: ui 4;">
+<ol class="ui-steps" start="6" style="counter-reset: ui 5;">
+    <li>Select <span class="path">Deploy changes</span> again and wait until the dot goes.</li>
     <li>Create a second run, <code class="chip" title="Select to copy">after_fix</code>, the same way, on the same two queries.</li>
 </ol>
 
@@ -1390,6 +1392,13 @@ WHERE s.order_date BETWEEN '2025-12-18' AND '2025-12-24'</code></pre>
     <p><strong>2 of 2</strong> correct, with SQL that uses 1 to 3 November 2025 and 18 to 24 December 2025.</p>
 </div>
 
+<details class="callout">
+    <summary>If after_fix is still 0 of 2 and asks which dates you mean</summary>
+    <div>
+        <p>The instructions are in your draft but not in the deployed view. If <span class="path">Deploy changes</span> still shows a dot, select it, wait until the dot goes, then create another run on the same two queries.</p>
+    </div>
+</details>
+
 <div class="info-box info">
     <strong>Both instructions are needed</strong>
     <p>At the build, SQL generation on its own still scored 0 of 2: Cortex Analyst kept asking what the terms meant before it reached the SQL. Question categorization lets the question through; SQL generation gets the dates right.</p>
@@ -1397,7 +1406,7 @@ WHERE s.order_date BETWEEN '2025-12-18' AND '2025-12-24'</code></pre>
 
 <div class="info-box info">
     <strong>In a real project, change a copy first</strong>
-    <p>A semantic view has no versions, so this edit reaches production the moment you save it, before the agent is evaluated again. Here you edit the production view to keep the afternoon short. In a real project, make the change on a development copy, evaluate it, then deploy it to the view production reads.</p>
+    <p>A semantic view has no versions, so this edit reaches production the moment you deploy it, before the agent is evaluated again. Here you edit the production view to keep the afternoon short. In a real project, make the change on a development copy, evaluate it, then deploy it to the view production reads.</p>
 </div>
 
 <div class="info-box tip">
