@@ -4,6 +4,9 @@
 -- runs the rest of the setup from there.
 -- =====================================================================================
 USE ROLE ACCOUNTADMIN;
+-- A new account takes several minutes to list its AI models, and bundle 2026_07 blocks the
+-- search services until the embedding model is listed. Turning the bundle off lets setup run now.
+SELECT SYSTEM$DISABLE_BEHAVIOR_CHANGE_BUNDLE('2026_07');
 CREATE WAREHOUSE IF NOT EXISTS WILDERNESS_WH WAREHOUSE_SIZE = SMALL AUTO_SUSPEND = 60 AUTO_RESUME = TRUE
   INITIALLY_SUSPENDED = TRUE;
 USE WAREHOUSE WILDERNESS_WH;
