@@ -1024,7 +1024,7 @@ a.lab-card:hover { box-shadow: var(--shadow-md); border-color: var(--sf-blue); c
         <div class="hero-meta">
             <div class="meta-item"><span class="meta-label">Core</span><span class="meta-value">99 min, 11 steps</span></div>
             <div class="meta-item"><span class="meta-label">You use</span><span class="meta-value">Snowsight, Cortex Code and CoWork</span></div>
-            <div class="meta-item"><span class="meta-label">Code</span><span class="meta-value">SQL blocks to paste, 6 prompts</span></div>
+            <div class="meta-item"><span class="meta-label">Code</span><span class="meta-value">A prompt for every step, with the SQL behind it</span></div>
         </div>
     </div>
 </section>
@@ -1106,9 +1106,11 @@ a.lab-card:hover { box-shadow: var(--shadow-md); border-color: var(--sf-blue); c
     <p>The production copy of the assistant is already in your account, so this lab does not depend on how far you got in Lab 1 or Lab 2.</p>
 </div>
 
-<p>You run this lab's SQL in one SQL file. In Snowsight, go to <span class="path">Projects » Workspaces</span>, select <span class="path">+ Add new » SQL File</span>, name it <code class="chip" title="Select to copy">lab3.sql</code>, and keep it open all afternoon. Paste each block into it and select <span class="path">Run all</span>, unless a step says otherwise. The evaluations, the semantic view and Cortex Code are in other Snowsight pages; each step says where.</p>
+<p>You work in one place this afternoon: the Cortex Code panel in Snowsight, the same one you used in Lab 2. Every step has a prompt to paste. Keep the one conversation open all afternoon, and read what Cortex Code proposes before you approve it. The evaluations, the semantic view and the budgets also show up in their Snowsight pages; each step says where to look.</p>
 
-<p>If a step does not finish, <a href="#stuck">If you get stuck</a> at the bottom of this page has a block that gets you to the same place.</p>
+<p>Under each prompt, collapsed, is the same step as SQL or as steps in Snowsight. If you would rather run the SQL, go to <span class="path">Projects » Workspaces</span>, select <span class="path">+ Add new » SQL File</span>, name it <code class="chip" title="Select to copy">lab3.sql</code>, paste each block into it and select <span class="path">Run all</span>.</p>
+
+<p>If a step does not finish, <a href="#stuck">If you get stuck</a> at the bottom of this page says how to carry on.</p>
 
 <div class="step-card" id="step-1">
     <div class="step-header">
@@ -1119,11 +1121,20 @@ a.lab-card:hover { box-shadow: var(--shadow-md); border-color: var(--sf-blue); c
     <div class="step-content">
 <p>Part 1: is it right? Tom Walsh: "The store managers like it. Before 72 stores lean on it every morning to Christmas Eve, I need to know it is right, and what it will cost." Before you change anything, freeze what the stores have now.</p>
 
-<p>An agent keeps a working draft and a list of committed versions, and a committed version never changes. Freezing the assistant as it is now gives you a fixed point to measure against and to roll back to. Pinning it as the default keeps everyone on it while you change the draft: until you pin it, the default is the latest commit, so this afternoon's new version would reach every store manager before anyone had tested it. You never type a version number; the blocks look it up.</p>
+<p>An agent keeps a working draft and a list of committed versions, and a committed version never changes. Freezing the assistant as it is now gives you a fixed point to measure against and to roll back to. Pinning it as the default keeps everyone on it while you change the draft: until you pin it, the default is the latest commit, so this afternoon's new version would reach every store manager before anyone had tested it.</p>
 
-<p>In <code>lab3.sql</code>, run this block. It checks that the production copy is in place, then commits the draft as a new version, labels it <code>baseline</code> and makes it the default.</p>
+<p>In the Cortex Code panel, paste this prompt. It checks that the production copy is in place, then commits the draft as a new version, labels it <code>baseline</code> and makes it the default.</p>
 
-<div class="code-block">
+<div class="code-block prompt">
+    <div class="code-header"><span class="code-lang">cortex code</span><button class="btn-copy" type="button">Copy</button></div>
+    <pre><code>Use the agent-studio skill. For the agent WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_ASSISTANT, check that it has its three tools (retail_analyst, customer_feedback and data_to_chart), that the search service WILDERNESS_HOL.LAB3_PRODUCTION.CSS_CUSTOMER_FEEDBACK exists, that the semantic view WILDERNESS_HOL.LAB3_PRODUCTION.SV_WILDERNESS_RETAIL has the metric RETURN_RATE, and that the dataset WILDERNESS_HOL.LAB3_PRODUCTION.CHRISTMAS_EVAL_SET exists. If anything is missing, stop and tell me what, and change nothing. If a version already has the alias baseline, change nothing and tell me which version it is. Otherwise commit the agent's live version as a new version with the comment 'Baseline: the production copy, before any Lab 3 change', give it the alias baseline and make it the default version. Then add a new live version from the last commit, so there is a draft to change later. Show me the versions.</code></pre>
+</div>
+
+<details class="callout">
+    <summary>Or run it as SQL in lab3.sql</summary>
+    <div>
+        <p>The block looks the version number up for you. Run it again and it says <code>Already frozen</code> and changes nothing.</p>
+        <div class="code-block">
     <div class="code-header"><span class="code-lang">sql</span><button class="btn-copy" type="button">Copy</button></div>
     <pre><code>-- Lab 3 Step 1: check the production copy setup built, then freeze it as the baseline.
 -- If anything is missing it stops and says what, and nothing is committed. Otherwise it commits the
@@ -1193,10 +1204,12 @@ $$;
 
 SHOW VERSIONS IN AGENT WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_ASSISTANT;</code></pre>
 </div>
+    </div>
+</details>
 
 <div class="info-box success">
     <strong>You should see</strong>
-    <p><code>All checks OK</code>, for the production Wilderness Assistant and its tools, its customer feedback search, <code>RETURN_RATE</code> on its semantic view and an evaluation dataset of eight questions, then <code>Baseline is VERSION$2, and it is the default</code> (the number can differ). Below it, the versions: the new one has the alias <code>BASELINE</code> and <code>is_default</code> true. If the message starts <code>MISSING</code>, nothing was frozen; see <a href="#stuck">If you get stuck</a>.</p>
+    <p>The checks pass for the production Wilderness Assistant and its three tools, its customer feedback search, <code>RETURN_RATE</code> on its semantic view and the evaluation dataset. Then the versions: the new one, for example <code>VERSION$2</code>, has the alias <code>BASELINE</code> and <code>is_default</code> true. If something is missing, nothing was frozen; see <a href="#stuck">If you get stuck</a>.</p>
 </div>
         <label class="completion-checkbox"><input type="checkbox" data-step="1"> Mark step 1 complete</label>
     </div>
@@ -1218,23 +1231,32 @@ SHOW VERSIONS IN AGENT WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_ASSISTANT;</cod
 </ul>
 <p>The run asks <code>baseline</code>, a version that cannot change, so whatever you edit while it runs does not change what is scored.</p>
 
-<ol class="ui-steps">
-    <li>Go to <span class="path">AI &amp; ML » Agents</span> and open <code class="chip" title="Select to copy">WILDERNESS_ASSISTANT</code>.</li>
-    <li>Open the <span class="path">Evaluations</span> tab and select <span class="path">Create evaluation run » Run an evaluation manually</span>.</li>
-    <li>Run name <code class="chip" title="Select to copy">baseline_run</code>. Agent version <code class="chip" title="Select to copy">baseline</code>.</li>
-    <li>Dataset: select the existing dataset <code class="chip" title="Select to copy">CHRISTMAS_EVAL_SET</code>. Input query <code class="chip" title="Select to copy">QUERY_TEXT</code>.</li>
-    <li>Metrics: <strong>Answer correctness</strong>, <strong>Logical consistency</strong> and <strong>Tool selection accuracy</strong>, each on version <strong>v3</strong>. Set the expected columns by hand, because the form can fill them in the wrong way round:
-        <ul>
-            <li>Answer correctness, expected answer: <code class="chip" title="Select to copy">EXPECTED_TOOLS</code>.</li>
-            <li>Tool selection accuracy, expected tool invocation: <code class="chip" title="Select to copy">EXPECTED_TOOLS</code>.</li>
-            <li>Logical consistency needs no expected column.</li>
-        </ul>
-        <code>QUERY_TEXT</code> holds the questions. <code>EXPECTED_TOOLS</code> holds both the expected answer and the expected tool calls, so both metrics read it.</li>
-    <li>Select <span class="path">Create</span>.</li>
-    <li>While it runs, run this in <code>lab3.sql</code> to see each question, what a right answer contains, and the tools it should use.</li>
-</ol>
+<p>In the Cortex Code panel, paste this prompt. It starts the run, shows you the eight questions while it works, and tells you when it is done.</p>
 
-<div class="code-block">
+<div class="code-block prompt">
+    <div class="code-header"><span class="code-lang">cortex code</span><button class="btn-copy" type="button">Copy</button></div>
+    <pre><code>Use the agent-studio skill. Start an agent evaluation run called baseline_run on the version with the alias baseline of WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_ASSISTANT. Use the dataset WILDERNESS_HOL.LAB3_PRODUCTION.CHRISTMAS_EVAL_SET and three metrics, each on version v3: answer_correctness, logical_consistency and tool_selection_accuracy. Put the run's configuration file on the stage @WILDERNESS_HOL.LAB3_PRODUCTION.EVAL_CONFIG. While it runs, list the eight questions in WILDERNESS_HOL.LAB3_PRODUCTION.AGENT_EVAL_QUESTIONS, each with what a right answer contains and the tools it should use. Check the run's status every minute and tell me when it is complete.</code></pre>
+</div>
+
+<details class="callout">
+    <summary>Or do it in Snowsight</summary>
+    <div>
+        <ol class="ui-steps">
+            <li>Go to <span class="path">AI &amp; ML » Agents</span> and open <code class="chip" title="Select to copy">WILDERNESS_ASSISTANT</code>.</li>
+            <li>Open the <span class="path">Evaluations</span> tab and select <span class="path">Create evaluation run » Run an evaluation manually</span>.</li>
+            <li>Run name <code class="chip" title="Select to copy">baseline_run</code>. Agent version <code class="chip" title="Select to copy">baseline</code>.</li>
+            <li>Dataset: select the existing dataset <code class="chip" title="Select to copy">CHRISTMAS_EVAL_SET</code>. Input query <code class="chip" title="Select to copy">QUERY_TEXT</code>.</li>
+            <li>Metrics: <strong>Answer correctness</strong>, <strong>Logical consistency</strong> and <strong>Tool selection accuracy</strong>, each on version <strong>v3</strong>. Set the expected columns by hand, because the form can fill them in the wrong way round:
+                <ul>
+                    <li>Answer correctness, expected answer: <code class="chip" title="Select to copy">EXPECTED_TOOLS</code>.</li>
+                    <li>Tool selection accuracy, expected tool invocation: <code class="chip" title="Select to copy">EXPECTED_TOOLS</code>.</li>
+                    <li>Logical consistency needs no expected column.</li>
+                </ul>
+                <code>QUERY_TEXT</code> holds the questions. <code>EXPECTED_TOOLS</code> holds both the expected answer and the expected tool calls, so both metrics read it.</li>
+            <li>Select <span class="path">Create</span>.</li>
+            <li>While it runs, run this in <code>lab3.sql</code> to see each question, what a right answer contains, and the tools it should use.</li>
+        </ol>
+        <div class="code-block">
     <div class="code-header"><span class="code-lang">sql</span><button class="btn-copy" type="button">Copy</button></div>
     <pre><code>-- Lab 3 Step 2, block 1: the eight questions and what a right answer contains.
 SELECT QUESTION_ID AS "#",
@@ -1244,6 +1266,8 @@ SELECT QUESTION_ID AS "#",
 FROM WILDERNESS_HOL.LAB3_PRODUCTION.AGENT_EVAL_QUESTIONS
 ORDER BY QUESTION_ID;</code></pre>
 </div>
+    </div>
+</details>
 
 <div class="table-wrapper">
 <table class="form-table">
@@ -1259,7 +1283,7 @@ ORDER BY QUESTION_ID;</code></pre>
 
 <div class="info-box success">
     <strong>You should see</strong>
-    <p><code>baseline_run</code> in the list with a status that moves on as it works. It takes about 4 to 5 minutes. The query shows eight questions, each with its expected answer and tools. Wait until <code>baseline_run</code> shows <strong>Completed</strong> before Step 3.</p>
+    <p>Eight questions, each with its expected answer and tools, then <code>baseline_run</code> completing after about 4 to 5 minutes. It is also listed on the agent's <span class="path">Evaluations</span> tab in <span class="path">AI &amp; ML » Agents</span>. Wait until it is complete before Step 3.</p>
 </div>
 
 <div class="info-box tip">
@@ -1280,29 +1304,28 @@ ORDER BY QUESTION_ID;</code></pre>
 
 <p>Each record shows the judge's explanation next to the agent's own steps, including the SQL Cortex Analyst wrote, so you can see where an answer went wrong. Cortex Code's agent-studio skill reads a whole run at once and groups the failures. Where a failure is fixed matters: the semantic view is shared, so a definition you put there reaches every agent and tool that reads it at once; the instructions belong to this agent, and a committed version keeps them.</p>
 
-<ol class="ui-steps">
-    <li>Open <code>baseline_run</code>. Sort the records by <strong>Answer correctness</strong>, lowest first.</li>
-    <li>Open the lowest record. The scores are on the left, the agent's steps in the middle and the detail of the selected step on the right.</li>
-    <li>Expand the judge's explanation of the answer correctness score.</li>
-    <li>Select the <code>retail_analyst</code> step and read the SQL it ran.</li>
-</ol>
-
-<div class="info-box success">
-    <strong>You should see</strong>
-    <p>Answer correctness about 0.6 to 0.7 across the eight. The lowest records are the launch-weekend questions, 5 and 7. The SQL counts the wrong days, often a two-day weekend of 1 and 2 November, or the answer asks you which weekend you mean. Question 8 points you to a weather website, and some answers called the same tool twice, which costs tool selection points.</p>
-</div>
-
-<ol class="ui-steps" start="5" style="counter-reset: ui 4;">
-    <li>Open the Cortex Code panel in Snowsight, the same one you used in Lab 2, and paste this. It only reads.</li>
-</ol>
+<p>In the Cortex Code panel, paste this prompt. It only reads.</p>
 
 <div class="code-block prompt">
     <div class="code-header"><span class="code-lang">cortex code</span><button class="btn-copy" type="button">Copy</button></div>
-    <pre><code>Use the agent-studio skill. Look at the evaluation run baseline_run for the agent WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_ASSISTANT. Group the low-scoring records into failure patterns. For each pattern, say whether it should be fixed in the semantic view or in the agent's instructions, and why. Do not change anything.</code></pre>
+    <pre><code>Use the agent-studio skill. Look at the evaluation run baseline_run for the agent WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_ASSISTANT. Give me the score for each question and metric, then group the low-scoring records into failure patterns. For each pattern, show one example, with the SQL Cortex Analyst wrote if there was one, and say whether it should be fixed in the semantic view or in the agent's instructions, and why. Do not change anything.</code></pre>
 </div>
+
+<details class="callout">
+    <summary>Or read it in Snowsight</summary>
+    <div>
+        <ol class="ui-steps">
+            <li>Open <code>baseline_run</code> on the agent's <span class="path">Evaluations</span> tab. Sort the records by <strong>Answer correctness</strong>, lowest first.</li>
+            <li>Open the lowest record. The scores are on the left, the agent's steps in the middle and the detail of the selected step on the right.</li>
+            <li>Expand the judge's explanation of the answer correctness score.</li>
+            <li>Select the <code>retail_analyst</code> step and read the SQL it ran.</li>
+        </ol>
+    </div>
+</details>
 
 <div class="info-box success">
     <strong>You should see</strong>
+    <p>Answer correctness about 0.6 to 0.7 across the eight. The lowest are the launch-weekend questions, 5 and 7: the SQL counts the wrong days, often a two-day weekend of 1 and 2 November, or the answer asks you which weekend you mean. Question 8 points you to a weather website, and some answers called the same tool twice, which costs tool selection points.</p>
     <p>Two kinds of failure. The dates: the assistant does not know Wilderness's trading terms, and that belongs in the semantic view. The behaviour: tools called twice and a refusal that sends people elsewhere, and that belongs in the agent's instructions. Step 4 fixes the definitions, Step 5 the behaviour. Its wording will differ from your neighbour's.</p>
 </div>
 
@@ -1327,44 +1350,86 @@ ORDER BY QUESTION_ID;</code></pre>
     <li><strong>A semantic view evaluation</strong> tests one layer, the SQL Cortex Analyst writes. The right answers are your own verified queries. During the run they are removed from a temporary copy of the view, so Cortex Analyst has to write the SQL itself, and its result is compared with yours.</li>
     <li><strong>Custom instructions</strong> tell Cortex Analyst what the tables cannot: here, which dates Wilderness's terms mean.</li>
 </ul>
-<p>You add two verified queries, show that the view gets them wrong, add the definitions, and show that it now gets them right.</p>
+<p>You add two verified queries, show that the view gets them wrong, add the definitions, and show that it now gets them right. Each query returns one total for a fixed range of days, so a wrong range gives a plainly wrong number.</p>
 
 <ol class="ui-steps">
-    <li>Go to <span class="path">AI &amp; ML » Cortex Analyst</span>, open <code class="chip" title="Select to copy">SV_WILDERNESS_RETAIL</code> in <code>LAB3_PRODUCTION</code> (not the one in <code>LAB1_ASSISTANT</code>) and select <span class="path">Edit</span>. It opens in the Workspaces editor.</li>
-    <li>Add each verified query below with its question and its SQL. Each returns one total for a fixed range of days, so a wrong range gives a plainly wrong number.</li>
+    <li>In the Cortex Code panel, paste this prompt. It adds the two verified queries and runs <code>before_fix</code>.</li>
 </ol>
 
-<p>Question: <code class="chip" title="Select to copy">What were net sales over the launch weekend last year?</code></p>
-<div class="code-block">
+<div class="code-block prompt">
+    <div class="code-header"><span class="code-lang">cortex code</span><button class="btn-copy" type="button">Copy</button></div>
+    <pre><code>Add two verified queries to the semantic view WILDERNESS_HOL.LAB3_PRODUCTION.SV_WILDERNESS_RETAIL and keep everything else in it as it is.
+
+Question: What were net sales over the launch weekend last year?
+SQL:
+SELECT MIN(s.order_date) AS first_day, MAX(s.order_date) AS last_day, SUM(s.net_sales) AS net_sales_aud
+FROM __sales AS s
+WHERE s.order_date BETWEEN '2025-11-01' AND '2025-11-03'
+
+Question: What were net sales in Peak Week last year?
+SQL:
+SELECT MIN(s.order_date) AS first_day, MAX(s.order_date) AS last_day, SUM(s.net_sales) AS net_sales_aud
+FROM __sales AS s
+WHERE s.order_date BETWEEN '2025-12-18' AND '2025-12-24'
+
+Then start a semantic view evaluation called before_fix on only those two questions, with the metric sql_correctness on version v3, and put its configuration file on the stage @WILDERNESS_HOL.LAB3_PRODUCTION.EVAL_CONFIG. Check its status every minute. When it is complete, show me the result for each question, with the SQL Cortex Analyst wrote or what it said instead.</code></pre>
+</div>
+
+<details class="callout">
+    <summary>Or do it in Snowsight</summary>
+    <div>
+        <ol class="ui-steps">
+            <li>Go to <span class="path">AI &amp; ML » Cortex Analyst</span>, open <code class="chip" title="Select to copy">SV_WILDERNESS_RETAIL</code> in <code>LAB3_PRODUCTION</code> (not the one in <code>LAB1_ASSISTANT</code>) and select <span class="path">Edit</span>. It opens in the Workspaces editor.</li>
+            <li>Add each verified query below with its question and its SQL.</li>
+        </ol>
+        <p>Question: <code class="chip" title="Select to copy">What were net sales over the launch weekend last year?</code></p>
+        <div class="code-block">
     <div class="code-header"><span class="code-lang">sql</span><button class="btn-copy" type="button">Copy</button></div>
     <pre><code>SELECT MIN(s.order_date) AS first_day, MAX(s.order_date) AS last_day, SUM(s.net_sales) AS net_sales_aud
 FROM __sales AS s
 WHERE s.order_date BETWEEN '2025-11-01' AND '2025-11-03'</code></pre>
 </div>
-
-<p>Question: <code class="chip" title="Select to copy">What were net sales in Peak Week last year?</code></p>
-<div class="code-block">
+        <p>Question: <code class="chip" title="Select to copy">What were net sales in Peak Week last year?</code></p>
+        <div class="code-block">
     <div class="code-header"><span class="code-lang">sql</span><button class="btn-copy" type="button">Copy</button></div>
     <pre><code>SELECT MIN(s.order_date) AS first_day, MAX(s.order_date) AS last_day, SUM(s.net_sales) AS net_sales_aud
 FROM __sales AS s
 WHERE s.order_date BETWEEN '2025-12-18' AND '2025-12-24'</code></pre>
 </div>
-
-<ol class="ui-steps" start="3" style="counter-reset: ui 2;">
-    <li>Select <span class="path">Deploy changes</span> and wait until the dot on the button goes. The editor shows your draft; the evaluation runs against the deployed view.</li>
-    <li>Open the semantic view's <span class="path">Evaluations</span> tab and select <span class="path">Create evaluation run</span>. Run name <code class="chip" title="Select to copy">before_fix</code>, metric <strong>SQL correctness</strong> on <strong>v3</strong>. Select only the two queries you just added, then <span class="path">Run evaluation</span>.</li>
-</ol>
+        <ol class="ui-steps" start="3" style="counter-reset: ui 2;">
+            <li>Select <span class="path">Deploy changes</span> and wait until the dot on the button goes. The editor shows your draft; the evaluation runs against the deployed view.</li>
+            <li>Open the semantic view's <span class="path">Evaluations</span> tab and select <span class="path">Create evaluation run</span>. Run name <code class="chip" title="Select to copy">before_fix</code>, metric <strong>SQL correctness</strong> on <strong>v3</strong>. Select only the two queries you just added, then <span class="path">Run evaluation</span>.</li>
+        </ol>
+    </div>
+</details>
 
 <div class="info-box success">
     <strong>You should see</strong>
-    <p>After 2 to 3 minutes, <strong>0 of 2</strong> correct. Open a result: Cortex Analyst did not answer, and asked what "Peak Week" or "launch weekend" means.</p>
+    <p>After 2 to 3 minutes, <strong>0 of 2</strong> correct. Cortex Analyst did not answer, and asked what "Peak Week" or "launch weekend" means.</p>
 </div>
 
-<ol class="ui-steps" start="5" style="counter-reset: ui 4;">
-    <li>In the editor, switch from <span class="path">Visual</span> to <span class="path">YAML</span>. Go to the last line of the file and paste the block below on a new line, starting at the left edge with no spaces before <code>module_custom_instructions</code>.</li>
+<ol class="ui-steps" start="2" style="counter-reset: ui 1;">
+    <li>Paste this prompt. It adds the definitions as custom instructions, runs <code>after_fix</code> and compares the two runs.</li>
 </ol>
 
-<div class="code-block">
+<div class="code-block prompt">
+    <div class="code-header"><span class="code-lang">cortex code</span><button class="btn-copy" type="button">Copy</button></div>
+    <pre><code>Add custom instructions to the semantic view WILDERNESS_HOL.LAB3_PRODUCTION.SV_WILDERNESS_RETAIL, under module_custom_instructions only. Do not use the older custom_instructions key, and keep everything else in the view as it is.
+
+question_categorization: Wilderness uses its own trading terms, and questions that use them are clear. The launch weekend is 1 to 3 November. Peak Week is 18 to 24 December. The Christmas trading period is 1 November to 24 December. 'Last year' means 2025.
+
+sql_generation: Wilderness uses these trading terms. The launch weekend is the first three days of Christmas trading, 1 to 3 November. Peak Week is the seven days to Christmas Eve, 18 to 24 December. The Christmas trading period runs from 1 November to 24 December, never calendar December. 'Last year' and 'last Christmas' mean 2025. The financial year runs from 1 July to 30 June, and 'last financial year' means FY26, 1 July 2025 to 30 June 2026. Always say which dates you used.
+
+Then run the same evaluation as before_fix again, called after_fix, on the same two questions. When it is complete, compare after_fix with before_fix question by question.</code></pre>
+</div>
+
+<details class="callout">
+    <summary>Or do it in Snowsight</summary>
+    <div>
+        <ol class="ui-steps">
+            <li>In the editor, switch from <span class="path">Visual</span> to <span class="path">YAML</span>. Go to the last line of the file and paste the block below on a new line, starting at the left edge with no spaces before <code>module_custom_instructions</code>.</li>
+        </ol>
+        <div class="code-block">
     <div class="code-header"><span class="code-lang">yaml</span><button class="btn-copy" type="button">Copy</button></div>
     <pre><code>module_custom_instructions:
   question_categorization: |
@@ -1372,32 +1437,21 @@ WHERE s.order_date BETWEEN '2025-12-18' AND '2025-12-24'</code></pre>
   sql_generation: |
     Wilderness uses these trading terms. The launch weekend is the first three days of Christmas trading, 1 to 3 November. Peak Week is the seven days to Christmas Eve, 18 to 24 December. The Christmas trading period runs from 1 November to 24 December, never calendar December. 'Last year' and 'last Christmas' mean 2025. The financial year runs from 1 July to 30 June, and 'last financial year' means FY26, 1 July 2025 to 30 June 2026. Always say which dates you used.</code></pre>
 </div>
-
-<p>It sets two instructions. <strong>Question categorization</strong> makes a question that uses a Wilderness term count as clear instead of unclear. <strong>SQL generation</strong> makes the SQL use the right dates.</p>
-
-<details class="callout">
-    <summary>If you see "Custom Instructions set through multiple fields"</summary>
-    <div>
-        <p>Typing into the Custom instructions boxes in the Visual view writes the SQL generation text twice: once under <code>module_custom_instructions</code> and again under the older <code>custom_instructions</code> key, and Snowflake rejects a view with both. In the YAML view, delete the whole line that starts with <code>custom_instructions:</code> and keep the <code>module_custom_instructions</code> block.</p>
+        <p><strong>If you see "Custom Instructions set through multiple fields":</strong> typing into the Custom instructions boxes in the Visual view writes the SQL generation text twice, once under <code>module_custom_instructions</code> and again under the older <code>custom_instructions</code> key, and Snowflake rejects a view with both. In the YAML view, delete the whole line that starts with <code>custom_instructions:</code> and keep the <code>module_custom_instructions</code> block.</p>
+        <ol class="ui-steps" start="2" style="counter-reset: ui 1;">
+            <li>Select <span class="path">Deploy changes</span> again and wait until the dot goes.</li>
+            <li>Create a second run, <code class="chip" title="Select to copy">after_fix</code>, the same way, on the same two queries.</li>
+        </ol>
+        <p><strong>If after_fix is still 0 of 2 and asks which dates you mean:</strong> the instructions are in your draft but not in the deployed view. If <span class="path">Deploy changes</span> still shows a dot, select it, wait until the dot goes, then create another run on the same two queries.</p>
     </div>
 </details>
 
-<ol class="ui-steps" start="6" style="counter-reset: ui 5;">
-    <li>Select <span class="path">Deploy changes</span> again and wait until the dot goes.</li>
-    <li>Create a second run, <code class="chip" title="Select to copy">after_fix</code>, the same way, on the same two queries.</li>
-</ol>
+<p>The block sets two instructions. <strong>Question categorization</strong> makes a question that uses a Wilderness term count as clear instead of unclear. <strong>SQL generation</strong> makes the SQL use the right dates.</p>
 
 <div class="info-box success">
     <strong>You should see</strong>
-    <p><strong>2 of 2</strong> correct, with SQL that uses 1 to 3 November 2025 and 18 to 24 December 2025.</p>
+    <p><strong>2 of 2</strong> correct, with SQL that uses 1 to 3 November 2025 and 18 to 24 December 2025. Both runs are also on the semantic view's <span class="path">Evaluations</span> tab in <span class="path">AI &amp; ML » Cortex Analyst</span>.</p>
 </div>
-
-<details class="callout">
-    <summary>If after_fix is still 0 of 2 and asks which dates you mean</summary>
-    <div>
-        <p>The instructions are in your draft but not in the deployed view. If <span class="path">Deploy changes</span> still shows a dot, select it, wait until the dot goes, then create another run on the same two queries.</p>
-    </div>
-</details>
 
 <div class="info-box info">
     <strong>Both instructions are needed</strong>
@@ -1434,9 +1488,43 @@ WHERE s.order_date BETWEEN '2025-12-18' AND '2025-12-24'</code></pre>
     <pre><code>Use the agent-studio skill. Based on the failures in evaluation run baseline_run for the agent WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_ASSISTANT, improve only the orchestration and response instructions. The semantic view already defines Wilderness's trading terms, such as the launch weekend, so do not put dates or definitions in the instructions. Do not change the tools, the tool descriptions, the semantic view or anything else. Change the agent's live version only: do not commit a version, do not change the default version and do not start an evaluation. Show me the instructions before and after.</code></pre>
 </div>
 
+<details class="callout">
+    <summary>Or run it as SQL in lab3.sql, with known-good instructions</summary>
+    <div>
+        <p>Use this if Cortex Code did not finish, or changed more than the instructions. It replaces only the response and orchestration instructions in the agent's draft with the ones the build tested and keeps everything else, including the tool descriptions.</p>
+        <div class="code-block">
+    <div class="code-header"><span class="code-lang">sql</span><button class="btn-copy" type="button">Copy</button></div>
+    <pre><code>-- Lab 3 Step 5, known-good instructions: your agent's draft as it is, with improved instructions only.
+EXECUTE IMMEDIATE $$
+DECLARE
+  v_spec VARIANT;
+  v_ins VARIANT;
+BEGIN
+  -- Open a draft from the latest version if there is none yet.
+  BEGIN
+    ALTER AGENT WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_ASSISTANT ADD LIVE VERSION FROM LAST;
+  EXCEPTION WHEN OTHER THEN NULL;
+  END;
+  SHOW VERSIONS IN AGENT WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_ASSISTANT;
+  SELECT PARSE_JSON("agent_spec") INTO :v_spec FROM TABLE(RESULT_SCAN(LAST_QUERY_ID())) WHERE "name" IS NULL;
+  v_ins := COALESCE(v_spec:instructions, OBJECT_CONSTRUCT());
+  v_ins := OBJECT_INSERT(v_ins, 'response',
+    'You help Wilderness Outfitters store managers and merchandisers through Christmas trading. Use plain Australian English and short sentences. Give the answer first, then the numbers behind it, and say which dates you used. Show money as AUD, for example AUD 1,234, never a bare $ sign. Quote customers word for word and name the source. Do not use emoji or marketing language. If a question is outside Wilderness sales, stock, returns and customer feedback, say so in one sentence and offer what you can answer instead. Do not send people to other websites or apps.', TRUE);
+  v_ins := OBJECT_INSERT(v_ins, 'orchestration',
+    'Use retail_analyst for any number and customer_feedback for what customers said. Call each tool once per question, and call it again only if the first result was empty or failed. For ''why'' and ''what can we do'' questions use both tools, retail_analyst first. Wilderness trading terms such as the launch weekend, Peak Week and the Christmas trading period are defined in the semantic view: pass the user''s words to retail_analyst rather than guessing dates or asking the user what they mean. Chart comparisons and trends.', TRUE);
+  v_spec := OBJECT_INSERT(v_spec, 'instructions', v_ins, TRUE);
+  EXECUTE IMMEDIATE 'ALTER AGENT WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_ASSISTANT MODIFY LIVE VERSION SET SPECIFICATION = '''
+                 || REPLACE(TO_JSON(v_spec), '''', '''''') || '''';
+  RETURN 'Draft updated: new response and orchestration instructions. Carry on with Step 6.';
+END;
+$$;</code></pre>
+</div>
+    </div>
+</details>
+
 <div class="info-box success">
     <strong>You should see</strong>
-    <p>A summary of the failures, then the response and orchestration instructions before and after. <code>SHOW VERSIONS</code> is unchanged: <code>BASELINE</code> is still the only labelled version and still the default. It takes about 5 minutes.</p>
+    <p>A summary of the failures, then the response and orchestration instructions before and after. The versions are unchanged: <code>BASELINE</code> is still the only labelled version and still the default. It takes about 5 minutes.</p>
 </div>
 
 <div class="info-box info">
@@ -1455,7 +1543,7 @@ WHERE s.order_date BETWEEN '2025-12-18' AND '2025-12-24'</code></pre>
     <div class="step-content">
 <p>Same questions, same metrics, new version. Only the version changes, so any difference comes from the changes.</p>
 
-<p>Committing the draft makes the changes a version that cannot change, so the evaluation scores exactly what you would promote. The Evaluations tab then compares runs side by side, question by question, so you see what got better and whether anything got worse. The two kinds of evaluation do different jobs:</p>
+<p>Committing the draft makes the changes a version that cannot change, so the evaluation scores exactly what you would promote. Comparing the two runs question by question shows what got better and whether anything got worse. The two kinds of evaluation do different jobs:</p>
 
 <div class="table-wrapper">
 <table class="form-table">
@@ -1469,11 +1557,20 @@ WHERE s.order_date BETWEEN '2025-12-18' AND '2025-12-24'</code></pre>
 </table>
 </div>
 
-<ol class="ui-steps">
-    <li>Run this block. It commits the draft as a new version and labels it <code>candidate</code>. The default stays on the baseline.</li>
-</ol>
+<p>In the Cortex Code panel, paste this prompt. It commits the draft as <code>candidate</code>, leaves the default on the baseline, runs <code>candidate_run</code> and compares it with <code>baseline_run</code>.</p>
 
-<div class="code-block">
+<div class="code-block prompt">
+    <div class="code-header"><span class="code-lang">cortex code</span><button class="btn-copy" type="button">Copy</button></div>
+    <pre><code>Use the agent-studio skill. Commit the live version of WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_ASSISTANT as a new version with the comment 'Candidate: improved instructions from Lab 3 Step 5', and give it the alias candidate. Do not change the default version: it stays on baseline. Then start an evaluation run called candidate_run on the candidate version, with the same dataset, the same three metrics on v3 and the same configuration as baseline_run. Check its status every minute. When it is complete, compare candidate_run with baseline_run question by question: what got better, what got worse, and the overall score for each metric.</code></pre>
+</div>
+
+<details class="callout">
+    <summary>Or do it with SQL and Snowsight</summary>
+    <div>
+        <ol class="ui-steps">
+            <li>In <code>lab3.sql</code>, run this block. It commits the draft as a new version and labels it <code>candidate</code>. The default stays on the baseline.</li>
+        </ol>
+        <div class="code-block">
     <div class="code-header"><span class="code-lang">sql</span><button class="btn-copy" type="button">Copy</button></div>
     <pre><code>-- Lab 3 Step 6: commit the draft Step 5 changed as a new version, and label it candidate.
 -- The default stays on the baseline, so the store managers keep getting the baseline until Step 7.
@@ -1495,21 +1592,17 @@ $$;
 
 SHOW VERSIONS IN AGENT WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_ASSISTANT;</code></pre>
 </div>
+        <ol class="ui-steps" start="2" style="counter-reset: ui 1;">
+            <li>On the agent's <span class="path">Evaluations</span> tab, select <span class="path">Create evaluation run » Run an evaluation manually</span>.</li>
+            <li>Run name <code class="chip" title="Select to copy">candidate_run</code>. Agent version <code class="chip" title="Select to copy">candidate</code>. The same dataset, <code class="chip" title="Select to copy">CHRISTMAS_EVAL_SET</code>, with input query <code class="chip" title="Select to copy">QUERY_TEXT</code>, and the same three metrics on <strong>v3</strong>, with <code class="chip" title="Select to copy">EXPECTED_TOOLS</code> as the expected column for Answer correctness and Tool selection accuracy. Select <span class="path">Create</span>. It takes about 4 to 5 minutes.</li>
+            <li>When it shows <strong>Completed</strong>, select <code>baseline_run</code> and <code>candidate_run</code> in the list, then <span class="path">Compare</span>, then <span class="path">Hide unchanged metrics</span>.</li>
+        </ol>
+    </div>
+</details>
 
 <div class="info-box success">
     <strong>You should see</strong>
-    <p><code>Candidate is VERSION$3</code> (the number can differ), then the versions: <code>CANDIDATE</code> new, <code>BASELINE</code> still the default.</p>
-</div>
-
-<ol class="ui-steps" start="2" style="counter-reset: ui 1;">
-    <li>Back on the agent's <span class="path">Evaluations</span> tab, select <span class="path">Create evaluation run » Run an evaluation manually</span>.</li>
-    <li>Run name <code class="chip" title="Select to copy">candidate_run</code>. Agent version <code class="chip" title="Select to copy">candidate</code>. The same dataset, <code class="chip" title="Select to copy">CHRISTMAS_EVAL_SET</code>, with input query <code class="chip" title="Select to copy">QUERY_TEXT</code>, and the same three metrics on <strong>v3</strong>, with <code class="chip" title="Select to copy">EXPECTED_TOOLS</code> as the expected column for Answer correctness and Tool selection accuracy. Select <span class="path">Create</span>. It takes about 4 to 5 minutes.</li>
-    <li>When it shows <strong>Completed</strong>, select <code>baseline_run</code> and <code>candidate_run</code> in the list, then <span class="path">Compare</span>, then <span class="path">Hide unchanged metrics</span>.</li>
-</ol>
-
-<div class="info-box success">
-    <strong>You should see</strong>
-    <p>Answer correctness up from about 0.6 to 0.7 to about 0.9 or higher, and tool selection up from about 0.7 to 0.9 to about 1.0. The launch-weekend questions pass, from the semantic view. The weather question improves, from the instructions. Nothing that passed before fails now.</p>
+    <p>The versions: <code>CANDIDATE</code> new, <code>BASELINE</code> still the default. After about 4 to 5 minutes, the comparison: answer correctness up from about 0.6 to 0.7 to about 0.9 or higher, and tool selection up from about 0.7 to 0.9 to about 1.0. The launch-weekend questions pass, from the semantic view. The weather question improves, from the instructions. Nothing that passed before fails now. To see it side by side, select both runs on the agent's <span class="path">Evaluations</span> tab, then <span class="path">Compare</span>.</p>
 </div>
 
 <div class="info-box warning">
@@ -1530,9 +1623,17 @@ SHOW VERSIONS IN AGENT WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_ASSISTANT;</cod
 
 <p>Promoting is a label and a default, not a rebuild: the version that scored better is the version the store managers get, and the baseline stays one line away.</p>
 
-<p>Run this block. It labels the candidate <code>production</code>, makes it the default and adds it to CoWork as <strong>Wilderness Assistant (production)</strong>, in front of every store manager at once.</p>
+<p>In the Cortex Code panel, paste this prompt. It labels the candidate <code>production</code>, makes it the default and adds it to CoWork as <strong>Wilderness Assistant (production)</strong>, in front of every store manager at once.</p>
 
-<div class="code-block">
+<div class="code-block prompt">
+    <div class="code-header"><span class="code-lang">cortex code</span><button class="btn-copy" type="button">Copy</button></div>
+    <pre><code>Use the agent-studio skill. For WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_ASSISTANT, give the version with the alias candidate the alias production and make it the default version. Leave the baseline version as it is. Then add the agent to Snowflake CoWork, the Snowflake Intelligence object SNOWFLAKE_INTELLIGENCE_OBJECT_DEFAULT; if it is already there, say so and carry on. Show me the versions.</code></pre>
+</div>
+
+<details class="callout">
+    <summary>Or run it as SQL in lab3.sql</summary>
+    <div>
+        <div class="code-block">
     <div class="code-header"><span class="code-lang">sql</span><button class="btn-copy" type="button">Copy</button></div>
     <pre><code>-- Lab 3 Step 7: promote the candidate and put the production assistant in CoWork.
 -- The candidate's label becomes production; the baseline stays as it is, so rolling back is one line.
@@ -1568,10 +1669,12 @@ $$;
 
 SHOW VERSIONS IN AGENT WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_ASSISTANT;</code></pre>
 </div>
+    </div>
+</details>
 
 <div class="info-box success">
     <strong>You should see</strong>
-    <p><code>Promoted VERSION$3 to production; Wilderness Assistant (production) added to CoWork</code> (the number can differ), and in the versions <code>PRODUCTION</code> with <code>is_default</code> true and <code>BASELINE</code> unchanged. In CoWork, <strong>Wilderness Assistant (production)</strong> is listed next to the Wilderness Assistant you built this morning.</p>
+    <p>In the versions, <code>PRODUCTION</code> with <code>is_default</code> true and <code>BASELINE</code> unchanged. In CoWork, <strong>Wilderness Assistant (production)</strong> is listed next to the Wilderness Assistant you built this morning.</p>
 </div>
 
 <div class="info-box tip">
@@ -1944,43 +2047,16 @@ SELECT 'Wilderness workshop removed' AS STATUS;</code></pre>
     <div class="section-container">
         <h2 class="section-title">If you get stuck</h2>
 <details class="callout stuck">
-    <summary>Step 1: the message says MISSING</summary>
+    <summary>Step 1: something is missing</summary>
     <div>
-        <p>It names what is missing, and nothing was frozen. Run the setup script from Lab 1 Step 1 again. It rebuilds the production copy and leaves everything else as it was. Then run the Step 1 block again.</p>
+        <p>Cortex Code, or the SQL block, names what is missing, and nothing was frozen. Run the setup script from Lab 1 Step 1 again. It rebuilds the production copy and leaves everything else as it was. Then run Step 1 again.</p>
     </div>
 </details>
 
 <details class="callout stuck">
-    <summary>Step 5: use known-good instructions</summary>
+    <summary>A prompt did not finish</summary>
     <div>
-        <p>If Cortex Code did not finish, or changed more than the instructions, run this instead. It replaces only the response and orchestration instructions in the agent's draft with the ones the build tested and keeps everything else, including the tool descriptions. Then carry on with Step 6.</p>
-        <div class="code-block">
-    <div class="code-header"><span class="code-lang">sql</span><button class="btn-copy" type="button">Copy</button></div>
-    <pre><code>-- Lab 3 Step 5, known-good instructions: your agent's draft as it is, with improved instructions only.
-EXECUTE IMMEDIATE $$
-DECLARE
-  v_spec VARIANT;
-  v_ins VARIANT;
-BEGIN
-  -- Open a draft from the latest version if there is none yet.
-  BEGIN
-    ALTER AGENT WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_ASSISTANT ADD LIVE VERSION FROM LAST;
-  EXCEPTION WHEN OTHER THEN NULL;
-  END;
-  SHOW VERSIONS IN AGENT WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_ASSISTANT;
-  SELECT PARSE_JSON("agent_spec") INTO :v_spec FROM TABLE(RESULT_SCAN(LAST_QUERY_ID())) WHERE "name" IS NULL;
-  v_ins := COALESCE(v_spec:instructions, OBJECT_CONSTRUCT());
-  v_ins := OBJECT_INSERT(v_ins, 'response',
-    'You help Wilderness Outfitters store managers and merchandisers through Christmas trading. Use plain Australian English and short sentences. Give the answer first, then the numbers behind it, and say which dates you used. Show money as AUD, for example AUD 1,234, never a bare $ sign. Quote customers word for word and name the source. Do not use emoji or marketing language. If a question is outside Wilderness sales, stock, returns and customer feedback, say so in one sentence and offer what you can answer instead. Do not send people to other websites or apps.', TRUE);
-  v_ins := OBJECT_INSERT(v_ins, 'orchestration',
-    'Use retail_analyst for any number and customer_feedback for what customers said. Call each tool once per question, and call it again only if the first result was empty or failed. For ''why'' and ''what can we do'' questions use both tools, retail_analyst first. Wilderness trading terms such as the launch weekend, Peak Week and the Christmas trading period are defined in the semantic view: pass the user''s words to retail_analyst rather than guessing dates or asking the user what they mean. Chart comparisons and trends.', TRUE);
-  v_spec := OBJECT_INSERT(v_spec, 'instructions', v_ins, TRUE);
-  EXECUTE IMMEDIATE 'ALTER AGENT WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_ASSISTANT MODIFY LIVE VERSION SET SPECIFICATION = '''
-                 || REPLACE(TO_JSON(v_spec), '''', '''''') || '''';
-  RETURN 'Draft updated: new response and orchestration instructions. Carry on with Step 6.';
-END;
-$$;</code></pre>
-</div>
+        <p>Every step has the same work, collapsed under its prompt, as SQL or as steps in Snowsight. Open it and carry on from there; the next prompt picks up from what is in your account, not from what Cortex Code said. Step 5's box holds instructions the build tested.</p>
     </div>
 </details>
     </div>
