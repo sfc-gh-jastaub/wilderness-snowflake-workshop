@@ -1024,7 +1024,7 @@ a.lab-card:hover { box-shadow: var(--shadow-md); border-color: var(--sf-blue); c
         <div class="hero-meta">
             <div class="meta-item"><span class="meta-label">Core</span><span class="meta-value">99 min, 11 steps</span></div>
             <div class="meta-item"><span class="meta-label">You use</span><span class="meta-value">Snowsight, Cortex Code and CoWork</span></div>
-            <div class="meta-item"><span class="meta-label">Code</span><span class="meta-value">SQL blocks to paste, 3 prompts</span></div>
+            <div class="meta-item"><span class="meta-label">Code</span><span class="meta-value">SQL blocks to paste, 6 prompts</span></div>
         </div>
     </div>
 </section>
@@ -1592,9 +1592,17 @@ SHOW VERSIONS IN AGENT WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_ASSISTANT;</cod
 
 <p>Account usage views break today's credits down by service: Cortex Agents, CoWork, AI functions, Cortex Search, Cortex Code and the warehouse. Setup tagged the database and the warehouse <code>PROJECT = 'wilderness_christmas'</code>, so the project's spend can be counted on its own.</p>
 
-<p>Run this block.</p>
+<p>In the Cortex Code panel, paste this prompt. It only reads.</p>
 
-<div class="code-block">
+<div class="code-block prompt">
+    <div class="code-header"><span class="code-lang">cortex code</span><button class="btn-copy" type="button">Copy</button></div>
+    <pre><code>Show what this account has spent in the last 24 hours, by service, from SNOWFLAKE.ACCOUNT_USAGE.METERING_HISTORY. Give the credits for each service, largest first, and name each one in plain words: Cortex Agents, CoWork, AI functions, AI inference, Cortex Search, Cortex Code and the warehouse. Do not change anything.</code></pre>
+</div>
+
+<details class="callout">
+    <summary>Or run it as SQL in lab3.sql</summary>
+    <div>
+        <div class="code-block">
     <div class="code-header"><span class="code-lang">sql</span><button class="btn-copy" type="button">Copy</button></div>
     <pre><code>-- Lab 3 Step 8: what this account has spent in the last 24 hours, by service.
 -- Usage reaches this view an hour or two after it happens, so the last hour may be missing.
@@ -1616,6 +1624,8 @@ GROUP BY WHAT
 HAVING CREDITS &gt; 0
 ORDER BY CREDITS DESC;</code></pre>
 </div>
+    </div>
+</details>
 
 <div class="info-box success">
     <strong>You should see</strong>
@@ -1693,10 +1703,18 @@ ORDER BY CREDITS DESC;</code></pre>
 <p>A budget on the project tag counts everything inside the project, the agent, the search service and the tasks included, against one monthly limit. It emails you at 80% and runs an action at 100%, here stopping the warehouse. It acts within hours.</p>
 
 <ol class="ui-steps">
-    <li>Run this block. It sets 150 credits a month, comfortably above the monthly estimate for all 72 stores.</li>
+    <li>In the Cortex Code panel, paste this prompt. It sets 150 credits a month, comfortably above the monthly estimate for all 72 stores.</li>
 </ol>
 
-<div class="code-block">
+<div class="code-block prompt">
+    <div class="code-header"><span class="code-lang">cortex code</span><button class="btn-copy" type="button">Copy</button></div>
+    <pre><code>Create a monthly budget called WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_PROJECT_BUDGET with a spending limit of 150 credits. It should count everything tagged WILDERNESS_HOL.SETUP.PROJECT = 'wilderness_christmas'. When spending is heading past 80%, email the address stored under the key REPORT_EMAIL in WILDERNESS_HOL.SETUP.WORKSHOP_SETTINGS, through the notification integration WILDERNESS_EMAIL. At 100% of actual spend, call a stored procedure WILDERNESS_HOL.LAB3_PRODUCTION.STOP_WILDERNESS_WH that turns off auto-resume on the warehouse WILDERNESS_WH and suspends it. When it is done, show me the email address, the tags the budget watches and its custom actions.</code></pre>
+</div>
+
+<details class="callout">
+    <summary>Or run it as SQL in lab3.sql</summary>
+    <div>
+        <div class="code-block">
     <div class="code-header"><span class="code-lang">sql</span><button class="btn-copy" type="button">Copy</button></div>
     <pre><code>-- Lab 3 Step 10: a monthly budget for the whole Wilderness project.
 -- It counts every object tagged PROJECT = 'wilderness_christmas': the database (and so the agent, the
@@ -1750,10 +1768,12 @@ CALL WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_PROJECT_BUDGET!ADD_CUSTOM_ACTION(
 CALL WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_PROJECT_BUDGET!GET_RESOURCE_TAGS();
 CALL WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_PROJECT_BUDGET!GET_CUSTOM_ACTIONS();</code></pre>
 </div>
+    </div>
+</details>
 
 <div class="info-box success">
     <strong>You should see</strong>
-    <p><code>Budget alerts go to</code> your email, then the tag the budget watches (<code>PROJECT</code> = <code>wilderness_christmas</code>) and one custom action, <code>STOP_WILDERNESS_WH</code> at 100% of actual spend.</p>
+    <p>Your email address for the alerts, the tag the budget watches (<code>PROJECT</code> = <code>wilderness_christmas</code>) and one custom action, <code>STOP_WILDERNESS_WH</code> at 100% of actual spend.</p>
 </div>
 
 <ol class="ui-steps" start="2" style="counter-reset: ui 1;">
@@ -1779,10 +1799,18 @@ CALL WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_PROJECT_BUDGET!GET_CUSTOM_ACTIONS
 <p>A per-user quota gives every user in scope the same AI limit and blocks a user who reaches it within minutes, until the next day. It counts the services you add to it: here CoWork and Cortex Agents, the two ways a store manager reaches the assistant, because CoWork questions are billed to CoWork, not to the agent. You try it on a demo store manager, never on yourself.</p>
 
 <ol class="ui-steps">
-    <li>Run this block. It creates a demo store manager, tags them, sets 2 credits a day, checks who is in scope, then turns blocking on.</li>
+    <li>In the Cortex Code panel, paste this prompt. It creates a demo store manager, tags them, sets 2 credits a day, checks who is in scope, then turns blocking on.</li>
 </ol>
 
-<div class="code-block">
+<div class="code-block prompt">
+    <div class="code-header"><span class="code-lang">cortex code</span><button class="btn-copy" type="button">Copy</button></div>
+    <pre><code>Create a demo user called STORE_MANAGER_DEMO with no password, and a tag WILDERNESS_HOL.LAB3_PRODUCTION.TEAM with the allowed value 'store_managers'. Set that tag on the demo user. Then create a per-user quota called WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_STORE_QUOTA of 2 credits per user per day, counting Snowflake Intelligence (CoWork) and Cortex Agents. Scope it to users tagged TEAM = 'store_managers', include STORE_MANAGER_DEMO by name, and exclude me by name so it can never block me. Show me the quota's scope before you turn on blocking. Only then turn blocking on, with an email to the user when they are blocked, and show me the settings.</code></pre>
+</div>
+
+<details class="callout">
+    <summary>Or run it as SQL in lab3.sql</summary>
+    <div>
+        <div class="code-block">
     <div class="code-header"><span class="code-lang">sql</span><button class="btn-copy" type="button">Copy</button></div>
     <pre><code>-- Lab 3 Step 11: a daily AI limit for store managers, tried on a demo user.
 -- A new quota covers every user in the account. This block narrows it to users tagged as store managers,
@@ -1828,10 +1856,12 @@ CALL WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_STORE_QUOTA!SET_BLOCK_ENFORCEMENT
 -- The settings in force: a daily limit of 2 credits, blocking on.
 CALL WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_STORE_QUOTA!GET_CONFIG();</code></pre>
 </div>
+    </div>
+</details>
 
 <div class="info-box success">
     <strong>You should see</strong>
-    <p>The scope check lists <code>STORE_MANAGER_DEMO</code> under included users, you under excluded users, and the two domains it counts, <code>CORTEX_AGENT</code> and <code>SNOWFLAKE_INTELLIGENCE</code>, which is CoWork. The last result shows <code>PER_USER_LIMIT_DAILY</code> 2 and <code>BLOCK_ENFORCEMENT_ENABLED</code> true.</p>
+    <p>The scope lists <code>STORE_MANAGER_DEMO</code> under included users, you under excluded users, and the two domains it counts, <code>CORTEX_AGENT</code> and <code>SNOWFLAKE_INTELLIGENCE</code>, which is CoWork. The settings show <code>PER_USER_LIMIT_DAILY</code> 2 and <code>BLOCK_ENFORCEMENT_ENABLED</code> true.</p>
 </div>
 
 <ol class="ui-steps" start="2" style="counter-reset: ui 1;">
@@ -1840,7 +1870,7 @@ CALL WILDERNESS_HOL.LAB3_PRODUCTION.WILDERNESS_STORE_QUOTA!GET_CONFIG();</code><
 
 <div class="info-box warning">
     <strong>Why the quota leaves you out by name</strong>
-    <p>A new quota covers every user in the account. You have used far more than 2 credits today, so a quota that included you would block your CoWork and agent requests for the rest of the day. The block narrows the quota to a store-manager tag, excludes you by name, and turns blocking on only after the scope check has shown who is in it.</p>
+    <p>A new quota covers every user in the account. You have used far more than 2 credits today, so a quota that included you would block your CoWork and agent requests for the rest of the day. So the quota is narrowed to a store-manager tag, you are excluded by name, and blocking goes on only after the scope has shown who is in it.</p>
 </div>
         <label class="completion-checkbox"><input type="checkbox" data-step="11"> Mark step 11 complete</label>
     </div>
